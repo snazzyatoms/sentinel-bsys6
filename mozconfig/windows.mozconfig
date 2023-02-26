@@ -1,0 +1,3 @@
+ac_add_options --enable-bootstrap
+export WINSYSROOT="$MOZBUILD/win-cross/vs"
+export MIDL="$MOZBUILD/wine/bin/widl"

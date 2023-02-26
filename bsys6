@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+set -e
+
+export BSYS6="$(dirname $(readlink -f "$0"))/src"
+
+if [ "$#" -eq 0 ]; then
+  set -- "help"
+fi
+
+while [[ $# -gt 0 ]]; do
+  if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+    set -- "help" "${@:2}"
+  fi
+  command="$1"
+  shift
+  source $BSYS6/$command.sh
+done
+
+for artifact in $AVAILABLE_ARTIFACTS; do
+  if [ -n "${!artifact:-}" ]; then
+    if [ -z "${found_artifact:-}" ]; then
+      echo "-> The following artifacts are available:"
+      found_artifact=1
+    fi
+    echo "  $artifact: ${!artifact}"
+  fi
+done

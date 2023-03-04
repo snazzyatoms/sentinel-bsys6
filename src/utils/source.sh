@@ -25,6 +25,9 @@ if [ -z "${SOURCE:-}" ]; then
       mv "$SOURCEDIR/../librewolf-$VERSION" "$SOURCEDIR" >&2
     fi
     rm "$WORKDIR/librewolf-$VERSION.source.tar.gz" >&2
+
+    echo "-> Creating stub for document_pdf.ico (Temporarily)" >&2
+    cp -v "$SOURCEDIR/browser/branding/librewolf/document.ico" "$SOURCEDIR/browser/branding/librewolf/document_pdf.ico" >&2
   fi
 
   export SOURCE="$SOURCEDIR"

@@ -32,4 +32,7 @@ Build:
   except:
     - merge_requests
   script:
-    - ./bsys6 build
+    - ./bsys6 msix
+  artifacts:
+    paths:
+      - *.msix

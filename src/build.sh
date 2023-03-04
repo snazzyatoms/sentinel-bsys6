@@ -22,6 +22,10 @@ if [ -z "${BUILT:-}" ]; then
   echo "ac_add_options --target=$MOZ_TARGET" >>"mozconfig"
 
   echo "-> Running mach build with target $MOZ_TARGET" >&2
-  ./mach build
+  if [ "${VERBOSE:-}" == "true" ]; then
+    ./mach build -v
+  else
+    ./mach build
+  fi
   export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/librewolf"
 fi

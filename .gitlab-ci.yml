@@ -35,4 +35,4 @@ Build:
     - ./bsys6 msix
   artifacts:
     paths:
-      - *.msix
+      - "*.msix"

@@ -12,8 +12,10 @@ if ! command -v sudo >/dev/null; then
   apt-get update
   apt-get install -y sudo
 else
+  echo "# sudo apt-get update"
   sudo apt-get update
 fi
 
 echo "-> Installing $@ with apt-get"
+echo "# sudo apt-get install -y $@"
 sudo apt-get install -y $@

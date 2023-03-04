@@ -6,7 +6,7 @@ source $BSYS6/utils/version.sh
 
 echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-source $BSYS6/apt-get.sh "msitools" "zstd" "gcc-multilib"
+source $BSYS6/apt-get.sh "msitools" "zstd" "libc6-i386" "clang"
 source $BSYS6/bootstrap.sh
 source $BSYS6/rustup_target.sh "x86_64-pc-windows-msvc"
 source $BSYS6/artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"

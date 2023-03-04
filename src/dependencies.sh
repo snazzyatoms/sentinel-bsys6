@@ -1,12 +1,15 @@
 #!/usr/bin/bash
 set -eu
 
-for pkgmgr in apt-get pacman; do
-  if command -v $pkgmgr >/dev/null; then
-    $BSYS6/dependencies_$pkgmgr.sh
-    return
-  fi
-done
+if command -v apt-get >/dev/null; then
+  $BSYS6/apt-get.sh python3-pip curl
+  return
+fi
+
+if command -v pacman >/dev/null; then
+  $BSYS6/apt-get.sh python-pip curl
+  return
+fi
 
 echo "No supported package manager found."
 exit 1

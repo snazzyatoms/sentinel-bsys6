@@ -3,16 +3,16 @@ set -eu
 
 source $BSYS6/utils/version.sh
 
-if [ -n "${SOURCE:-}" ]; then
-  if [ -f "$SOURCE/mozconfig.back" ]; then
-    rm -f "$SOURCE/mozconfig"
-    mv "$SOURCE/mozconfig.back" "$SOURCE/mozconfig"
-  fi
-else
-  source $BSYS6/require.sh tar
-
-  if [ ! -d "$SOURCEDIR" ]; then
+if [ -z "${SOURCE:-}" ]; then
+  if [ -d "$SOURCEDIR" ]; then
+    if [ -f "$SOURCEDIR/mozconfig.backup" ]; then
+      rm -f "$SOURCEDIR/mozconfig"
+      mv "$SOURCEDIR/mozconfig.backup" "$SOURCEDIR/mozconfig"
+    fi
+  else
     echo "-> Fetching librewolf-$VERSION.source.tar.gz" >&2
+
+    source $BSYS6/require.sh tar
 
     mkdir -p "$SOURCEDIR/.." >&2
     mkdir -p "$WORKDIR" >&2

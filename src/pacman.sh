@@ -9,4 +9,5 @@ else
   pacman -Syu
 fi
 
-sudo pacman -S python-pip curl
+echo "-> Installing bsys6 dependencies with pacman"
+sudo pacman -S python-pip curl msitools zstd

@@ -11,7 +11,7 @@ $SOURCE/mach --no-interactive python --virtualenv build "$SOURCE/build/vs/pack_v
 
 echo "-> Extracting Windows SDK"
 mkdir -p "$MOZBUILD/win-cross"
-tar xf "$tmpdir/vs.tar.zst" -C "$MOZBUILD/win-cross"
+tar xfv "$tmpdir/vs.tar.zst" -C "$MOZBUILD/win-cross"
 
 echo "-> Cleaning up"
 rm -rf "$tmpdir"

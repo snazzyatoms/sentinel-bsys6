@@ -1,0 +1,31 @@
+Images:
+  stage: images
+  when: manual
+  image: registry.gitlab.com/librewolf-community/browser/bsys5/dind
+  tags: [autoscale]
+  parallel:
+    matrix:
+      - TARGET:
+          - linux
+          - windows
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
+    - ./bsys6 build_image
+    - docker push registry.gitlab.com/maltejur/bsys6/$TARGET:latest
+
+Build:
+  stage: build
+  when: manual
+  allow_failure: false
+  parallel:
+    matrix:
+      - TARGET:
+          - linux
+          - windows
+  image: registry.gitlab.com/maltejur/bsys6/$TARGET:latest
+  tags:
+    - autoscale
+  except:
+    - merge_requests
+  script:
+    - ./bsys6 build

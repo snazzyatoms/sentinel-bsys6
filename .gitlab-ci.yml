@@ -1,3 +1,7 @@
+stages:
+  - images
+  - build
+
 Images:
   stage: images
   when: manual

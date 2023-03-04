@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-set -e -o pipefail
+set -eu
 
 source $BSYS6/require.sh docker
 

@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-set -e -o pipefail
+set -eu
 
 source $BSYS6/utils/require_target.sh "linux"
 source $BSYS6/utils/version.sh

@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-set -e -o pipefail
+set -eu
 
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <dependency to check>"

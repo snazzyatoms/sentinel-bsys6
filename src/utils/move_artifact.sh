@@ -13,7 +13,8 @@ if [ -z "$file" ]; then
   echo "$0: Failed to find artifact file $2/$3" >&2
   exit 1
 fi
-export $1="$WORKDIR/$file"
+# export $1="$WORKDIR/$file" # Move the file to workdir
+export $1="$ENTRY_PWD/$file" # Move file to current directory
 if [ -f "$1" ]; then
   rm "$1"
 fi

@@ -2,7 +2,7 @@
 set -eu
 
 if [ -z "${MSIX:-}" ]; then
-  source $BSYS6/utils/require_target.sh "windows"
+  source "$BSYS6/utils/require_target.sh" "windows"
 
   source "$BSYS6/utils/vars.sh"
   source "$BSYS6/build_use_existing.sh"

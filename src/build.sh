@@ -16,8 +16,8 @@ if [ -z "${BUILT:-}" ]; then
     touch "mozconfig.backup"
   fi
 
-  if [ -f "$BSYS6/../mozconfig/$TARGET.mozconfig" ]; then
-    cat "$BSYS6/../mozconfig/$TARGET.mozconfig" >>"mozconfig"
+  if [ -f "$BSYS6/../assets/$TARGET.mozconfig" ]; then
+    cat "$BSYS6/../assets/$TARGET.mozconfig" >>"mozconfig"
   fi
   echo "ac_add_options --target=$MOZ_TARGET" >>"mozconfig"
 

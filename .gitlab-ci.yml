@@ -17,16 +17,11 @@ Images:
     - ./bsys6 build_image
     - docker push registry.gitlab.com/maltejur/bsys6/$TARGET:latest
 
-Build:
+Linux:
   stage: build
   when: manual
   allow_failure: false
-  parallel:
-    matrix:
-      - TARGET:
-          - linux
-          - windows
-  image: registry.gitlab.com/maltejur/bsys6/$TARGET:latest
+  image: registry.gitlab.com/maltejur/bsys6/linux:latest
   tags:
     - autoscale
   except:
@@ -37,7 +32,7 @@ Build:
     paths:
       - "*.tar.bz2"
 
-MSIX:
+Windows:
   stage: build
   when: manual
   allow_failure: false
@@ -47,7 +42,8 @@ MSIX:
   except:
     - merge_requests
   script:
-    - ./bsys6 msix
+    - ./bsys6 nsis msix
   artifacts:
     paths:
+      - "*.exe"
       - "*.msix"

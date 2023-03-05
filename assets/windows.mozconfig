@@ -1,5 +1,4 @@
 ac_add_options --enable-bootstrap
-ac_add_options --with-l10n-base=$(pwd)/browser/locales/l10n
 export WINSYSROOT="$MOZBUILD/win-cross/vs"
 export MIDL="$MOZBUILD/wine/bin/widl"
 export FXC="$MOZBUILD/fxc2/bin/fxc2.exe"

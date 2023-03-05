@@ -28,12 +28,6 @@ if [ -z "${BUILT:-}" ]; then
     ./mach build
   fi
 
-  echo "-> Building locales"
-  echo "Building chrome-<locale> targets"
-  cat "$SOURCE/browser/locales/shipped-locales" | sed s/^/chrome-/ | xargs make -j$(nproc) -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null 2>/dev/null
-  echo "Building browser/app tools target"
-  make -C "$SOURCE/obj-$MOZ_TARGET/browser/app" tools
-
   if [ -d "$SOURCE/obj-$MOZ_TARGET/dist/librewolf" ]; then
     export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/librewolf"
   elif [ -d "$SOURCE/obj-$MOZ_TARGET/dist/bin" ]; then

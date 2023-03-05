@@ -42,8 +42,10 @@ Windows:
   except:
     - merge_requests
   script:
-    - ./bsys6 nsis msix
+    - ./bsys6 package nsis msix
   artifacts:
     paths:
+      - "*.zip"
       - "*setup.exe"
       - "*.msix"
+      - "*.sha256sum"

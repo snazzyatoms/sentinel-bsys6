@@ -45,5 +45,5 @@ Windows:
     - ./bsys6 nsis msix
   artifacts:
     paths:
-      - "*.exe"
+      - "*setup.exe"
       - "*.msix"

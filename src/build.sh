@@ -27,5 +27,23 @@ if [ -z "${BUILT:-}" ]; then
   else
     ./mach build
   fi
-  export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/librewolf"
+
+  echo "-> Building locales"
+  echo "Building chrome-<locale> targets"
+  cat "$SOURCE/browser/locales/shipped-locales" | sed s/^/chrome-/ | xargs make -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null
+  echo "Building browser/app tools target"
+  make -C "$SOURCE/obj-$MOZ_TARGET/browser/app" tools
+
+  if [ -d "$SOURCE/obj-$MOZ_TARGET/dist/librewolf" ]; then
+    export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/librewolf"
+  elif [ -d "$SOURCE/obj-$MOZ_TARGET/dist/bin" ]; then
+    export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/bin"
+  else
+    echo "Could not find binary directory after build" >&2
+    exit 1
+  fi
+
+  if [ "$TARGET" == "windows" ]; then
+    cp -v "$BSYS6/../assets/librewolf.ico" "$BUILT"
+  fi
 fi

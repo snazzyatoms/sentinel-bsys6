@@ -8,7 +8,8 @@ fi
 
 source "$BSYS6/utils/vars.sh"
 
-file="$(ls $2 | grep -x $3 | tail -n 1)"
+echo "Searching for artifact $3"
+file="$(ls "$2" | grep -x "$3" | tail -n 1)"
 if [ -z "$file" ]; then
   echo "$0: Failed to find artifact file $2/$3" >&2
   exit 1
@@ -18,4 +19,5 @@ export $1="$ENTRY_PWD/$file" # Move file to current directory
 if [ -f "$1" ]; then
   rm "$1"
 fi
+echo "Found $file, moving to $ENTRY_PWD"
 mv "$2/$file" "${!1}"

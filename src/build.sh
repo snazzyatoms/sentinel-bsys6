@@ -30,7 +30,7 @@ if [ -z "${BUILT:-}" ]; then
 
   echo "-> Building locales"
   echo "Building chrome-<locale> targets"
-  cat "$SOURCE/browser/locales/shipped-locales" | sed s/^/chrome-/ | xargs make -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null
+  cat "$SOURCE/browser/locales/shipped-locales" | sed s/^/chrome-/ | xargs make -j$(nproc) -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null 2>/dev/null
   echo "Building browser/app tools target"
   make -C "$SOURCE/obj-$MOZ_TARGET/browser/app" tools
 

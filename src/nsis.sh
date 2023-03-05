@@ -23,5 +23,6 @@ if [ -z "${NSIS:-}" ]; then
 
   source "$BSYS6/utils/move_artifact.sh" "NSIS" "$TMPDIR" ".*setup\.exe"
 
+  cd "$WORKDIR"
   rm -rf "$TMPDIR"
 fi

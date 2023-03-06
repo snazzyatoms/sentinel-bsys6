@@ -22,6 +22,7 @@ if [ -z "${NSIS:-}" ]; then
   echo "Done"
 
   source "$BSYS6/utils/move_artifact.sh" "NSIS" "$TMPDIR" ".*setup\.exe"
+  source "$BSYS6/utils/calculate_sha256.sh" "NSIS"
 
   rm -rf "$TMPDIR"
   unset TMPDIR

@@ -4,6 +4,6 @@ ARG TARGET=linux
 ADD . /bsys6
 WORKDIR /bsys6
 
-RUN ./bsys6 dependencies prepare clean
+RUN ./bsys6 prepare clean
 
 RUN rm -rf /bsys6

@@ -5,7 +5,7 @@ source $BSYS6/utils/require_target.sh "windows"
 
 echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-source $BSYS6/dependencies.sh "python3-pip curl msitools zstd libc6-i386" "python-pip curl msitools zstd lib32-glibc"
+source $BSYS6/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full" "python-pip curl msitools zstd lib32-glibc p7zip"
 source $BSYS6/utils/version.sh
 source $BSYS6/bootstrap.sh
 source $BSYS6/rustup_target.sh "x86_64-pc-windows-msvc"

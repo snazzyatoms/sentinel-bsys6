@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 set -eu
 
-if [ "$#" -ne 3 ]; then
-  echo "Usage: move_artifact.sh <artifact_name> <directory> <file_regex>" >&2
+if [ "$#" -lt 3 ]; then
+  echo "Usage: move_artifact.sh <artifact_name> <directory> <file_regex> (new_file)" >&2
   exit 1
 fi
 
@@ -14,8 +14,13 @@ if [ -z "$file" ]; then
   echo "$0: Failed to find artifact file $2/$3" >&2
   exit 1
 fi
-# export $1="$WORKDIR/$file" # Move the file to workdir
-export $1="$ENTRY_PWD/$file" # Move file to current directory
+
+if [ "$#" -gt 3 ]; then
+  export $1="$ENTRY_PWD/$4"
+else
+  export $1="$ENTRY_PWD/$file"
+fi
+
 if [ -f "$1" ]; then
   rm "$1"
 fi

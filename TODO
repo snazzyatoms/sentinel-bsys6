@@ -4,3 +4,4 @@
 - Package locales with build target
 - Trap and clean up tmpdirs
 - Fix custom WORKDIR
+- Move files to subfolders to organize commands a bit more

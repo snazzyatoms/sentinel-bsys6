@@ -15,13 +15,13 @@ Images:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
     - ./bsys6 build_image
-    - docker push registry.gitlab.com/maltejur/bsys6/$TARGET:latest
+    - docker push registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET:latest
 
 Linux:
   stage: build
   when: manual
   allow_failure: false
-  image: registry.gitlab.com/maltejur/bsys6/linux:latest
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/linux:latest
   tags:
     - autoscale
   except:
@@ -36,7 +36,7 @@ Windows:
   stage: build
   when: manual
   allow_failure: false
-  image: registry.gitlab.com/maltejur/bsys6/windows:latest
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/windows:latest
   tags:
     - autoscale
   except:

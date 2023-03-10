@@ -5,7 +5,7 @@ if [ -z "${WIN_PORTABLE:-}" ]; then
   source $BSYS6/exports/require_target.sh "windows"
   source $BSYS6/package.sh
   source $BSYS6/exports/tmpdir.sh
-  $BSYS6/utils/require.sh
+  $BSYS6/utils/require.sh "jq" "zip" "unzip" "wget"
 
   echo "-> Building portable zip" >&2
 

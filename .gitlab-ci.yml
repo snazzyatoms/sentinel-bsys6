@@ -42,7 +42,7 @@ Windows:
   except:
     - merge_requests
   script:
-    - TARGET=windows ./bsys6 package nsis msix
+    - TARGET=windows ./bsys6 package nsis msix win_portable
   artifacts:
     paths:
       - "*.zip"

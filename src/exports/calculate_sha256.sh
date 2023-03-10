@@ -7,5 +7,5 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo "-> Calculating checksum" >&2
-sha256sum "${!1}" | cut -f 1 -d " " >"${!1}.sha256sum"
+sha256sum "${!1}" | tee /dev/stderr | cut -f 1 -d " " >"${!1}.sha256sum"
 export $1_SHA256="${!1}.sha256sum"

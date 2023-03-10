@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eu
 
-source $BSYS6/require.sh pacman
+$BSYS6/utils/require.sh pacman
 
 if ! command -v sudo >/dev/null; then
   pacman -Syu sudo
@@ -11,5 +11,5 @@ else
 fi
 
 echo "-> Installing $@ dependencies with pacman"
-echo "# sudo pacman -S $@"
-sudo pacman -S $@
+echo "# sudo pacman -S --needed $@"
+sudo pacman -S --needed $@

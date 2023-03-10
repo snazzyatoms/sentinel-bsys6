@@ -7,12 +7,12 @@ if [ "$#" -ne 2 ]; then
 fi
 
 if command -v apt-get >/dev/null; then
-  $BSYS6/apt-get.sh $1
+  $BSYS6/utils/apt-get.sh $1
   exit
 fi
 
 if command -v pacman >/dev/null; then
-  $BSYS6/pacman.sh $2
+  $BSYS6/utils/pacman.sh $2
   exit
 fi
 

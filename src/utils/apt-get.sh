@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eu
 
-source $BSYS6/require.sh apt-get
+$BSYS6/utils/require.sh apt-get
 
 if [ "$#" -eq 0 ]; then
   echo "apt-get.sh: At least one argument is required"

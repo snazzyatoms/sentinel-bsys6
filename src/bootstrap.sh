@@ -1,10 +1,7 @@
 #!/usr/bin/bash
 set -eu
 
-source $BSYS6/utils/vars.sh
-source $BSYS6/utils/source.sh
-
-cd "$SOURCE"
+source $BSYS6/source.sh
 
 echo "-> Bootstrapping the build system with mach"
-./mach --no-interactive bootstrap --application-choice=browser
+(cd $SOURCE && ./mach --no-interactive bootstrap --application-choice=browser)

@@ -6,7 +6,7 @@ if [ "$#" -lt 3 ]; then
   exit 1
 fi
 
-source "$BSYS6/utils/vars.sh"
+source "$BSYS6/exports/vars.sh"
 
 echo "Searching for artifact $3"
 file="$(ls "$2" | grep -x "$3" | tail -n 1)"

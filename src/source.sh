@@ -1,7 +1,8 @@
 #!/usr/bin/bash
 set -eu
 
-source $BSYS6/utils/version.sh
+source $BSYS6/exports/target.sh
+source $BSYS6/exports/version.sh
 
 if [ -z "${SOURCE:-}" ]; then
   if [ -d "$SOURCEDIR" ]; then
@@ -12,7 +13,7 @@ if [ -z "${SOURCE:-}" ]; then
   else
     echo "-> Fetching librewolf-$VERSION.source.tar.gz" >&2
 
-    source $BSYS6/require.sh tar
+    $BSYS6/utils/require.sh tar
 
     mkdir -p "$SOURCEDIR/.." >&2
     mkdir -p "$WORKDIR" >&2
@@ -28,7 +29,20 @@ if [ -z "${SOURCE:-}" ]; then
 
     echo "-> Creating stub for document_pdf.ico (Temporarily)" >&2
     cp -v "$SOURCEDIR/browser/branding/librewolf/document.ico" "$SOURCEDIR/browser/branding/librewolf/document_pdf.ico" >&2
+
+    if [ -f "$SOURCEDIR/mozconfig" ]; then
+      echo "-> Creating mozconfig backup" >&2
+      cp "$SOURCEDIR/mozconfig" "$SOURCEDIR/mozconfig.backup"
+    else
+      touch "$SOURCEDIR/mozconfig.backup"
+    fi
   fi
+
+  echo "-> Updating mozconfig" >&2
+  if [ -f "$BSYS6/../assets/$TARGET.mozconfig" ]; then
+    cat "$BSYS6/../assets/$TARGET.mozconfig" >>"$SOURCEDIR/mozconfig"
+  fi
+  echo "ac_add_options --target=$MOZ_TARGET" >>"$SOURCEDIR/mozconfig"
 
   export SOURCE="$SOURCEDIR"
 fi

@@ -1,18 +1,42 @@
 #!/usr/bin/bash
 
-source $BSYS6/utils/vars.sh
+source $BSYS6/exports/target.sh
 
 cat <<EOF
 bsys6 - The 6th generation LibreWolf Build System
 
 Usage: bsys6 [command]
 
-Commands:
+Commands:                                                                  | Artifacts:
 EOF
+
+command_descr() {
+  case "$1" in
+  bootstrap) echo "Bootstrap the build system with mach" ;;
+  build_docker) echo "Run the 'build' command inside Docker" ;;
+  build_image) echo "Build the docker image used by 'build_docker'" ;;
+  build) echo "Build LibreWolf (requires a prepared system)           | BUILT" ;;
+  clean) echo "Remove the work directory (including source)" ;;
+  clobber) echo "Clean the current source directory" ;;
+  help) echo "Show this page" ;;
+  msix) echo "Build a MSIX package for Windows                       | MSIX" ;;
+  nsis) echo "Build the installer for Windows with nsis              | NSIS" ;;
+  package) echo "Package LibreWolf into a zip/tarball                   | PACKAGED" ;;
+  prepare) echo "Prepare the build enviroment and install dependencies" ;;
+  source) printf "Download the latest LibreWolf source code into         | SOURCE\rthe working directory" ;;
+  *) ;;
+  esac
+}
 
 for file in $BSYS6/*.sh; do
   basename="${file##*/}"
-  echo "  ${basename%.sh}"
+  command="${basename%.sh}"
+  descr="$(command_descr $command | sed "s/^/$(printf "%-18s" "")/")"
+  if [ "$descr" == "" ]; then
+    echo "  $command"
+  else
+    printf "  %-15s - %s\n" "$command" "$(command_descr $command | sed "s/\r/\n$(printf "%-20s" "")/")"
+  fi
 done
 
 cat <<EOF

@@ -4,6 +4,8 @@ set -e
 export BSYS6="$(dirname $(readlink -f "$0"))/src"
 export ENTRY_PWD="$(pwd)"
 
+source $BSYS6/exports/vars.sh
+
 if [ "$#" -eq 0 ]; then
   set -- "help"
 fi

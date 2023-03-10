@@ -2,13 +2,12 @@
 set -eu -o pipefail
 
 if [ -z "${NSIS:-}" ]; then
-  source "$BSYS6/utils/require_target.sh" "windows"
+  source $BSYS6/exports/require_target.sh "windows"
 
-  source "$BSYS6/utils/vars.sh"
-  source "$BSYS6/build_use_existing.sh"
+  source $BSYS6/exports/build_use_existing.sh
 
   echo "-> Building installer with nsis"
-  source "$BSYS6/utils/tmpdir.sh"
+  source $BSYS6/exports/tmpdir.sh
   echo "tmpdir is $TMPDIR"
   mkdir -p "$TMPDIR/x86-ansi"
   cp -v "$BSYS6/../assets/nsProcess.dll" "$TMPDIR/x86-ansi/nsProcess.dll"
@@ -21,8 +20,8 @@ if [ -z "${NSIS:-}" ]; then
   (cd "$TMPDIR" && $MOZBUILD/nsis/bin/makensis -V1 "setup.nsi")
   echo "Done"
 
-  source "$BSYS6/utils/move_artifact.sh" "NSIS" "$TMPDIR" ".*setup\.exe"
-  source "$BSYS6/utils/calculate_sha256.sh" "NSIS"
+  source $BSYS6/exports/move_artifact.sh "NSIS" "$TMPDIR" ".*setup\.exe"
+  source $BSYS6/exports/calculate_sha256.sh "NSIS"
 
   rm -rf "$TMPDIR"
   unset TMPDIR

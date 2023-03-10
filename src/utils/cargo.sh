@@ -3,7 +3,7 @@ set -eu
 
 PATH="$HOME/.cargo/bin:$PATH"
 
-source $BSYS6/require.sh cargo
+$BSYS6/utils/require.sh cargo
 
 while [[ $# -gt 0 ]]; do
   echo "-> Installing $1 with cargo"

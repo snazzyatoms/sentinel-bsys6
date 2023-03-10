@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 set -eu
 
-source "$BSYS6/utils/vars.sh"
+source "$BSYS6/exports/vars.sh"
 
 if [ -z "${VERSION:-}" ]; then
-  $BSYS6/require.sh curl
+  $BSYS6/utils/require.sh curl
 
   echo "-> Fetching version" >&2
 

@@ -9,10 +9,6 @@ if [ -z "$BSYS6" ]; then
   export BSYS6="$(dirname "$(readlink -f "$0/..")")"
 fi
 
-if [ -z "${TARGET:-}" ]; then
-  export TARGET="linux"
-fi
-
 if [ -z "${ARCH:-}" ]; then
   export ARCH="x86_64"
 fi
@@ -32,14 +28,5 @@ export AVAILABLE_ARTIFACTS="SOURCE BUILT PACKAGED MSIX NSIS"
 
 if ! echo "$AVAILABLE_ARCHS" | grep -q "$ARCH"; then
   echo "Unsupported architecture $ARCH"
-  exit 1
-fi
-
-if [ "$TARGET" == "linux" ]; then
-  export MOZ_TARGET="$ARCH-pc-linux-gnu"
-elif [ "$TARGET" == "windows" ]; then
-  export MOZ_TARGET="$ARCH-pc-mingw32"
-else
-  echo "Unsupported target $TARGET"
   exit 1
 fi

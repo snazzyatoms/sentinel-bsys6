@@ -1,8 +1,7 @@
 #!/usr/bin/bash
 set -e
 
-source $BSYS6/utils/vars.sh
-source $BSYS6/utils/source.sh
+source $BSYS6/source.sh
 
 tmpdir="$(mktemp -d)"
 

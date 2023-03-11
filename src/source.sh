@@ -5,12 +5,7 @@ source $BSYS6/exports/target.sh
 source $BSYS6/exports/version.sh
 
 if [ -z "${SOURCE:-}" ]; then
-  if [ -d "$SOURCEDIR" ]; then
-    if [ -f "$SOURCEDIR/mozconfig.backup" ]; then
-      rm -f "$SOURCEDIR/mozconfig"
-      mv "$SOURCEDIR/mozconfig.backup" "$SOURCEDIR/mozconfig"
-    fi
-  else
+  if [ ! -d "$SOURCEDIR" ]; then
     echo "-> Fetching librewolf-$VERSION.source.tar.gz" >&2
 
     $BSYS6/utils/require.sh tar
@@ -29,7 +24,9 @@ if [ -z "${SOURCE:-}" ]; then
 
     echo "-> Creating stub for document_pdf.ico (Temporarily)" >&2
     cp -v "$SOURCEDIR/browser/branding/librewolf/document.ico" "$SOURCEDIR/browser/branding/librewolf/document_pdf.ico" >&2
+  fi
 
+  if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then
     if [ -f "$SOURCEDIR/mozconfig" ]; then
       echo "-> Creating mozconfig backup" >&2
       cp "$SOURCEDIR/mozconfig" "$SOURCEDIR/mozconfig.backup"
@@ -38,11 +35,21 @@ if [ -z "${SOURCE:-}" ]; then
     fi
   fi
 
-  echo "-> Updating mozconfig" >&2
-  if [ -f "$BSYS6/../assets/$TARGET.mozconfig" ]; then
-    cat "$BSYS6/../assets/$TARGET.mozconfig" >>"$SOURCEDIR/mozconfig"
+  mozconfig="$(
+    cat <<EOF
+$(cat "$SOURCEDIR/mozconfig.backup")
+ac_add_options --target=$MOZ_TARGET
+EOF
+  )"
+
+  mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
+  mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
+
+  if [ "$mozconfig_new_hash" != "$mozconfig_old_hash" ]; then
+    echo "-> Updating mozconfig" >&2
+    echo "$mozconfig" >"$SOURCEDIR/mozconfig"
+    echo "$mozconfig_new_hash" >"$SOURCEDIR/mozconfig.hash"
   fi
-  echo "ac_add_options --target=$MOZ_TARGET" >>"$SOURCEDIR/mozconfig"
 
   export SOURCE="$SOURCEDIR"
 fi

@@ -42,6 +42,15 @@ ac_add_options --target=$MOZ_TARGET
 EOF
   )"
 
+  if [ -f "$BSYS6/../assets/$TARGET.mozconfig" ]; then
+    mozconfig="$(
+      cat <<EOF
+$mozconfig
+$(cat "$BSYS6/../assets/$TARGET.mozconfig")
+EOF
+    )"
+  fi
+
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 
@@ -49,6 +58,7 @@ EOF
     echo "-> Updating mozconfig" >&2
     echo "$mozconfig" >"$SOURCEDIR/mozconfig"
     echo "$mozconfig_new_hash" >"$SOURCEDIR/mozconfig.hash"
+    export MOZCONFIG_CHANGED="true"
   fi
 
   export SOURCE="$SOURCEDIR"

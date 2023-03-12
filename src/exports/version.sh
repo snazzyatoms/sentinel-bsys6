@@ -4,19 +4,11 @@ set -eu
 source "$BSYS6/exports/vars.sh"
 
 if [ -z "${VERSION:-}" ]; then
-  $BSYS6/utils/require.sh curl
-
-  echo "-> Fetching version" >&2
-
-  version="$(curl -fsS https://gitlab.com/librewolf-community/browser/source/-/raw/main/version)"
-  release="$(curl -fsS https://gitlab.com/librewolf-community/browser/source/-/raw/main/release)"
-
-  if [ "$version" == "" ] || [ "$release" == "" ]; then
-    echo "Failed to fetch version from GitLab" >&2
-    exit 1
+  if find "$WORKDIR/version" -mmin +720 2>/dev/null; then
+    export VERSION="$(cat "$WORKDIR/version")"
+  else
+    source "$BSYS6/update.sh"
   fi
-
-  export VERSION="$version-$release"
 fi
 
 if [ -z "${SOURCEDIR:-}" ]; then

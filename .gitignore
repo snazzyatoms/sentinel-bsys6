@@ -1,2 +1,5 @@
-env.sh
-*.exe
+/env.sh
+/*.exe
+/*.tar.*
+/*.sha256sum
+/*.zip

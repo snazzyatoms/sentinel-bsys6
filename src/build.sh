@@ -9,18 +9,12 @@ if [ -z "${BUILT:-}" ]; then
 
   source "$BSYS6/source.sh"
 
-  echo "-> Running mach build with target $MOZ_TARGET" >&2
+  echo "-> Running 'mach build' with target $MOZ_TARGET" >&2
   if [ "${VERBOSE:-}" == "true" ]; then
     $SOURCE/mach build -v
   else
     $SOURCE/mach build
   fi
-
-  echo "-> Building locales"
-  echo "Building chrome-<locale> targets"
-  cat "$SOURCE/browser/locales/shipped-locales" | sed s/^/chrome-/ | xargs make -j$(nproc) -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null 2>/dev/null
-  echo "Building browser/app tools target"
-  make -C "$SOURCE/obj-$MOZ_TARGET/browser/app" tools
 
   if [ -d "$SOURCE/obj-$MOZ_TARGET/dist/librewolf" ]; then
     export BUILT="$SOURCE/obj-$MOZ_TARGET/dist/librewolf"

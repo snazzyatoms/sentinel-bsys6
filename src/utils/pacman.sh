@@ -6,10 +6,10 @@ $BSYS6/utils/require.sh pacman
 if ! command -v sudo >/dev/null; then
   pacman -Syu sudo
 else
-  echo "# sudo pacman -Syu"
-  sudo pacman -Syu
+  echo "# sudo pacman -Syu --noconfirm"
+  sudo pacman -Syu --noconfirm
 fi
 
 echo "-> Installing $@ dependencies with pacman"
-echo "# sudo pacman -S --needed $@"
-sudo pacman -S --needed $@
+echo "# sudo pacman -S --needed $@ --noconfirm"
+sudo pacman -S --needed $@ --noconfirm

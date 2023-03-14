@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-set -e
+set -eu
 
 source $BSYS6/exports/target.sh
 
@@ -23,6 +23,24 @@ windows)
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc"
   $BSYS6/utils/artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
   $BSYS6/utils/winsdk.sh
+  ;;
+
+dind)
+  if [ -z "${DOCKER:-}" ]; then
+    echo "Error: Preparing the 'dind' target should only happen inside a docker container" >&2
+    exit 1
+  fi
+
+  echo "-> Preparing dind container"
+
+  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release" ""
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
+  $BSYS6/utils/dependencies.sh "docker-ce docker-ce-cli containerd.io docker-compose-plugin make wget lbzip2" ""
+
+  echo "-> Installing GitLab release-cli"
+  curl -L --output /usr/local/bin/release-cli "https://release-cli-downloads.s3.amazonaws.com/latest/release-cli-linux-amd64"
+  chmod +x /usr/local/bin/release-cli
   ;;
 
 *)

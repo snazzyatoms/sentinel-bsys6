@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 ARG TARGET=linux
+ENV DOCKER=1
 
 ADD . /bsys6
 WORKDIR /bsys6

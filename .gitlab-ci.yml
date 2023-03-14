@@ -1,15 +1,17 @@
 stages:
   - images
   - build
+  - release
 
 Images:
   stage: images
   when: manual
-  image: registry.gitlab.com/librewolf-community/browser/bsys5/dind
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/dind
   tags: [autoscale]
   parallel:
     matrix:
       - TARGET:
+          - dind
           - linux
           - windows
   script:
@@ -26,8 +28,7 @@ Linux:
     - autoscale
   except:
     - merge_requests
-  script:
-    - ./bsys6 package
+  script: ./bsys6 package
   artifacts:
     paths:
       - "*.tar.bz2"
@@ -49,3 +50,17 @@ Windows:
       - "*setup.exe"
       - "*.msix"
       - "*.sha256sum"
+
+Release:
+  stage: release
+  when: manual
+  allow_failure: false
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/dind
+  needs:
+    - job: "Build"
+      artifacts: true
+  only:
+    - master
+  except:
+    - merge_requests
+  script: ./bsys6 release

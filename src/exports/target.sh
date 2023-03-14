@@ -9,11 +9,16 @@ if [ -z "${TARGET:-}" ]; then
   export TARGET="linux"
 fi
 
-if [ "$TARGET" == "linux" ]; then
+case $TARGET in
+linux)
   export MOZ_TARGET="$ARCH-pc-linux-gnu"
-elif [ "$TARGET" == "windows" ]; then
+  ;;
+windows)
   export MOZ_TARGET="$ARCH-pc-mingw32"
-else
+  ;;
+dind) ;;
+*)
   echo "Unsupported target $TARGET"
   exit 1
-fi
+  ;;
+esac

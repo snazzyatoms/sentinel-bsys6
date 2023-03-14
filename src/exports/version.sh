@@ -4,7 +4,7 @@ set -eu
 source "$BSYS6/exports/vars.sh"
 
 if [ -z "${VERSION:-}" ]; then
-  if find "$WORKDIR/version" -mmin +720 2>/dev/null; then
+  if find "$WORKDIR/version" -mmin +720 >/dev/null 2>/dev/null; then
     export VERSION="$(cat "$WORKDIR/version")"
   else
     source "$BSYS6/update.sh"

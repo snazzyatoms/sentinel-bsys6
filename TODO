@@ -1,7 +1,5 @@
 - Mount /tmp/bsys6 as volume and match user ids https://linuxnatives.net/2019/align-user-ids-inside-and-outside-docker-with-subuser-mapping
 - Artifacts
-- Build our own dind image
-- Package locales with build target
 - Trap and clean up tmpdirs
 - Fix custom WORKDIR
-- Move files to subfolders to organize commands a bit more
+- Build multiple architectures

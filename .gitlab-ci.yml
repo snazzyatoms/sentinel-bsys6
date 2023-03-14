@@ -6,7 +6,7 @@ stages:
 Images:
   stage: images
   when: manual
-  image: registry.gitlab.com/librewolf-community/browser/bsys6/dind
+  image: registry.gitlab.com/librewolf-community/browser/bsys5/dind
   tags: [autoscale]
   parallel:
     matrix:

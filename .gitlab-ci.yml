@@ -57,7 +57,9 @@ Release:
   allow_failure: false
   image: registry.gitlab.com/librewolf-community/browser/bsys6/dind
   needs:
-    - job: "Build"
+    - job: "Linux"
+      artifacts: true
+    - job: "Windows"
       artifacts: true
   only:
     - master

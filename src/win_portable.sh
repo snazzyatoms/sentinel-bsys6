@@ -24,19 +24,23 @@ if [ -z "${WIN_PORTABLE:-}" ]; then
   cd ..
 
   # ahk-tools by @ltGuillaume
-  wget -O portable.releases.json 'https://codeberg.org/api/v1/repos/ltGuillaume/LibreWolf-Portable/releases?&limit=1'
+  wget -q -O portable.releases.json 'https://codeberg.org/api/v1/repos/ltGuillaume/LibreWolf-Portable/releases?&limit=1'
   wget -O $(jq -r '.[0].assets[0].name' portable.releases.json) $(jq -r '.[0].assets[0].browser_download_url' portable.releases.json)
   unzip $(jq -r '.[0].assets[0].name' portable.releases.json)
-  #rm *.url portable.releases.json
+  rm $(jq -r '.[0].assets[0].name' portable.releases.json)
+  rm portable.releases.json
 
-  wget -O updater.releases.json 'https://codeberg.org/api/v1/repos/ltGuillaume/LibreWolf-WinUpdater/releases?&limit=1'
+  wget -q -O updater.releases.json 'https://codeberg.org/api/v1/repos/ltGuillaume/LibreWolf-WinUpdater/releases?&limit=1'
   wget -O $(jq -r '.[0].assets[0].name' updater.releases.json) $(jq -r '.[0].assets[0].browser_download_url' updater.releases.json)
   unzip $(jq -r '.[0].assets[0].name' updater.releases.json)
-  #rm *.url updater.releases.json
+  rm $(jq -r '.[0].assets[0].name' updater.releases.json)
+  rm updater.releases.json
+
+  # extra files from the zip files
+  rm *.url
 
   # make the final zip
   cd $TMPDIR
-  echo "zip -rq9 librewolf-$VERSION.en-US.win64-portable.zip librewolf-$VERSION"
   zip -r9 librewolf-$VERSION.en-US.win64-portable.zip librewolf-$VERSION
 
   source $BSYS6/exports/move_artifact.sh "WIN_PORTABLE" "$TMPDIR" "librewolf-.*\.zip"

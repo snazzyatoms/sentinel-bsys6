@@ -7,10 +7,11 @@ if [ -z "${PACKAGED:-}" ]; then
 
   echo "-> Packaging locales (output hidden)" >&2
   locales="$(cat "$SOURCE/browser/locales/shipped-locales")"
+  export MOZ_CHROME_MULTILOCALE="$(echo "$locales" | tr '\n' ' ')"
   echo "$locales" | sed s/^/chrome-/ | xargs make -j$(nproc) -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null 2>/dev/null
 
   echo "-> Running 'mach package'" >&2
-  MOZ_CHROME_MULTILOCALE="$(echo "$locales" | tr '\n' ' ')" "$SOURCE/mach" package
+  "$SOURCE/mach" package
   if [ "$TARGET" == "windows" ]; then
     source $BSYS6/exports/move_artifact.sh "PACKAGED" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*win64\.zip"
   else

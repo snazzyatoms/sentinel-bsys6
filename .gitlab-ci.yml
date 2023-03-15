@@ -32,6 +32,7 @@ Linux:
   artifacts:
     paths:
       - "*.tar.bz2"
+      - "*.sha256sum"
 
 Windows:
   stage: build

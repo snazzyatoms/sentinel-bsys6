@@ -42,7 +42,7 @@ upload_asset() {
   fi
 }
 
-for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.*"); do
+for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.*" -o -name "*.msix"); do
   upload_asset "$file"
 done
 
@@ -92,6 +92,7 @@ body="$(
 {
   "name": "$VERSION",
   "tag_name": "$VERSION",
+  "ref": "master",
   "description": "$description",
   "assets": {
     "links": [

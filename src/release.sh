@@ -23,7 +23,7 @@ if [ -z "${CI_PROJECT_ID:-}" ]; then
   export CI_PROJECT_ID="44042130"
 fi
 
-if curl --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$VERSION"; then
+if curl -f --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$VERSION"; then
   echo "Error: Release $VERSION already exists" >&2
   exit 1
 fi

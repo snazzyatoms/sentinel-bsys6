@@ -4,10 +4,10 @@ set -eu
 if [ -z "${MSIX:-}" ]; then
   source $BSYS6/exports/require_target.sh "windows"
 
-  source $BSYS6/exports/build_use_existing.sh
+  source $BSYS6/package.sh
 
   echo "-> Building msix with mach" >&2
-  repackage_msix="$SOURCE/mach repackage msix --publisher=CN=846D51B2-15A2-4033-86D1-071B877C86A7 --identity-name=31856maltejur.LibreWolf --publisher-display-name=maltejur"
+  repackage_msix="$SOURCE/mach repackage msix --input '$PACKAGED' --publisher 'CN=846D51B2-15A2-4033-86D1-071B877C86A7' --identity-name '31856maltejur.LibreWolf' --publisher-display-name 'maltejur'"
   if [ ! -z "${MSIX_VERSION:-}" ]; then
     repackage_msix="$repackage_msix --version=$MSIX_VERSION"
   fi

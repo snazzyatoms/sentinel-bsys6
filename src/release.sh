@@ -42,7 +42,7 @@ upload_asset() {
   fi
 }
 
-for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.*" -o -name "*.msix"); do
+for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix"); do
   upload_asset "$file"
 done
 

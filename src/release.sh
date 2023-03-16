@@ -56,7 +56,7 @@ if [ "$(echo "$FULL_VERSION" | cut -d'-' -f2)" == "1" ]; then
 fi
 
 if [ ! -z "${CI_PIPELINE_ID:-}" ]; then
-  description="$description\n\n(Built on GitLab by pipeline [$CI_PIPELINE_ID](https://gitlab.com/librewolf-community/browser/bsys5/-/pipelines/$CI_PIPELINE_ID))"
+  description="$description\n\n(Built on GitLab by pipeline [$CI_PIPELINE_ID](https://gitlab.com/librewolf-community/browser/bsys6/-/pipelines/$CI_PIPELINE_ID))"
 fi
 
 assets=""

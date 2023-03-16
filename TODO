@@ -3,3 +3,4 @@
 - Trap and clean up tmpdirs
 - Fix custom WORKDIR
 - Build multiple architectures
+- Give all artifacts a consistent name, respecting $FULL_VERSION

@@ -23,8 +23,8 @@ if [ -z "${CI_PROJECT_ID:-}" ]; then
   export CI_PROJECT_ID="44042130"
 fi
 
-if curl -f --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$VERSION"; then
-  echo "Error: Release $VERSION already exists" >&2
+if curl -f --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$FULL_VERSION"; then
+  echo "Error: Release $FULL_VERSION already exists" >&2
   exit 1
 fi
 
@@ -33,7 +33,7 @@ packages_other=()
 
 upload_asset() {
   echo "-> Uploading $1 to GitLab package registry" >&2
-  package_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$VERSION/$1"
+  package_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/$1"
   curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$package_url"
   packages+=("$package_url")
   if [ -f "$1.sha256sum" ]; then
@@ -46,12 +46,12 @@ for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.*" -o -name "*
   upload_asset "$file"
 done
 
-echo "-> Publishing release $VERSION" >&2
+echo "-> Publishing release $FULL_VERSION" >&2
 
-description="## LibreWolf bsys6 Release v$VERSION\n\n"
+description="## LibreWolf bsys6 Release v$FULL_VERSION\n\n"
 
-if [ "$(echo "$VERSION" | cut -d'-' -f2)" == "1" ]; then
-  ffver=$(echo "$VERSION" | cut -d'-' -f1)
+if [ "$(echo "$FULL_VERSION" | cut -d'-' -f2)" == "1" ]; then
+  ffver=$(echo "$FULL_VERSION" | cut -d'-' -f1)
   description="$description- Upstream release, see the [Firefox $ffver Release Notes](https://www.mozilla.org/en-US/firefox/$ffver/releasenotes/)"
 fi
 
@@ -90,8 +90,8 @@ done
 body="$(
   cat <<EOF
 {
-  "name": "$VERSION",
-  "tag_name": "$VERSION",
+  "name": "$FULL_VERSION",
+  "tag_name": "$FULL_VERSION",
   "ref": "master",
   "description": "$description",
   "assets": {

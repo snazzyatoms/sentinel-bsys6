@@ -16,7 +16,7 @@ if [ -z "${NSIS:-}" ]; then
   mkdir -p "$TMPDIR/x86-ansi"
   cp -v "$BSYS6/../assets/nsProcess.dll" "$TMPDIR/x86-ansi/nsProcess.dll"
   curl -Lo "$TMPDIR/vc_redist.x64.exe" "https://aka.ms/vs/17/release/vc_redist.x64.exe"
-  sed "s/pkg_version/$VERSION/g" <"$BSYS6/../assets/setup.nsi" >"$TMPDIR/setup.nsi"
+  sed "s/pkg_version/$FULL_VERSION/g" <"$BSYS6/../assets/setup.nsi" >"$TMPDIR/setup.nsi"
   cp "$BSYS6/../assets/librewolf.ico" "$TMPDIR"
   cp "$BSYS6/../assets/banner.bmp" "$TMPDIR"
   printf "Running nsis... "

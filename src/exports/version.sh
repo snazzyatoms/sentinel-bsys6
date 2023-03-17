@@ -15,8 +15,8 @@ if [ -z "${SOURCEDIR:-}" ]; then
   export SOURCEDIR="$WORKDIR/librewolf-$VERSION"
 fi
 
-if [ -z "${FULL_VERSION:-}"]; then
-  if [ -n "${RELEASE}" ] && [ "$RELEASE" != "1" ]; then
+if [ -z "${FULL_VERSION:-}" ]; then
+  if [ -n "${RELEASE:-}" ] && [ "$RELEASE" != "1" ]; then
     export FULL_VERSION="$VERSION-$RELEASE"
   else
     export RELEASE="1"

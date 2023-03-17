@@ -16,7 +16,7 @@ if [ -z "${SOURCEDIR:-}" ]; then
 fi
 
 if [ -z "${FULL_VERSION:-}" ]; then
-  if [ "${RELEASE:-}" != "1" ]; then
+  if [ -n "${RELEASE:-}" ] && [ "$RELEASE" != "1" ]; then
     export FULL_VERSION="$VERSION-$RELEASE"
   else
     export RELEASE="1"

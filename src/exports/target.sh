@@ -12,6 +12,9 @@ fi
 case $TARGET in
 linux)
   export MOZ_TARGET="$ARCH-pc-linux-gnu"
+  if [ "${ARCH:-}" == "arm64" ]; then
+    export MOZ_TARGET="aarch64-unknown-linux-gnu"
+  fi
   ;;
 windows)
   export MOZ_TARGET="$ARCH-pc-mingw32"

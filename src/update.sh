@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eu
 
-$BSYS6/utils/require.sh curl
+$BSYS6/utils/require_command.sh curl
 
 echo "-> Fetching version" >&2
 

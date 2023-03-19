@@ -23,3 +23,9 @@ if [ -z "${FULL_VERSION:-}" ]; then
     export FULL_VERSION="$VERSION"
   fi
 fi
+
+if [ -z "${CHOCO_VERSION:-}" ]; then
+  ver=$(echo "$VERSION" | sed 's/-.*$//g')
+  rel=$(echo "$VERSION" | sed 's/^.*-//g')
+  export CHOCO_VERSION="$ver$(echo $(for i in $(seq $(echo "$ver" | tr -cd '.' | wc -c) 1); do printf ".0"; done)).$rel"
+fi

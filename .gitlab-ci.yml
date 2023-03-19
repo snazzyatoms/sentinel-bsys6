@@ -50,6 +50,7 @@ Windows:
       - "*.zip"
       - "*setup.exe"
       - "*.msix"
+      - "*.nupkg"
       - "*.sha256sum"
 
 Release:

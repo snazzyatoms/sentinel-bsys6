@@ -24,9 +24,21 @@ mkdir -p "$WORKDIR"
 
 export AVAILABLE_TARGETS="linux windows"
 export AVAILABLE_ARCHS="x86_64 arm64 i686"
-export AVAILABLE_ARTIFACTS="SOURCE BUILT PACKAGED MSIX NSIS WIN_PORTABLE"
+export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX NSIS WIN_PORTABLE NUPKG"
 
-if ! echo "$AVAILABLE_ARCHS" | grep -q "$ARCH"; then
+if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then
   echo "Unsupported architecture $ARCH"
   exit 1
+fi
+
+if [ -z "${CI_API_V4_URL:-}" ]; then
+  export CI_API_V4_URL="https://gitlab.com/api/v4"
+fi
+
+if [ -z "${CI_PROJECT_ID:-}" ]; then
+  export CI_PROJECT_ID="44042130"
+fi
+
+if [ -z "${GL_API}" ]; then
+  export GL_API="$CI_API_V4_URL/projects/$CI_PROJECT_ID"
 fi

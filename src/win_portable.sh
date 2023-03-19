@@ -2,14 +2,14 @@
 set -eu
 
 if [ -z "${WIN_PORTABLE:-}" ]; then
-  source $BSYS6/exports/require_target.sh "windows"
-  source $BSYS6/package.sh
-  source $BSYS6/exports/tmpdir.sh
-  $BSYS6/utils/require.sh "jq" "zip" "unzip" "wget"
+  source $BSYS6/exports/require_target.sh windows
+  source $BSYS6/exports/require_artifact.sh package
+  $BSYS6/utils/require_command.sh "jq" "zip" "unzip" "wget"
 
   echo "-> Building portable zip" >&2
+  tmpdir="$(mktemp -d)"
 
-  cd $TMPDIR
+  cd $tmpdir
   mkdir -p librewolf-$VERSION/Profiles/Default
   mkdir -p librewolf-$VERSION/LibreWolf
 
@@ -40,9 +40,8 @@ if [ -z "${WIN_PORTABLE:-}" ]; then
   rm *.url
 
   # make the final zip
-  cd $TMPDIR
+  cd $tmpdir
   zip -r9 librewolf-$VERSION.en-US.win64-portable.zip librewolf-$VERSION
 
-  source $BSYS6/exports/move_artifact.sh "WIN_PORTABLE" "$TMPDIR" "librewolf-.*\.zip"
-  source $BSYS6/exports/calculate_sha256.sh "WIN_PORTABLE"
+  source $BSYS6/exports/move_artifact.sh "WIN_PORTABLE" "$tmpdir" "librewolf-.*\.zip"
 fi

@@ -9,22 +9,23 @@ linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
   $BSYS6/utils/dependencies.sh "python3-pip curl" "python-pip curl"
-  # cross-compilation 
+  # cross-compilation
   $BSYS6/utils/dependencies.sh "binutils-aarch64-linux-gnu" "aarch64-linux-gnu-binutils"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
-  $BSYS6/utils/artifact.sh "sysroot-wasm32-wasi" "linux64-cbindgen"
+  $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-cbindgen"
   ;;
 
 windows)
   echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq zip unzip wget" "python-pip curl msitools zstd lib32-glibc p7zip jq zip unzip wget"
+  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq zip unzip wget mono-runtime" "python-pip curl msitools zstd lib32-glibc p7zip jq zip unzip wget mono"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc"
-  $BSYS6/utils/artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
+  $BSYS6/utils/install_toolchain_artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
   $BSYS6/utils/winsdk.sh
+  $BSYS6/utils/install_chocolatey.sh
   ;;
 
 dind)

@@ -3,7 +3,7 @@ set -e
 
 PATH="$HOME/.cargo/bin:$PATH"
 
-$BSYS6/utils/require.sh rustup
+$BSYS6/utils/require_command.sh rustup
 
 while [[ $# -gt 0 ]]; do
   echo "-> Adding rustup target $1"

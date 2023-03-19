@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+set -eu
+
+source $BSYS6/exports/target.sh
+
+if [ ! -d "$SOURCEDIR/obj-$MOZ_TARGET/dist" ]; then
+  source "$BSYS6/build.sh"
+else
+  export SOURCE="$SOURCEDIR"
+fi

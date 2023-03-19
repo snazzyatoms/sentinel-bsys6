@@ -10,20 +10,25 @@ bsys6 - The 6th generation LibreWolf Build System
 
 Usage: bsys6 [command]
 
-Commands:                                                                  | Artifacts:
+Commands:                                                                   | Artifacts:
   bootstrap       - Bootstrap the build system with mach
   build_docker    - Run the 'build' command inside Docker
   build_image     - Build the docker image used by 'build_docker'
-  build           - Build LibreWolf (requires a prepared system)           | BUILT
+  build           - Build LibreWolf (requires a prepared system)
   clean           - Remove the work directory (including source)
   clobber         - Clean the current source directory
   help            - Show this page
-  msix            - Build a MSIX package for Windows                       | MSIX
-  nsis            - Build the installer for Windows with nsis              | NSIS
-  package         - Package LibreWolf into a zip/tarball                   | PACKAGED
+  msix            - Build a MSIX package for Windows                        | MSIX
+  nsis            - Build the installer for Windows with nsis               | NSIS
+  nupkg
+  package         - Package LibreWolf into a zip/tarball                    | PACKAGE
   prepare         - Prepare the build enviroment and install dependencies
-  source          - Download the latest LibreWolf source code into         | SOURCE
+  release
+  run
+  source          - Download the latest LibreWolf source code into          | SOURCE
                     the working directory
+  update
+  win_portable    - Build a zip containing the LibreWolf Portable           | WIN_PORTABLE
 
 Commands may be customized by setting the following environment variables:
   TARGET  - The target platform (available: linux windows; currently: linux)
@@ -42,6 +47,10 @@ Commands may be customized by setting the following environment variables:
 See `./bsys6 --help` for a probably more up-to-date version of this.
 
 ## Development
+
+### Available commands
+
+![](./assets/structure.svg)
 
 ### Structure
 

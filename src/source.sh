@@ -8,7 +8,7 @@ if [ -z "${SOURCE:-}" ]; then
   if [ ! -d "$SOURCEDIR" ]; then
     echo "-> Fetching librewolf-$VERSION.source.tar.gz" >&2
 
-    $BSYS6/utils/require.sh tar
+    $BSYS6/utils/require_command.sh tar
 
     mkdir -p "$SOURCEDIR/.." >&2
     mkdir -p "$WORKDIR" >&2
@@ -52,7 +52,7 @@ EOF
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 
   if [ "$mozconfig_new_hash" != "$mozconfig_old_hash" ]; then
-    echo "-> Updating mozconfig" >&2
+    echo "-> Updating mozconfig, target is $MOZ_TARGET" >&2
     echo "$mozconfig" >"$SOURCEDIR/mozconfig"
     echo "$mozconfig_new_hash" >"$SOURCEDIR/mozconfig.hash"
     export MOZCONFIG_CHANGED="true"

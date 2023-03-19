@@ -29,39 +29,28 @@ command_descr() {
   esac
 }
 
-command_artifacts() {
-  case "$1" in
-  build) echo "BUILT" ;;
-  msix) echo "MSIX" ;;
-  nsis) echo "NSIS" ;;
-  package) echo "PACKAGED" ;;
-  source) echo "SOURCE" ;;
-  win_portable) echo "WIN_PORTABLE" ;;
-  *) ;;
-  esac
-}
-
 for file in $BSYS6/*.sh; do
   basename="${file##*/}"
   command="${basename%.sh}"
   descr="$(command_descr $command)"
-  artifacts="$(command_artifacts $command)"
   if [ "$descr" == "" ]; then
     echo "  $command"
   else
+    ogIFS="$IFS"
     IFS=$'\n'
     for line in $descr; do
       if [ "$command" == "" ]; then
         printf "%-19s %s\n" "" "$line"
       else
-        if [ "$artifacts" == "" ]; then
-          printf "  %-15s - %s\n" "$command" "$line"
+        if [[ "${AVAILABLE_ARTIFACTS,,}" =~ (^|[[:space:]])"$command"($|[[:space:]]) ]]; then
+          printf "  %-15s - %-55s | %s\n" "$command" "$line" "${command^^}"
         else
-          printf "  %-15s - %-55s | %s\n" "$command" "$line" "$artifacts"
+          printf "  %-15s - %s\n" "$command" "$line"
         fi
       fi
       command=""
     done
+    IFS="$ogIFS"
   fi
 done
 

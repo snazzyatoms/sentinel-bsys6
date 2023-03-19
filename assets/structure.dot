@@ -1,0 +1,6 @@
+digraph {
+  node [shape = plaintext;];
+  
+  SOURCE -> "(BUILD)" -> PACKAGE -> {NSIS MSIX WIN_PORTABLE};
+  NSIS -> NUPKG;
+}

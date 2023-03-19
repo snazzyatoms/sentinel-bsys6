@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -eu
 
-$BSYS6/utils/require.sh pacman
+$BSYS6/utils/require_command.sh pacman
 
 if ! command -v sudo >/dev/null; then
   pacman -Syu sudo

@@ -26,6 +26,7 @@ if [ -f "$1" ]; then
 fi
 echo "Found $file, moving to $ENTRY_PWD" >&2
 mv "$2/$file" "${!1}"
+mkdir -p "$WORKDIR/artifacts"
 rm -rf "$WORKDIR/artifacts/${1,,}-$TARGET-$ARCH-$VERSION"
 ln -s "${!1}" "$WORKDIR/artifacts/${1,,}-$TARGET-$ARCH-$VERSION"
 

@@ -8,9 +8,6 @@ if [ "$#" -eq 0 ]; then
   exit 1
 fi
 
-export DEBIAN_FRONTEND="noninteractive"
-export TZ="Etc/UTC"
-
 if ! command -v sudo >/dev/null; then
   apt-get update
   apt-get install -y sudo

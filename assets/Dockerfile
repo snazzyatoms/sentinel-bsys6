@@ -1,9 +1,7 @@
-FROM ubuntu:latest
+FROM debian:sid
 ARG TARGET=linux
 
 ENV DOCKER=1
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Amsterdam
 
 ADD . /bsys6
 WORKDIR /bsys6

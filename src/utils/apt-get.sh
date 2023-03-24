@@ -9,6 +9,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 export DEBIAN_FRONTEND="noninteractive"
+export TZ="Etc/UTC"
 
 if ! command -v sudo >/dev/null; then
   apt-get update

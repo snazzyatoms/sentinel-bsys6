@@ -124,7 +124,7 @@ submit_winget() {
 
   echo "-> Sumbitting $1 as a pull request to winget-pkgs"
   username=$(gh_request "https://api.github.com/user" | jq -r .login)
-  if ! curl -sf -H "Authorization: token $gh_token" "https://api.github.com/repos/$username/winget-pkgs" >/dev/null; then
+  if ! curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$username/winget-pkgs" >/dev/null; then
     printf "Forking microsoft/winget-pkgs...\r"
     gh_request -X POST "https://api.github.com/repos/microsoft/winget-pkgs/forks" >/dev/null
     echo "Forked microsoft/winget-pkgs to $username/winget-pkgs"
@@ -163,7 +163,7 @@ submit_winget() {
     cd "$clonedir"
     git add .
     git commit -m "Update LibreWolf.LibreWolf to v$FULL_VERSION"
-    git remote set-url --push origin https://$username:$gh_token@github.com/$username/winget-pkgs.git
+    git remote set-url --push origin https://$username:$GH_TOKEN@github.com/$username/winget-pkgs.git
     git push origin update_librewolf --force
   )
   printf "Creating pull request...\r"

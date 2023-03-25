@@ -169,7 +169,7 @@ submit_winget() {
     git push origin update_librewolf --force
   )
   printf "Creating pull request...\r"
-  pr_response=$(gh_request "https://api.github.com/repos/microsoft/winget-pkgs/pulls" -d "{\"head\":\"$username:update_librewolf\",\"base\":\"master\",\"title\":\"Update LibreWolf.LibreWolf to v${version}\",\"body\":\"(This pull-request was auto-generated.)\"}")
+  pr_response=$(gh_request "https://api.github.com/repos/microsoft/winget-pkgs/pulls" -d "{\"head\":\"$username:update_librewolf\",\"base\":\"master\",\"title\":\"Update LibreWolf.LibreWolf to v$FULL_VERSION\",\"body\":\"(This pull-request was auto-generated.)\"}")
   echo "Pull request created: $(echo "$pr_response" | jq -r .html_url)"
 }
 

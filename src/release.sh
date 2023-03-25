@@ -152,10 +152,10 @@ submit_winget() {
   mkdir "$wingetdir"
   export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
   export WINGET_CHECKSUM="$(cat "${1}_SHA256")"
-  envsubst '$FULL_VERSION' \
+  envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.installer.yaml.in" \
     >"$wingetdir/LibreWolf.LibreWolf.installer.yaml"
-  envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
+  envsubst '$FULL_VERSION' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.locale.en-US.yaml.in" \
     >"$wingetdir/LibreWolf.LibreWolf.locale.en-US.yaml"
   envsubst '$FULL_VERSION' \

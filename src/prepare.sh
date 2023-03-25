@@ -42,6 +42,7 @@ dind)
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
   $BSYS6/utils/dependencies.sh "docker-ce docker-ce-cli containerd.io docker-compose-plugin make wget lbzip2" ""
   $BSYS6/utils/install_release_cli.sh
+  $BSYS6/utils/install_chocolatey.sh
   ;;
 
 *)

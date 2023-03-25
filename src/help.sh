@@ -22,6 +22,7 @@ command_descr() {
   msix) echo "Build a MSIX package for Windows" ;;
   nsis) echo "Build the installer for Windows with nsis" ;;
   package) echo "Package LibreWolf into a zip/tarball" ;;
+  package_docker) echo "Run the 'package' command inside Docker" ;;
   prepare) echo "Prepare the build enviroment and install dependencies" ;;
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
   win_portable) echo "Build a zip containing the LibreWolf Portable" ;;

@@ -13,6 +13,7 @@ linux)
   $BSYS6/utils/dependencies.sh "binutils-aarch64-linux-gnu" "aarch64-linux-gnu-binutils"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
+  $BSYS6/utils/rustup_target.sh "aarch64-unknown-linux-gnu"
   $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-cbindgen"
   ;;
 

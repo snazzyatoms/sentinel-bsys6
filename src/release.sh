@@ -3,6 +3,8 @@ set -eu
 shopt -s nullglob
 
 source $BSYS6/exports/version.sh
+source $BSYS6/utils/require_command.sh curl jq
+source $BSYS6/utils/require_choco.sh
 
 abort="false"
 for required_var in "CI_JOB_TOKEN" "REPO_DEPLOY_TOKEN" "CODEBERG_TOKEN" "GH_TOKEN" "CHOCO_API_KEY"; do

@@ -4,10 +4,7 @@ set -eu
 source $BSYS6/exports/version.sh
 source $BSYS6/exports/require_target.sh windows
 source $BSYS6/exports/require_artifact.sh nsis
-if [ ! -f "$MOZBUILD/chocolatey/choco" ]; then
-  echo "Error: Chocolatey was not found, did you run 'TARGET=windows bsys6 prepare'?" >&2
-  exit 1
-fi
+source $BSYS6/utils/require_choco.sh
 
 echo "-> Building .nupkg" >&2
 echo "v$VERSION -> v$CHOCO_VERSION"

@@ -28,6 +28,12 @@ Linux:
     - autoscale
   except:
     - merge_requests
+  parallel:
+    matrix:
+      - ARCH:
+          - x86_64
+          - arm64
+          - i686
   script: ./bsys6 package
   artifacts:
     paths:
@@ -43,6 +49,12 @@ Windows:
     - autoscale
   except:
     - merge_requests
+  parallel:
+    matrix:
+      - ARCH:
+          - x86_64
+          - arm64
+          - i686
   script:
     - TARGET=windows ./bsys6 package nsis msix win_portable nupkg
   artifacts:

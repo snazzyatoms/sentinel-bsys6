@@ -10,4 +10,4 @@ if [ ! -z "${MSIX_VERSION:-}" ]; then
   repackage_msix="$repackage_msix --version $MSIX_VERSION"
 fi
 (cd $SOURCE && MAKEAPPX=$MOZBUILD/msix-packaging/makemsix $repackage_msix)
-source $BSYS6/exports/move_artifact.sh "MSIX" "$MOZBUILD/cache/mach-msix" "31856maltejur\.LibreWolf.*\.msix"
+source $BSYS6/exports/move_artifact.sh "MSIX" "$MOZBUILD/cache/mach-msix" "31856maltejur\.LibreWolf.*\.msix" "!keep"

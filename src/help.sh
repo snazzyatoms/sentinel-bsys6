@@ -20,11 +20,15 @@ command_descr() {
   clobber) echo "Clean the current source directory" ;;
   help) echo "Show this page" ;;
   msix) echo "Build a MSIX package for Windows" ;;
-  seup) echo "Build the installer for Windows with nsis" ;;
+  nupkg) echo "Build a .nupkg to be used for Chocolatey" ;;
   package) echo "Package LibreWolf into a zip/tarball" ;;
   package_docker) echo "Run the 'package' command inside Docker" ;;
   prepare) echo "Prepare the build enviroment and install dependencies" ;;
+  release) printf "Publish all the various artifacts\n(Should only be used in CI)" ;;
+  run) echo "Start the built browser" ;;
+  setup) echo "Build the installer for Windows with nsis" ;;
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
+  update) echo "Update the version cache" ;;
   win_portable) echo "Build a zip containing the LibreWolf Portable" ;;
   *) ;;
   esac
@@ -35,7 +39,11 @@ for file in $BSYS6/*.sh; do
   command="${basename%.sh}"
   descr="$(command_descr $command)"
   if [ "$descr" == "" ]; then
-    echo "  $command"
+    if [[ "${AVAILABLE_ARTIFACTS,,}" =~ (^|[[:space:]])"$command"($|[[:space:]]) ]]; then
+      printf "  %-73s | %s\n" "$command" "${command^^}"
+    else
+      echo "  $command"
+    fi
   else
     ogIFS="$IFS"
     IFS=$'\n'

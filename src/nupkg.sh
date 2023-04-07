@@ -3,7 +3,7 @@ set -eu
 
 source $BSYS6/exports/version.sh
 source $BSYS6/exports/require_target.sh windows
-source $BSYS6/exports/require_artifact.sh seup
+source $BSYS6/exports/require_artifact.sh setup
 source $BSYS6/utils/require_choco.sh
 
 echo "-> Building .nupkg" >&2

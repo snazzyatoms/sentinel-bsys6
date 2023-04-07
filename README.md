@@ -19,16 +19,17 @@ Commands:                                                                   | Ar
   clobber         - Clean the current source directory
   help            - Show this page
   msix            - Build a MSIX package for Windows                        | MSIX
-  nupkg
+  nupkg           - Build a .nupkg to be used for Chocolatey                | NUPKG
   package_docker  - Run the 'package' command inside Docker
   package         - Package LibreWolf into a zip/tarball                    | PACKAGE
   prepare         - Prepare the build enviroment and install dependencies
-  release
-  run
-  setup
+  release         - Publish all the various artifacts
+                    (Should only be used in CI)
+  run             - Start the built browser
+  setup           - Build the installer for Windows with nsis               | SETUP
   source          - Download the latest LibreWolf source code into          | SOURCE
                     the working directory
-  update
+  update          - Update the version cache
   win_portable    - Build a zip containing the LibreWolf Portable           | WIN_PORTABLE
 
 Commands may be customized by setting the following environment variables:

@@ -24,7 +24,7 @@ mkdir -p "$WORKDIR"
 
 export AVAILABLE_TARGETS="linux windows"
 export AVAILABLE_ARCHS="x86_64 arm64 i686"
-export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX NSIS WIN_PORTABLE NUPKG"
+export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX SETUP WIN_PORTABLE NUPKG"
 
 if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then
   echo "Unsupported architecture $ARCH"

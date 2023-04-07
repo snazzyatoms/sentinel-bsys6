@@ -20,7 +20,7 @@ command_descr() {
   clobber) echo "Clean the current source directory" ;;
   help) echo "Show this page" ;;
   msix) echo "Build a MSIX package for Windows" ;;
-  nsis) echo "Build the installer for Windows with nsis" ;;
+  seup) echo "Build the installer for Windows with nsis" ;;
   package) echo "Package LibreWolf into a zip/tarball" ;;
   package_docker) echo "Run the 'package' command inside Docker" ;;
   prepare) echo "Prepare the build enviroment and install dependencies" ;;

@@ -3,7 +3,7 @@ set -eu
 
 source $BSYS6/exports/version.sh
 source $BSYS6/exports/require_target.sh windows
-source $BSYS6/exports/require_artifact.sh nsis
+source $BSYS6/exports/require_artifact.sh seup
 source $BSYS6/utils/require_choco.sh
 
 echo "-> Building .nupkg" >&2
@@ -11,8 +11,8 @@ echo "v$VERSION -> v$CHOCO_VERSION"
 tmpdir=$(mktemp -d)
 echo "tmpdir is $tmpdir"
 mkdir -p "$tmpdir/tools"
-export CHOCO_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$NSIS")"
-export CHOCO_CHECKSUM="$(cat "$NSIS_SHA256")"
+export CHOCO_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$SETUP")"
+export CHOCO_CHECKSUM="$(cat "$SETUP_SHA256")"
 envsubst '$CHOCO_VERSION' \
   <"$BSYS6/../assets/choco/librewolf.nuspec.in" \
   >$tmpdir/librewolf.nuspec

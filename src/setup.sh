@@ -21,7 +21,7 @@ printf "Running nsis... "
 (cd "$tmpdir" && $MOZBUILD/nsis/bin/makensis -V1 "setup.nsi")
 echo "Done"
 
-source $BSYS6/exports/move_artifact.sh "NSIS" "$tmpdir" ".*setup\.exe"
+source $BSYS6/exports/move_artifact.sh "SETUP" "$tmpdir" ".*setup\.exe"
 
 rm -rf "$tmpdir"
 unset TMPDIR

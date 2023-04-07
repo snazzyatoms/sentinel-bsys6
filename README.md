@@ -19,12 +19,13 @@ Commands:                                                                   | Ar
   clobber         - Clean the current source directory
   help            - Show this page
   msix            - Build a MSIX package for Windows                        | MSIX
-  nsis            - Build the installer for Windows with nsis               | NSIS
   nupkg
+  package_docker  - Run the 'package' command inside Docker
   package         - Package LibreWolf into a zip/tarball                    | PACKAGE
   prepare         - Prepare the build enviroment and install dependencies
   release
   run
+  setup
   source          - Download the latest LibreWolf source code into          | SOURCE
                     the working directory
   update
@@ -34,7 +35,7 @@ Commands may be customized by setting the following environment variables:
   TARGET  - The target platform (available: linux windows; currently: linux)
   ARCH    - The target architecture (available: x86_64 arm64 i686; currently: x86_64)
   VERSION - The version of LibreWolf to build (default: latest)
-  WORKDIR - The directory to use for temporary files (default: ~/.local/share/bsys6/work)
+  WORKDIR - The directory to use for temporary files (currently: /home/maltejur/.local/share/bsys6/work)
 
   You can also persist these settings by creating a file named "env.sh" in the
   same directory as this script, and setting the variables there, for example:

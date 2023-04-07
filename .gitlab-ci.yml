@@ -56,7 +56,7 @@ Windows:
           # - arm64 # Not supported by widl it seems
           - i686
   script:
-    - TARGET=windows ./bsys6 package nsis msix win_portable nupkg
+    - TARGET=windows ./bsys6 package seup msix win_portable nupkg
   artifacts:
     paths:
       - "*.zip"

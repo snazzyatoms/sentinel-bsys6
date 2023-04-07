@@ -52,7 +52,11 @@ See `./bsys6 --help` for a probably more up-to-date version of this.
 
 ### Available commands
 
-![](./assets/structure.svg)
+```mermaid
+flowchart TB
+    SOURCE --> BUILD --> PACKAGE --> SETUP & MSIX & WIN_PORTABLE
+    SETUP --> NUPKG
+```
 
 ### Structure
 

@@ -1,6 +1,0 @@
-digraph {
-  node [shape = plaintext;];
-  
-  SOURCE -> "(BUILD)" -> PACKAGE -> {SETUP MSIX WIN_PORTABLE};
-  SETUP -> NUPKG;
-}

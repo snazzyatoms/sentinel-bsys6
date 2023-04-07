@@ -13,7 +13,7 @@ mkdir -p librewolf-$VERSION/Profiles/Default
 mkdir -p librewolf-$VERSION/LibreWolf
 
 cd librewolf-$VERSION/LibreWolf
-unzip -q $BSYS6/../librewolf-$VERSION.en-US.win64.zip
+unzip -q $PACKAGE
 mv librewolf/* .
 rmdir librewolf
 # issue #244

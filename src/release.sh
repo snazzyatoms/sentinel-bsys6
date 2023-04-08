@@ -60,6 +60,7 @@ publish_release() {
     description="$description\n\n(Built on GitLab by pipeline [$CI_PIPELINE_ID](https://gitlab.com/librewolf-community/browser/bsys6/-/pipelines/$CI_PIPELINE_ID))"
   fi
 
+  codeberg_description="$description\n"
   assets=""
 
   for package in "${packages[@]}"; do
@@ -73,6 +74,7 @@ $assets
 },
 EOF
     )"
+    codeberg_description="$codeberg_description\n[$(basename "$package")]($package)"
   done
 
   for package in "${packages_other[@]}"; do
@@ -109,6 +111,22 @@ EOF
     --data "$body" \
     --request POST \
     "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases"
+
+  codeberg_description="$codeberg_description\n\n[View on GitLab](https://gitlab.com/librewolf-community/browser/bsys6/-/releases/$FULL_VERSION)"
+  codeberg_body="$(
+    cat <<EOF
+{
+  "name": "$FULL_VERSION",
+  "tag_name": "$FULL_VERSION",
+  "body": "$codeberg_description"
+}
+EOF
+  )"
+  curl --header 'Content-Type: application/json' \
+    --header 'accept: application/json' \
+    --data "$codeberg_body" \
+    --request POST \
+    "https://codeberg.org/api/v1/repos/librewolf/bsys6/releases?token=$CODEBERG_TOKEN"
 }
 
 push_nupkg() {

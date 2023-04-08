@@ -179,10 +179,10 @@ done
 
 publish_release
 
-for file in $(find -name "*.nupkg"); do
+for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
   push_nupkg "$file"
 done
 
-for file in $(find -name "*setup.exe"); do
+for file in $(find -name "*windows-x86_64-setup.exe"); do
   submit_winget "$file"
 done

@@ -3,8 +3,9 @@ set -eu
 shopt -s nullglob
 
 source $BSYS6/exports/version.sh
-source $BSYS6/utils/require_command.sh curl jq
-source $BSYS6/utils/require_choco.sh
+source $BSYS6/exports/setup_signing.sh
+$BSYS6/utils/require_command.sh curl jq
+$BSYS6/utils/require_choco.sh
 
 abort="false"
 for required_var in "CI_JOB_TOKEN" "REPO_DEPLOY_TOKEN" "CODEBERG_TOKEN" "GH_TOKEN" "CHOCO_API_KEY"; do
@@ -34,6 +35,14 @@ upload_asset() {
   if [ -f "$1.sha256sum" ]; then
     curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1.sha256sum" "$package_url.sha256sum"
     packages_other+=("$package_url.sha256sum")
+  fi
+  if [ -n "${SIGNING_KEY_FPR:-}" ]; then
+    echo "-> Creating and uploading signature for '$1' with key '$SIGNING_KEY_FPR'" >&2
+    gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$1"
+    if [ -f "$1.sig" ]; then
+      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1.sig" "$package_url.sig"
+      packages_other+=("$package_url.sig")
+    fi
   fi
 }
 

@@ -1,62 +1,61 @@
 # 🛠️ bsys6
 
 This repository should make it easy to build LibreWolf and various things
-arround it, via Docker or directly on your system.
+arround it, via Docker or directly on your system. (Work in Progress, currently
+used in combination with
+[bsys5](https://gitlab.com/librewolf-community/browser/bsys5))
+
+## Setup
+
+1. Clone this repository
+   `git clone https://gitlab.com/librewolf-community/browser/bsys6.git`
+2. _(optional)_ Add the checked out repository to your `PATH` to have the
+   `bsys6` command available everywhere
 
 ## Usage
 
-```
-bsys6 - The 6th generation LibreWolf Build System
-
-Usage: bsys6 [command]
-
-Commands:                                                                   | Artifacts:
-  bootstrap       - Bootstrap the build system with mach
-  build_docker    - Run the 'build' command inside Docker
-  build_image     - Build the docker image used by 'build_docker'
-  build           - Build LibreWolf (requires a prepared system)
-  clean           - Remove the work directory (including source)
-  clobber         - Clean the current source directory
-  help            - Show this page
-  msix            - Build a MSIX package for Windows                        | MSIX
-  nupkg           - Build a .nupkg to be used for Chocolatey                | NUPKG
-  package_docker  - Run the 'package' command inside Docker
-  package         - Package LibreWolf into a zip/tarball                    | PACKAGE
-  prepare         - Prepare the build enviroment and install dependencies
-  release         - Publish all the various artifacts
-                    (Should only be used in CI)
-  run             - Start the built browser
-  setup           - Build the installer for Windows with nsis               | SETUP
-  source          - Download the latest LibreWolf source code into          | SOURCE
-                    the working directory
-  update          - Update the version cache
-  portable    - Build a zip containing the LibreWolf Portable           | PORTABLE
-
-Commands may be customized by setting the following environment variables:
-  TARGET  - The target platform (available: linux windows; currently: linux)
-  ARCH    - The target architecture (available: x86_64 arm64 i686; currently: x86_64)
-  VERSION - The version of LibreWolf to build (default: latest)
-  WORKDIR - The directory to use for temporary files (currently: /home/maltejur/.local/share/bsys6/work)
-
-  You can also persist these settings by creating a file named "env.sh" in the
-  same directory as this script, and setting the variables there, for example:
-
-  '''
-  export WORKDIR=/mnt/ssd2/bsys6-work
-  '''
-```
-
-See `./bsys6 --help` for a probably more up-to-date version of this.
-
-## Development
-
-### Available commands
+Right now this repository is only meant to be used on a x86_64 Linux system. You
+always run `./bsys6`, followed by a chain of commands you want to run. The most
+important commands are the following, a arrow indicates a dependency to another
+command:
 
 ```mermaid
 flowchart TB
     SOURCE --> BUILD --> PACKAGE --> SETUP & MSIX & PORTABLE
     SETUP --> NUPKG
 ```
+
+To view all commands, run `./bsys6 help`. Commands can be customized by setting
+environment variables, most importantly:
+
+| Environment variable | Description                                                                                          | Possible values (bold is default)                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `TARGET`             | The platform you want to build for.                                                                  | **`linux`** `windows`                                                                                       |
+| `ARCH`               | The architecture that you want to build for.                                                         | **`x86_64`** `arm64` `i686`                                                                                 |
+| `VERSION`            | The version of LibreWolf to build.                                                                   | **`[latest version]`** [`[version tag]`](https://gitlab.com/librewolf-community/browser/source/-/releases). |
+| `WORKDIR`            | The directory where the source code should be downloaded to and where the compilation should happen. | **`~/.local/share/bsys6/work`** `[any directory]`                                                           |
+
+For actually building LibreWolf, there are two options available:
+
+### Building with Docker
+
+Still in development.
+
+### Building directly on your system
+
+1. Prepare all the dependencies for your system. You can do that by running
+   `./bsys6 prepare`.
+
+   If you want to cross-compile, also already set the `TARGET` environment
+   variable to the platform you want to target before that to ensure all
+   necessary dependencies are installed. This step is only supported on Arch and
+   Debian based systems, you will have to install the dependencies manually on
+   other systems.
+
+2. Run `./bsys6 <COMMAND>`. The available commands can be found above and the
+   resulting artifact will be placed in your current directory.
+
+## Development
 
 ### Structure
 

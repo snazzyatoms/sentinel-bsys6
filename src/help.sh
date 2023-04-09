@@ -29,7 +29,7 @@ command_descr() {
   setup) echo "Build the installer for Windows with nsis" ;;
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
   update) echo "Update the version cache" ;;
-  portable) echo "Build a zip containing the LibreWolf Portable" ;;
+  portable) printf "Build a zip containing a portable LibreWolf using\nhttps://codeberg.org/ltguillaume/librewolf-portable" ;;
   *) ;;
   esac
 }

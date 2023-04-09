@@ -30,7 +30,7 @@ Commands:                                                                   | Ar
   source          - Download the latest LibreWolf source code into          | SOURCE
                     the working directory
   update          - Update the version cache
-  win_portable    - Build a zip containing the LibreWolf Portable           | WIN_PORTABLE
+  portable    - Build a zip containing the LibreWolf Portable           | PORTABLE
 
 Commands may be customized by setting the following environment variables:
   TARGET  - The target platform (available: linux windows; currently: linux)
@@ -54,7 +54,7 @@ See `./bsys6 --help` for a probably more up-to-date version of this.
 
 ```mermaid
 flowchart TB
-    SOURCE --> BUILD --> PACKAGE --> SETUP & MSIX & WIN_PORTABLE
+    SOURCE --> BUILD --> PACKAGE --> SETUP & MSIX & PORTABLE
     SETUP --> NUPKG
 ```
 

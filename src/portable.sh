@@ -42,4 +42,4 @@ rm *.url
 cd $tmpdir
 zip -r9 librewolf-$VERSION.en-US.win64-portable.zip librewolf-$VERSION
 
-source $BSYS6/exports/move_artifact.sh "WIN_PORTABLE" "$tmpdir" "librewolf-.*\.zip"
+source $BSYS6/exports/move_artifact.sh "PORTABLE" "$tmpdir" "librewolf-.*\.zip"

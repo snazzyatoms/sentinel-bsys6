@@ -39,6 +39,6 @@ if [ -z "${CI_PROJECT_ID:-}" ]; then
   export CI_PROJECT_ID="44042130"
 fi
 
-if [ -z "${GL_API}" ]; then
+if [ -z "${GL_API:-}" ]; then
   export GL_API="$CI_API_V4_URL/projects/$CI_PROJECT_ID"
 fi

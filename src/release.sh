@@ -64,11 +64,19 @@ publish_release() {
   assets=""
 
   for package in "${packages[@]}"; do
+    name="$(basename "$package")"
+    # Temporarily add a blank character to the end of the file name
+    # to prevent old winupdater installations to accidentally download
+    # the 32-bit version.
+    # https://codeberg.org/ltguillaume/librewolf-portable/issues/9
+    if [[ "$name" == *"windows-i686"* ]]; then
+      name="$name⠀"
+    fi
     assets="$(
       cat <<-EOF
 $assets
 {
-  "name": "$(basename "$package")",
+  "name": "$name",
   "url": "$package",
   "link_type": "package"
 },
@@ -78,11 +86,12 @@ EOF
   done
 
   for package in "${packages_other[@]}"; do
+    name="$(basename "$package")"
     assets="$(
       cat <<-EOF
 $assets
 {
-  "name": "$(basename "$package")",
+  "name": "$name",
   "url": "$package",
   "link_type": "other"
 },

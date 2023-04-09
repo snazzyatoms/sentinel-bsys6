@@ -8,7 +8,7 @@ $BSYS6/utils/require_command.sh curl jq
 $BSYS6/utils/require_choco.sh
 
 abort="false"
-for required_var in "CI_JOB_TOKEN" "REPO_DEPLOY_TOKEN" "CODEBERG_TOKEN" "GH_TOKEN" "CHOCO_API_KEY"; do
+for required_var in "CI_JOB_TOKEN" "REPO_DEPLOY_TOKEN" "CODEBERG_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET"; do
   if [ -z "${!required_var:-}" ]; then
     echo "Error: '$required_var' is not set" >&2
     abort="true"
@@ -141,6 +141,12 @@ EOF
 push_nupkg() {
   echo "-> Pushing $1 to Chocolatey"
   "$MOZBUILD/chocolatey/choco" push "$1" --source https://push.chocolatey.org/ -k $CHOCO_API_KEY
+}
+
+push_msix() {
+  echo "-> Pushing $1 to the Microsoft Store"
+  echo "Obtaining access token"
+  ms_access_token="$(curl -X POST https://login.microsoftonline.com/8e129239-9e0b-4c0d-ac63-792a85bcc57f/oauth2/token --header "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=cd3474b9-1bed-44e3-970c-7040dad00df7&client_secret=$MS_CLIENT_SECRET&scope=https://api.store.microsoft.com/.default" | jq -r '.access_token')"
 }
 
 submit_winget() {

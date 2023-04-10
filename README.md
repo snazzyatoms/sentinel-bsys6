@@ -39,7 +39,13 @@ For actually building LibreWolf, there are two options available:
 
 ### Building with Docker
 
-Still in development.
+1. Run `./bsys6_docker <COMMAND>`. The available commands can be found above and
+   the resulting artifact will be placed in your current directory.
+
+   This will automatically download a prebuilt docker image as a build
+   environment. If you want to build the image yourself, run
+   `./bsys6 build_image`, optionally with the `TARGET` environment variable set
+   to specify which image you want to build.
 
 ### Building directly on your system
 

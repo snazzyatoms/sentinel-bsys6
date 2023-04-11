@@ -27,20 +27,25 @@ fi
 packages=()
 packages_other=()
 
-upload_asset() {
+upload_to_registry() {
   echo "-> Uploading $1 to GitLab package registry" >&2
-  package_url="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
-  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$package_url"
+  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
+  echo
+}
+
+upload_asset() {
+  sha256sum "$1" >"sha256sums.txt"
+  upload_to_registry "$1"
   packages+=("$package_url")
   if [ -f "$1.sha256sum" ]; then
-    curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1.sha256sum" "$package_url.sha256sum"
+    upload_to_registry "$1.sha256sum"
     packages_other+=("$package_url.sha256sum")
   fi
   if [ -n "${SIGNING_KEY_FPR:-}" ]; then
     echo "-> Creating and uploading signature for '$1' with key '$SIGNING_KEY_FPR'" >&2
     gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$1"
     if [ -f "$1.sig" ]; then
-      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1.sig" "$package_url.sig"
+      upload_to_registry "$1.sig"
       packages_other+=("$package_url.sig")
     fi
   fi
@@ -211,6 +216,9 @@ submit_winget() {
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix"); do
   upload_asset "$file"
 done
+
+upload_to_registry "sha256sums.txt"
+packages_other+=("sha256sums.txt")
 
 publish_release
 

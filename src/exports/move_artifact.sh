@@ -34,7 +34,7 @@ if [ -f "$1" ]; then
   rm "$1"
 fi
 echo "Found $file, moving to ${!1}" >&2
-mv "$2/$file" "${!1}"
+mv -f "$2/$file" "${!1}"
 mkdir -p "$WORKDIR/artifacts"
 rm -rf "$WORKDIR/artifacts/$unique_file_name"
 ln -s "${!1}" "$WORKDIR/artifacts/$unique_file_name"

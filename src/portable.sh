@@ -39,6 +39,7 @@ rm portable.releases.json
 wget -q -O updater.releases.json 'https://codeberg.org/api/v1/repos/ltGuillaume/LibreWolf-WinUpdater/releases?&limit=1'
 wget -O $(jq -r '.[0].assets[0].name' updater.releases.json) $(jq -r '.[0].assets[0].browser_download_url' updater.releases.json)
 unzip $(jq -r '.[0].assets[0].name' updater.releases.json)
+rm *.ps1 # we don't need those for the portable version
 rm $(jq -r '.[0].assets[0].name' updater.releases.json)
 rm updater.releases.json
 

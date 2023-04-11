@@ -65,13 +65,6 @@ publish_release() {
 
   for package in "${packages[@]}"; do
     name="$(basename "$package")"
-    # Temporarily add a blank character to the end of the file name
-    # to prevent old winupdater installations to accidentally download
-    # the 32-bit version.
-    # https://codeberg.org/ltguillaume/librewolf-portable/issues/9
-    if [[ "$name" == *"windows-i686"* ]]; then
-      name="$name⠀"
-    fi
     assets="$(
       cat <<-EOF
 $assets

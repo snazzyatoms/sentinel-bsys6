@@ -186,7 +186,7 @@ submit_winget() {
   wingetdir="$clonedir/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
   mkdir "$wingetdir"
   export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
-  export WINGET_CHECKSUM="$(cat "${1}_SHA256")"
+  export WINGET_CHECKSUM="$(cat "${1}.sha256sum")"
   envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.installer.yaml.in" \
     >"$wingetdir/LibreWolf.LibreWolf.installer.yaml"

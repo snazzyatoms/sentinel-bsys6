@@ -4,3 +4,4 @@
 - Trap and clean up tmpdirs
 - Fix custom WORKDIR
 - Update artifacts on MOZCONFIG_CHANGED
+- Add distribution.ini

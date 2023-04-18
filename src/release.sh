@@ -29,24 +29,23 @@ packages_other=()
 
 upload_to_registry() {
   echo "-> Uploading $1 to GitLab package registry" >&2
-  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
-  echo
+  package_url="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
+  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$package_url" >&2
+  echo >&2
+  echo "$package_url"
 }
 
 upload_asset() {
   sha256sum "$1" >"sha256sums.txt"
-  upload_to_registry "$1"
-  packages+=("$package_url")
+  packages+=("$(upload_to_registry "$1")")
   if [ -f "$1.sha256sum" ]; then
-    upload_to_registry "$1.sha256sum"
-    packages_other+=("$package_url.sha256sum")
+    packages_other+=("$(upload_to_registry "$1.sha256sum")")
   fi
   if [ -n "${SIGNING_KEY_FPR:-}" ]; then
     echo "-> Creating and uploading signature for '$1' with key '$SIGNING_KEY_FPR'" >&2
     gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$1"
     if [ -f "$1.sig" ]; then
-      upload_to_registry "$1.sig"
-      packages_other+=("$package_url.sig")
+      packages_other+=("$(upload_to_registry "$1.sig")")
     fi
   fi
 }

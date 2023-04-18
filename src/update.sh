@@ -2,6 +2,7 @@
 set -eu
 
 $BSYS6/utils/require_command.sh curl
+$BSYS6/exports/vars.sh # for $WORKDIR
 
 echo "-> Fetching version" >&2
 

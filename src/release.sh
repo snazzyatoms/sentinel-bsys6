@@ -36,7 +36,7 @@ upload_to_registry() {
 }
 
 upload_asset() {
-  sha256sum "$1" >"sha256sums.txt"
+  sha256sum "$1" >>"sha256sums.txt"
   packages+=("$(upload_to_registry "$1")")
   if [ -f "$1.sha256sum" ]; then
     packages_other+=("$(upload_to_registry "$1.sha256sum")")

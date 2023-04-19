@@ -36,16 +36,17 @@ upload_to_registry() {
 }
 
 upload_asset() {
-  sha256sum "$1" >>"sha256sums.txt"
-  packages+=("$(upload_to_registry "$1")")
-  if [ -f "$1.sha256sum" ]; then
-    packages_other+=("$(upload_to_registry "$1.sha256sum")")
+  asset="$(echo "$1" | sed 's/^.\///')"
+  sha256sum "$asset" >>"sha256sums.txt"
+  packages+=("$(upload_to_registry "$asset")")
+  if [ -f "$asset.sha256sum" ]; then
+    packages_other+=("$(upload_to_registry "$asset.sha256sum")")
   fi
   if [ -n "${SIGNING_KEY_FPR:-}" ]; then
-    echo "-> Creating and uploading signature for '$1' with key '$SIGNING_KEY_FPR'" >&2
-    gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$1"
-    if [ -f "$1.sig" ]; then
-      packages_other+=("$(upload_to_registry "$1.sig")")
+    echo "-> Creating and uploading signature for '$asset' with key '$SIGNING_KEY_FPR'" >&2
+    gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$asset"
+    if [ -f "$asset.sig" ]; then
+      packages_other+=("$(upload_to_registry "$asset.sig")")
     fi
   fi
 }

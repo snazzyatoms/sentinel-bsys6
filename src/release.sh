@@ -216,8 +216,7 @@ for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name 
   upload_asset "$file"
 done
 
-upload_to_registry "sha256sums.txt"
-packages_other+=("sha256sums.txt")
+packages_other+=("$(upload_to_registry "sha256sums.txt")")
 
 publish_release
 

@@ -4,3 +4,4 @@ ac_add_options --disable-alsa
 export WINSYSROOT="$MOZBUILD/win-cross/vs"
 export MIDL="$MOZBUILD/wine/bin/widl"
 export FXC="$MOZBUILD/fxc2/bin/fxc2.exe"
+export MOZ_APP_REMOTINGNAME=LibreWolf

@@ -19,6 +19,9 @@ linux)
 windows)
   export MOZ_TARGET="$ARCH-pc-mingw32"
   ;;
+macos)
+  export MOZ_TARGET="$ARCH-apple-darwin"
+  ;;
 dind) ;;
 *)
   echo "Unsupported target $TARGET"

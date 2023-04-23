@@ -1,0 +1,2 @@
+ac_add_options --with-l10n-base=$(pwd)/browser/locales/l10n
+ac_add_options --disable-alsa

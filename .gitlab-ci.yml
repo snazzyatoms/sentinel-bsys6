@@ -56,7 +56,7 @@ macOS:
           - x86_64
           - arm64
           - i686
-  script: ./bsys6 package
+  script: TARGET=macos ./bsys6 package
   artifacts:
     paths:
       - "*.tar.bz2"

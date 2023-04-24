@@ -13,6 +13,7 @@ Images:
       - TARGET:
           - dind
           - linux
+          - macos
           - windows
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
@@ -38,6 +39,28 @@ Linux:
   artifacts:
     paths:
       - "*.tar.bz2"
+      - "*.sha256sum"
+
+macOS:
+  stage: build
+  when: manual
+  allow_failure: false
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/macos:latest
+  tags:
+    - autoscale
+  except:
+    - merge_requests
+  parallel:
+    matrix:
+      - ARCH:
+          - x86_64
+          - arm64
+          - i686
+  script: ./bsys6 package
+  artifacts:
+    paths:
+      - "*.tar.bz2"
+      - "*.dmg"
       - "*.sha256sum"
 
 Windows:

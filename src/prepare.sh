@@ -37,9 +37,9 @@ macos)
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"
   $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-libdmg" "linux64-cctools-port" "linux64-hfsplus" "linux64-binutils"
-  # # does this perhaps work?
-  # cargo install cbindgen
-  # pip install testresources pycairo
+  # does this perhaps work?
+  cargo install cbindgen
+  pip install testresources pycairo
   ;;
 
 dind)

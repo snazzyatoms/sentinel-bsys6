@@ -39,7 +39,7 @@ macos)
   $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-libdmg" "linux64-cctools-port" "linux64-hfsplus" "linux64-binutils"
   # does this perhaps work?
   #$BSYS6/utils/cargo.sh cbindgen
-  pip install testresources pycairo
+  pip install --break-system-packages testresources pycairo
   ;;
 
 dind)

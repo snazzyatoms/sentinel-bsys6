@@ -32,7 +32,7 @@ windows)
 macos)
   echo "-> Preparing build environment for cross-compilation to macOS (target: macos)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rsync" "python-pip curl rsync"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip" "python-pip curl rsync zip unzip"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"

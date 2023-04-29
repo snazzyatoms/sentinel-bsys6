@@ -55,7 +55,6 @@ macOS:
       - ARCH:
           - x86_64
           - arm64
-          - i686
   script: TARGET=macos ./bsys6 package
   artifacts:
     paths:

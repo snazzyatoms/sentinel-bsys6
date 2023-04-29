@@ -5,7 +5,8 @@ source $BSYS6/exports/target.sh
 source $BSYS6/exports/require_build.sh
 
 echo "-> Running 'mach package'" >&2
-$SOURCE/mach package -v
+#$SOURCE/mach package -v
+$SOURCE/mach package
 
 echo "-> Packaging locales (output hidden)" >&2
 cat "$SOURCE/browser/locales/shipped-locales" | xargs "$SOURCE/mach" package-multi-locale --locales >/dev/null 2>/dev/null
@@ -13,7 +14,6 @@ cat "$SOURCE/browser/locales/shipped-locales" | xargs "$SOURCE/mach" package-mul
 if [ "$TARGET" == "windows" ]; then
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.zip"
 elif [ "$TARGET" == "macos" ]; then
-  echo "[macos debug] moving artifact.."
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.dmg"
 else
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.tar\.bz2"

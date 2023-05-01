@@ -4,12 +4,13 @@ set -eu
 source $BSYS6/exports/target.sh
 source $BSYS6/exports/require_build.sh
 
-echo "-> Running 'mach package'" >&2
-#$SOURCE/mach package -v
-$SOURCE/mach package
-
 echo "-> Packaging locales (output hidden)" >&2
-cat "$SOURCE/browser/locales/shipped-locales" | xargs "$SOURCE/mach" package-multi-locale --locales >/dev/null 2>/dev/null
+locales="$(cat "$SOURCE/browser/locales/shipped-locales")"
+export MOZ_CHROME_MULTILOCALE="$(echo "$locales" | tr '\n' ' ')"
+echo "$locales" | sed s/^/chrome-/ | xargs make -j$(nproc) -C "$SOURCE/obj-$MOZ_TARGET" >/dev/null 2>/dev/null
+
+echo "-> Running 'mach package'" >&2
+"$SOURCE/mach" package
 
 if [ "$TARGET" == "windows" ]; then
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.zip"

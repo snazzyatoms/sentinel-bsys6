@@ -21,8 +21,8 @@ command:
 
 ```mermaid
 flowchart TB
-    SOURCE --> BUILD --> PACKAGE --> SETUP & MSIX & PORTABLE
-    SETUP --> NUPKG
+    source --> build --> package --> setup & msix & portable
+    setup --> nupkg
 ```
 
 To view all commands, run `./bsys6 help`. Commands can be customized by setting
@@ -52,11 +52,11 @@ For actually building LibreWolf, there are two options available:
 1. Prepare all the dependencies for your system. You can do that by running
    `./bsys6 prepare`.
 
-   If you want to cross-compile, also already set the `TARGET` environment
-   variable to the platform you want to target before that to ensure all
-   necessary dependencies are installed. This step is only supported on Arch and
-   Debian based systems, you will have to install the dependencies manually on
-   other systems.
+   This step is only supported on Arch and Debian based systems, you will have
+   to install the dependencies manually on other systems. If you want to
+   cross-compile, also already set the `TARGET` environment variable to the
+   platform you want to target before that to ensure all necessary dependencies
+   are installed.
 
 2. Run `./bsys6 <COMMAND>`. The available commands can be found above and the
    resulting artifact will be placed in your current directory.

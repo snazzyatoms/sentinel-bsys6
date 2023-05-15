@@ -10,11 +10,7 @@ cat "$SOURCE/browser/locales/shipped-locales" | xargs "$SOURCE/mach" package-mul
 if [ "$TARGET" == "windows" ]; then
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.zip"
 elif [ "$TARGET" == "macos" ]; then
-  if [ "$ARCH" == "arm64" ]; then
-    source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-aarch64-apple-darwin/dist" "librewolf-.*\.dmg"
-  else
-    source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.dmg"
-  fi
+  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.dmg"
 else
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.tar\.bz2"
 fi

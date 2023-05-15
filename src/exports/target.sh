@@ -21,6 +21,9 @@ windows)
   ;;
 macos)
   export MOZ_TARGET="$ARCH-apple-darwin"
+  if [ "${ARCH:-}" == "arm64" ]; then
+    export MOZ_TARGET="aarch64-apple-darwin"
+  fi
   ;;
 dind) ;;
 *)

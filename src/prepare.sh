@@ -32,14 +32,11 @@ windows)
 macos)
   echo "-> Preparing build environment for cross-compilation to macOS (target: macos)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip" "python-pip curl rsync zip unzip"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources" "python-pip curl rsync zip unzip python-testresources"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"
   $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-libdmg" "linux64-cctools-port" "linux64-hfsplus" "linux64-binutils"
-  # does this perhaps work?
-  #$BSYS6/utils/cargo.sh cbindgen
-  pip install --break-system-packages testresources # pycairo
   ;;
 
 dind)

@@ -147,36 +147,35 @@ push_msix() {
   ms_access_token="$(curl -X POST https://login.microsoftonline.com/8e129239-9e0b-4c0d-ac63-792a85bcc57f/oauth2/token --header "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=cd3474b9-1bed-44e3-970c-7040dad00df7&client_secret=$MS_CLIENT_SECRET&scope=https://api.store.microsoft.com/.default" | jq -r '.access_token')"
 }
 
-submit_winget() {
-  gh_request() {
-    response="$(curl -s -H "Authorization: token $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" "$@")"
-    if [ "$(echo "$response" | jq 'type')" == "object" ]; then
-      if [ "$(echo "$response" | jq 'has("message")')" == "true" ]; then
-        echo "Error with GitHub API: $(echo "$response" | jq -r '.message')" >&2
-        exit 1
-      fi
-      if [ "$(echo "$response" | jq 'has("errors")')" == "true" ]; then
-        echo "Error(s) with GitHub API:" >&2
-        echo "$pr_response" | jq -r '.errors | .[].message' >&2
-        exit 1
-      fi
+gh_request() {
+  response="$(curl -s -H "Authorization: token $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" "$@")"
+  if [ "$(echo "$response" | jq 'type')" == "object" ]; then
+    if [ "$(echo "$response" | jq 'has("message")')" == "true" ]; then
+      echo "Error with GitHub API: $(echo "$response" | jq -r '.message')" >&2
+      exit 1
     fi
-    echo "$response"
-  }
-
-  echo "-> Sumbitting $1 as a pull request to winget-pkgs"
-  username=$(gh_request "https://api.github.com/user" | jq -r .login)
-  if ! curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$username/winget-pkgs" >/dev/null; then
-    printf "Forking microsoft/winget-pkgs...\r"
-    gh_request -X POST "https://api.github.com/repos/microsoft/winget-pkgs/forks" >/dev/null
-    echo "Forked microsoft/winget-pkgs to $username/winget-pkgs"
+    if [ "$(echo "$response" | jq 'has("errors")')" == "true" ]; then
+      echo "Error(s) with GitHub API:" >&2
+      echo "$pr_response" | jq -r '.errors | .[].message' >&2
+      exit 1
+    fi
   fi
-  clonedir="$WORKDIR/winget-pkgs"
+  echo "$response"
+}
+
+gh_prepare_repo() {
+  username=$(gh_request "https://api.github.com/user" | jq -r .login)
+  if ! curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$username/$2" >/dev/null; then
+    printf "Forking $1/$2...\r"
+    gh_request -X POST "https://api.github.com/repos/$1/$2/forks" >/dev/null
+    echo "Forked $1/$2 to $username/$2"
+  fi
+  CLONEDIR="$WORKDIR/$2"
   if [ ! -d "$clonedir/.git" ]; then
-    git clone https://github.com/$username/winget-pkgs.git "$clonedir"
+    git clone https://github.com/$username/$2.git "$clonedir"
     (
       cd "$clonedir"
-      git remote add upstream https://github.com/microsoft/winget-pkgs.git
+      git remote add upstream https://github.com/$1/$2.git
       git config user.name "LibreWolf"
       git config user.email "bsys6@librewolf.net"
       git config commit.gpgSign "false"
@@ -185,10 +184,29 @@ submit_winget() {
   (
     cd "$clonedir"
     git fetch upstream
-    git switch -C update_librewolf
+    git switch -C bsys6_automation
     git reset --hard upstream/master
   )
-  wingetdir="$clonedir/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
+}
+
+gh_submit_pr() {
+  username=$(gh_request "https://api.github.com/user" | jq -r .login)
+  (
+    cd "$clonedir"
+    git add .
+    git commit -m "$3"
+    git remote set-url --push origin https://$username:$GH_TOKEN@github.com/$username/$2.git
+    git push origin bsys6_automation --force
+  )
+  printf "Creating pull request...\r"
+  pr_response=$(gh_request "https://api.github.com/repos/$1/$2/pulls" -d "{\"head\":\"$username:bsys6_automation\",\"base\":\"master\",\"title\":\"$3\",\"body\":\"(This pull-request was auto-generated.)\"}")
+  echo "Pull request created: $(echo "$pr_response" | jq -r .html_url)"
+}
+
+submit_winget() {
+  gh_prepare_repo "microsoft" "winget-pkgs"
+  echo "-> Sumbitting $1 as a pull request to winget-pkgs"
+  wingetdir="$CLONEDIR/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
   mkdir "$wingetdir"
   export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
   export WINGET_CHECKSUM="$(cat "${1}.sha256sum")"
@@ -201,16 +219,7 @@ submit_winget() {
   envsubst '$FULL_VERSION' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.yaml.in" \
     >"$wingetdir/LibreWolf.LibreWolf.yaml"
-  (
-    cd "$clonedir"
-    git add .
-    git commit -m "Update LibreWolf.LibreWolf to v$FULL_VERSION"
-    git remote set-url --push origin https://$username:$GH_TOKEN@github.com/$username/winget-pkgs.git
-    git push origin update_librewolf --force
-  )
-  printf "Creating pull request...\r"
-  pr_response=$(gh_request "https://api.github.com/repos/microsoft/winget-pkgs/pulls" -d "{\"head\":\"$username:update_librewolf\",\"base\":\"master\",\"title\":\"Update LibreWolf.LibreWolf to v$FULL_VERSION\",\"body\":\"(This pull-request was auto-generated.)\"}")
-  echo "Pull request created: $(echo "$pr_response" | jq -r .html_url)"
+  gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
 }
 
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix"); do

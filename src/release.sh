@@ -171,10 +171,10 @@ gh_prepare_repo() {
     echo "Forked $1/$2 to $username/$2"
   fi
   CLONEDIR="$WORKDIR/$2"
-  if [ ! -d "$clonedir/.git" ]; then
-    git clone https://github.com/$username/$2.git "$clonedir"
+  if [ ! -d "$CLONEDIR/.git" ]; then
+    git clone https://github.com/$username/$2.git "$CLONEDIR"
     (
-      cd "$clonedir"
+      cd "$CLONEDIR"
       git remote add upstream https://github.com/$1/$2.git
       git config user.name "LibreWolf"
       git config user.email "bsys6@librewolf.net"
@@ -182,7 +182,7 @@ gh_prepare_repo() {
     )
   fi
   (
-    cd "$clonedir"
+    cd "$CLONEDIR"
     git fetch upstream
     git switch -C bsys6_automation
     git reset --hard upstream/master
@@ -192,7 +192,7 @@ gh_prepare_repo() {
 gh_submit_pr() {
   username=$(gh_request "https://api.github.com/user" | jq -r .login)
   (
-    cd "$clonedir"
+    cd "$CLONEDIR"
     git add .
     git commit -m "$3"
     git remote set-url --push origin https://$username:$GH_TOKEN@github.com/$username/$2.git

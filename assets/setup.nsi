@@ -151,43 +151,21 @@ continue:
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$\"$INSTDIR\librewolf.exe$\" -osint -url $\"%1$\""
 
+	DetailPrint "Removing potentially broken WinUpdater Scheduled Task"
+	nsExec::ExecToLog 'schtasks.exe /delete /tn "LibreWolf WinUpdater" /f'
+
+	DetailPrint "Removing potentially broken WinUpdater start menu entry"
+	SetShellVarContext current
+	RmDir /r "$SMPROGRAMS\LibreWolf"
+	SetShellVarContext all
 SectionEnd
 
-Section /o "LibreWolf Portable" portable
-	SetOutPath $INSTDIR
-	File /r LibreWolf
-	File LibreWolf-Portable.exe
+Section /o "LibreWolf WinUpdater" winupdater
+	File LibreWolf-WinUpdater.exe
+	File ScheduledTask-Create.ps1
+	File ScheduledTask-Remove.ps1
+	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" "$INSTDIR\LibreWolf-WinUpdater.exe" "" "$INSTDIR\LibreWolf-WinUpdater.exe"
 SectionEnd
-
-SectionGroup /e "LibreWolf WinUpdater" winupdatergroup
-	Section /o "WinUpdater" winupdater
-		${If} ${SectionIsSelected} ${portable}
-			File LibreWolf-WinUpdater.exe
-		${Else}
-			SetShellVarContext current
-			SetOutPath "$APPDATA\LibreWolf"
-			File LibreWolf-WinUpdater.exe
-			CreateDirectory "$SMPROGRAMS\${COMPANYNAME}"
-			CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" "$APPDATA\LibreWolf\LibreWolf-WinUpdater.exe" "" "$APPDATA\LibreWolf\LibreWolf-WinUpdater.exe"
-			SetShellVarContext all
-		${EndIf}
-	SectionEnd
-	Section /o "Scheduled Task" scheduledtask
-		DetailPrint "Creating Scheduled Task"
-		; https://ss64.com/nt/schtasks.html
-		; There is no better way to create _this_ specific task with schtasks.exe other than with this ugly xml file
-		File "/oname=$PLUGINSDIR\winupdater_task.xml" "winupdater_task.xml"
-		FileOpen $0 "$PLUGINSDIR\winupdater_task.xml" a
-		FileSeek $0 0 END
-		FileWrite $0 "      <Command>$APPDATA\LibreWolf\LibreWolf-WinUpdater.exe</Command>$\r$\n"
-		FileWrite $0 "      <Arguments>/Scheduled</Arguments>$\r$\n"
-		FileWrite $0 "    </Exec>$\r$\n"
-		FileWrite $0 "  </Actions>$\r$\n"
-		FileWrite $0 "</Task>"
-		FileClose $0
-		nsExec::ExecToLog 'schtasks.exe /create /xml "$PLUGINSDIR\winupdater_task.xml" /tn "LibreWolf WinUpdater" /f'
-	SectionEnd
-SectionGroupEnd
 
 # Uninstaller
 section "Uninstall"
@@ -200,12 +178,11 @@ section "Uninstall"
 		nsProcess::_KillProcess "${EXECUTABLE}"
 		Sleep 2000
 	${EndIf}
+	
+	SetShellVarContext all
 
 	# Remove the Start Menu folder
-	SetShellVarContext current
-	RmDir /r "$SMPROGRAMS\${COMPANYNAME}"
-	SetShellVarContext all
-	RmDir /r "$SMPROGRAMS\${COMPANYNAME}"
+	RmDir /r "$SMPROGRAMS\LibreWolf"
  
 	# Remove files
 	RmDir /r $INSTDIR
@@ -222,17 +199,30 @@ section "Uninstall"
 	DeleteRegKey HKLM "Software\Classes\LibreWolfHTM"
 
 
-	DetailPrint "Removing Scheduled Task"
-	nsExec::ExecToLog 'schtasks.exe /delete /tn "LibreWolf WinUpdater" /f'
+	DetailPrint "Removing WinUpdater"
+
+	SetShellVarContext current
+	FindFirst $0 $1 $PROFILE\..\*
+	loop:
+		StrCmp $1 "" done
+
+		RmDir /r "$PROFILE\..\$1\AppData\Roaming\LibreWolf\WinUpdater"
+
+		FindNext $0 $1
+		Goto loop
+	done:
+	FindClose $0
+	SetShellVarContext all
+
+
+	DetailPrint "Removing WinUpdater Scheduled Task(s)"
+	nsExec::ExecToLog `powershell -Command "Get-ScheduledTask 'LibreWolf*' | Unregister-ScheduledTask -Confirm:$$false"`
 
 sectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${main} "Install the browser for all users"
-  !insertmacro MUI_DESCRIPTION_TEXT ${portable} "Extract the browser to a folder or removable storage device for portable use"
-  !insertmacro MUI_DESCRIPTION_TEXT ${winupdatergroup} "A companion tool to update LibreWolf with a single click"
   !insertmacro MUI_DESCRIPTION_TEXT ${winupdater} "A companion tool to update LibreWolf with a single click"
-  !insertmacro MUI_DESCRIPTION_TEXT ${scheduledtask} "Adds Windows scheduled task to automatically update LibreWolf at log on and every 4 hours"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
@@ -241,44 +231,16 @@ Function .onInit
 	Var /GLOBAL INSTALL_TYPE
 	StrCpy $DEFAULT_INSTDIR $INSTDIR
 	StrCpy $INSTALL_TYPE "normal"
-FunctionEnd
-
-Function .onSelChange
-	${If} ${SectionIsSelected} ${main}
-	${AndIf} $0 = ${main}
-		StrCpy $INSTDIR $DEFAULT_INSTDIR
-		StrCpy $INSTALL_TYPE "normal"
-		SectionSetFlags ${portable} 0
-		SectionSetFlags ${main} 17 ; SF_SELECTED & SF_RO
-		SectionSetFlags ${winupdater} 0
-		SectionSetFlags ${scheduledtask} 0
-	${EndIf}
-	${If} ${SectionIsSelected} ${portable}
-	${AndIf} $0 = ${portable}
-		StrCpy $INSTDIR "$DESKTOP\LibreWolf Portable"
-		StrCpy $INSTALL_TYPE "portable"
-		SectionSetFlags ${portable} 17 ; SF_SELECTED & SF_RO
-		SectionSetFlags ${main} 0
-		SectionSetFlags ${winupdater} ${SF_SELECTED}
-		SectionSetFlags ${scheduledtask} ${SF_RO}
-	${EndIf}
-	${IfNot} ${SectionIsSelected} ${winupdater}
-	${AndIfNot} ${SectionIsSelected} ${portable}
-	${AndIf} $0 = ${winupdater}
-		SectionSetFlags ${scheduledtask} 0
-	${EndIf}
-	${If} ${SectionIsSelected} ${scheduledtask}
-	${AndIf} $0 = ${scheduledtask}
-		SectionSetFlags ${winupdater} ${SF_SELECTED}
-	${EndIf}
+	SetShellVarContext current
+	IfFileExists "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" +3 +1
+	SetShellVarContext all
+	IfFileExists "$INSTDIR\LibreWolf-WinUpdater.exe" +1 +2
+	SectionSetFlags ${winupdater} ${SF_SELECTED}
+	SetShellVarContext all
 FunctionEnd
 
 
 Function "CreateDesktopShortcut"
 	SetShellVarContext all
-	${If} ${SectionIsSelected} ${portable}
-		CreateShortCut "$DESKTOP\LibreWolf.lnk" "$INSTDIR\LibreWolf-Portable.exe" "" "$INSTDIR\LibreWolf\librewolf.ico" 0
-	${Else}
-		CreateShortCut "$DESKTOP\LibreWolf.lnk" "$INSTDIR\librewolf.exe" "" "$INSTDIR\librewolf.exe" 0
-	${EndIf}
+	CreateShortCut "$DESKTOP\LibreWolf.lnk" "$INSTDIR\librewolf.exe" "" "$INSTDIR\librewolf.exe" 0
 FunctionEnd

@@ -12,7 +12,6 @@ mv "$tmpdir/librewolf" "$tmpdir/LibreWolf"
 
 echo "-> Building installer with nsis"
 cp -v "$BSYS6/../assets/librewolf.ico" "$tmpdir/LibreWolf/librewolf.ico"
-cp -v "$BSYS6/../assets/winupdater_task.xml" "$tmpdir/winupdater_task.xml"
 mkdir -p "$tmpdir/x86-ansi"
 cp -v "$BSYS6/../assets/nsProcess.dll" "$tmpdir/x86-ansi/nsProcess.dll"
 $BSYS6/utils/download.sh "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$tmpdir/vc_redist.x64.exe"

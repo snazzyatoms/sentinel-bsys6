@@ -1,4 +1,4 @@
-FROM debian:sid
+FROM debian:bookworm
 ARG TARGET=linux
 
 ENV DOCKER=1

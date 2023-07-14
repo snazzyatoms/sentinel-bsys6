@@ -199,7 +199,7 @@ gh_submit_pr() {
     git push origin bsys6_automation --force
   )
   printf "Creating pull request...\r"
-  pr_response=$(gh_request "https://api.github.com/repos/$1/$2/pulls" -d "{\"head\":\"$username:bsys6_automation\",\"base\":\"master\",\"title\":\"$3\",\"body\":\"(This pull-request was auto-generated.)\"}")
+  pr_response=$(gh_request "https://api.github.com/repos/$1/$2/pulls" -d "{\"head\":\"$username:bsys6_automation\",\"base\":\"master\",\"title\":\"$3\",\"body\":\"(This pull-request was auto-generated, ping @maltejur)\"}")
   echo "Pull request created: $(echo "$pr_response" | jq -r .html_url)"
 }
 
@@ -222,7 +222,7 @@ submit_winget() {
   gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
 }
 
-for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" ); do
+for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg"); do
   upload_asset "$file"
 done
 

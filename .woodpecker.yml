@@ -1,6 +1,3 @@
-when:
-  event: manual
-
 matrix:
   ARCH:
     - x86_64
@@ -8,6 +5,8 @@ matrix:
 
 steps:
   windows:
+    when:
+      event: manual
     image: registry.gitlab.com/librewolf-community/browser/bsys6/windows:latest
     commands:
       - TARGET=windows ./bsys6 package setup msix portable nupkg

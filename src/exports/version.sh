@@ -16,6 +16,10 @@ if [ -z "${SOURCEDIR:-}" ]; then
   export SOURCEDIR="$WORKDIR/librewolf-$VERSION"
 fi
 
+if [ -z "${SOURCE_URL:-}" ]; then
+  export SOURCE_URL="https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$VERSION/librewolf-$VERSION.source.tar.gz"
+fi
+
 if [ -z "${FULL_VERSION:-}" ]; then
   if [ -n "${RELEASE:-}" ] && [ "$RELEASE" != "1" ]; then
     export FULL_VERSION="$VERSION-$RELEASE"

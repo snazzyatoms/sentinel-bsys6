@@ -13,7 +13,7 @@ if [ -z "${SOURCE:-}" ]; then
     mkdir -p "$SOURCEDIR/.." >&2
     mkdir -p "$WORKDIR" >&2
 
-    curl -o "$WORKDIR/librewolf-$VERSION.source.tar.gz" "https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$VERSION/librewolf-$VERSION.source.tar.gz" >&2
+    curl -o "$WORKDIR/librewolf-$VERSION.source.tar.gz" "$SOURCE_URL" >&2
 
     echo "-> Extracting librewolf-$VERSION.source.tar.gz" >&2
     tar xf "$WORKDIR/librewolf-$VERSION.source.tar.gz" -C "$SOURCEDIR/.." >&2

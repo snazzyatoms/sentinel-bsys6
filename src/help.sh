@@ -31,6 +31,7 @@ command_descr() {
   update) echo "Update the version cache" ;;
   portable) printf "Build a zip containing a portable LibreWolf using\nhttps://codeberg.org/ltguillaume/librewolf-portable" ;;
   deb) printf "Build the Debian .deb pacakge file";;
+  rpm) printf "Create a Redhad/Fedora-style .rpm package file";;
   *) ;;
   esac
 }

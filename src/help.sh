@@ -30,6 +30,7 @@ command_descr() {
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
   update) echo "Update the version cache" ;;
   portable) printf "Build a zip containing a portable LibreWolf using\nhttps://codeberg.org/ltguillaume/librewolf-portable" ;;
+  deb) printf "Build the Debian .deb pacakge file";;
   *) ;;
   esac
 }

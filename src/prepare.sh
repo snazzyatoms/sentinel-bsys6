@@ -8,7 +8,7 @@ case $TARGET in
 linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg" "python-pip curl dpkg rpm gnupg"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg jq" "python-pip curl dpkg rpm gnupg jq"
   # cross-compilation
   $BSYS6/utils/dependencies.sh "binutils-aarch64-linux-gnu" "aarch64-linux-gnu-binutils"
   source $BSYS6/exports/version.sh
@@ -32,7 +32,7 @@ windows)
 macos)
   echo "-> Preparing build environment for cross-compilation to macOS (target: macos)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources" "python-pip curl rsync zip unzip python-testresources"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources jq" "python-pip curl rsync zip unzip python-testresources jq"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"

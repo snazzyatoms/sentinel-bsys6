@@ -10,9 +10,9 @@ source $BSYS6/exports/version.sh
 
 print_arch() {
     case "$ARCH" in
-    x86_64) echo "x86_64";;
-    arm64) echo "aarch64";;
-    i686) echo "i686";;
+    x86_64) echo "x86_64" ;;
+    arm64) echo "aarch64" ;;
+    i686) echo "i686" ;;
     esac
 }
 
@@ -37,10 +37,10 @@ make_rpm_setup_folder() {
     # Create and populate the source folder.
     rm -rf rpmbuild
     mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-    sed "s/__VERSION__/$version/g" < librewolf.spec > tmp.spec
-    sed "s/__RELEASE__/$release/g" < tmp.spec > tmp2.spec
+    sed "s/__VERSION__/$version/g" <librewolf.spec >tmp.spec
+    sed "s/__RELEASE__/$release/g" <tmp.spec >tmp2.spec
     arch2=$(print_arch)
-    sed "s/__ARCH__/$arch2/g" < tmp2.spec > rpmbuild/SPECS/librewolf.spec
+    sed "s/__ARCH__/$arch2/g" <tmp2.spec >rpmbuild/SPECS/librewolf.spec
     rm librewolf.spec tmp.spec tmp2.spec
 
     # Populate the SOURCES folder.
@@ -52,7 +52,7 @@ make_rpm_setup_folder() {
     mkdir -p librewolf-$version/usr/bin
     mv librewolf/* librewolf-$version/usr/share/librewolf
     rmdir librewolf
-    ( cd librewolf-$version/usr/bin && ln -s ../share/librewolf/librewolf )
+    (cd librewolf-$version/usr/bin && ln -s ../share/librewolf/librewolf)
 
     # Application icon
     mkdir -p librewolf-$version/usr/share/applications
@@ -66,7 +66,7 @@ make_rpm_setup_folder() {
     cp librewolf-$version/usr/share/librewolf/browser/chrome/icons/default/default128.png librewolf-$version/usr/share/icons/hicolor/128x128/apps/librewolf.png
 
     # This creates a `1ibrewolf.destop` file.
-    sed "s/MYDIR/\/usr\/share\/librewolf/g" < librewolf-$version/usr/share/librewolf/librewolf.desktop.in > librewolf-$version/usr/share/applications/librewolf.desktop
+    sed "s/MYDIR/\/usr\/share\/librewolf/g" <librewolf-$version/usr/share/librewolf/librewolf.desktop.in >librewolf-$version/usr/share/applications/librewolf.desktop
     rm librewolf-$version/usr/share/librewolf/librewolf.desktop.in
 
     # This creates the `lw.tar.gz` file that is the payload in the SPEC file.
@@ -77,21 +77,19 @@ make_rpm_setup_folder() {
 
 echo "-> Building Redhat package" >&2
 
-# NOTE TO ARCH USERS:
-# The `rpm` package is an alias for the `rpm-tools` package,
-# both of which conflict with the `rpmextract` package.
-# `rpmextract` is needed by appimage builder.
-$BSYS6/utils/dependencies.sh "" "rpm gnupg"
+if [ $(print_arch) != "aarch64" ]; then
+    tmpdir=$(mktemp -d)
+    (cd $tmpdir && tar xf "$PACKAGE")
 
-tmpdir=$(mktemp -d)
-(cd $tmpdir && tar xf "$PACKAGE")
+    # This is the location to stuff the bsys5 stuff in here
+    (cd $tmpdir && make_rpm_setup_folder)
 
-# This is the location to stuff the bsys5 stuff in here
-(cd $tmpdir && make_rpm_setup_folder)
+    echo "-> Running rpmbuild"
+    (cd $tmpdir && export HOME=$(pwd) && head rpmbuild/SPECS/librewolf.spec && setarch $(print_arch) rpmbuild -bb --target $(print_arch) --quiet --define "_rpmdir $tmpdir" rpmbuild/SPECS/librewolf.spec)
+    (cd $tmpdir && cp -v $(print_arch)/*.rpm .)
 
-echo "-> Running rpmbuild"
-( cd $tmpdir && export HOME=$(pwd) && head rpmbuild/SPECS/librewolf.spec && setarch $(print_arch) rpmbuild -bb --target $(print_arch) --quiet --define "_rpmdir $tmpdir" rpmbuild/SPECS/librewolf.spec )
-( cd $tmpdir && cp -v $(print_arch)/*.rpm . )
-
-# Publish and cleanup.
-source $BSYS6/exports/move_artifact.sh "RPM" "$tmpdir" ".*\.rpm"
+    # Publish and cleanup.
+    source $BSYS6/exports/move_artifact.sh "RPM" "$tmpdir" ".*\.rpm"
+else
+    echo "(limitation: skipping rpm package for aarch64)"
+fi

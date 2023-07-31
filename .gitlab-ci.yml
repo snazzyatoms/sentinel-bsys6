@@ -35,9 +35,13 @@ Linux:
           - x86_64
           - arm64
           - i686
-  script: ./bsys6 package
+  script:
+    - ./bsys6 package deb
+    - ./bsys6 package rpm
   artifacts:
     paths:
+      - "*.deb"
+      - "*.rpm"
       - "*.tar.bz2"
       - "*.sha256sum"
 

@@ -8,7 +8,7 @@ source $BSYS6/exports/require_target.sh linux
 source $BSYS6/exports/require_artifact.sh package
 source $BSYS6/exports/version.sh
 
-$BSYS6/utils/dependencies.sh "" "dpkg gnupg"
+src/utils/require_command.sh dpkg gpg
 
 # Including legacy script as a function.
 function build_deb() {
@@ -61,8 +61,8 @@ EOF
 
     # Sign the deb file if private key is provided and we have dpkg-sig available
     if [[ -f pk.asc ]] && command -v dpkg-sig &>/dev/null; then
-	gpg --import pk.asc
-	dpkg-sig --sign builder librewolf.deb
+        gpg --import pk.asc
+        dpkg-sig --sign builder librewolf.deb
     fi
 }
 
@@ -71,7 +71,7 @@ echo "-> Building Debian package" >&2
 tmpdir=$(mktemp -d)
 (cd $tmpdir && tar xf "$PACKAGE")
 
-sed "s/MYDIR/\/usr\/share\/librewolf/g" < $BSYS6/../assets/linux.librewolf.desktop.in > $tmpdir/librewolf.desktop
+sed "s/MYDIR/\/usr\/share\/librewolf/g" <$BSYS6/../assets/linux.librewolf.desktop.in >$tmpdir/librewolf.desktop
 (cd $tmpdir && build_deb $FULL_VERSION)
 
 # Publish and cleanup.

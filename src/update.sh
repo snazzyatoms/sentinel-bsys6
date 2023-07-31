@@ -6,14 +6,12 @@ $BSYS6/exports/vars.sh # for $WORKDIR
 
 echo "-> Fetching version" >&2
 
-version="$(curl -fS https://gitlab.com/librewolf-community/browser/source/-/raw/main/version)"
-release="$(curl -fS https://gitlab.com/librewolf-community/browser/source/-/raw/main/release)"
+export VERSION="$(curl https://gitlab.com/api/v4/projects/32320088/repository/tags | jq -r '.[0].name' | sed 's/^v//')"
 
-if [ "$version" == "" ] || [ "$release" == "" ]; then
+if [ "$VERSION" == "" ]; then
   echo "Failed to fetch version from GitLab" >&2
   exit 1
 fi
 
-export VERSION="$version-$release"
 echo "Version is $VERSION, caching as the default version for 12 hours" >&2
 echo "$VERSION" >$WORKDIR/version

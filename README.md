@@ -21,7 +21,7 @@ command:
 
 ```mermaid
 flowchart TB
-    source --> build --> package --> setup & msix & portable
+    source --> build --> package --> setup & msix & portable & deb & rpm
     setup --> nupkg
 ```
 

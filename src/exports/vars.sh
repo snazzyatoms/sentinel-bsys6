@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -e
 
 if [ -f "$BSYS6/../env.sh" ]; then

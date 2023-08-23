@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 $BSYS6/utils/require_command.sh awk gpg

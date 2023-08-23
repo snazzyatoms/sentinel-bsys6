@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 # Extension of vars.sh, but kept in a seperate file because

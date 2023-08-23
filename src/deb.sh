@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # deb.sh - make the debian style `.deb` package file.
 

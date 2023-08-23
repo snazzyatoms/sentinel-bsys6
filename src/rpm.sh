@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # rpm.sh - make the Fedora-style `.rpm` package file.
 

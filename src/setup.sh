@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu -o pipefail
 
 source $BSYS6/exports/require_target.sh windows

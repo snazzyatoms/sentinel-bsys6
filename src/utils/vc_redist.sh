@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 # https://gitlab.com/librewolf-community/browser/windows/-/issues/244

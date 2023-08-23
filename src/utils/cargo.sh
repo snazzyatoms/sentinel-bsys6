@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 PATH="$HOME/.cargo/bin:$PATH"

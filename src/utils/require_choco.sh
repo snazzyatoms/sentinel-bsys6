@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 if [ ! -f "$MOZBUILD/chocolatey/choco" ]; then

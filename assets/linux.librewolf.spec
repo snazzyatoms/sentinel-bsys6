@@ -66,3 +66,4 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/omni.ja
 /usr/share/librewolf/platform.ini
 /usr/share/librewolf/plugin-container
+/usr/share/librewolf/libgkcodecs.so

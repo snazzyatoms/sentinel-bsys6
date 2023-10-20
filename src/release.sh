@@ -29,7 +29,7 @@ packages_other=()
 
 upload_to_registry() {
   echo "-> Uploading $1 to GitLab package registry" >&2
-  package_url="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
+  package_url="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$1")"
   curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$package_url" >&2
   echo >&2
   echo "$package_url"
@@ -142,9 +142,15 @@ push_nupkg() {
 }
 
 push_msix() {
+  # https://github.com/microsoft/store-submission/blob/main/src/store_apis.ts
   echo "-> Pushing $1 to the Microsoft Store"
   echo "Obtaining access token"
   ms_access_token="$(curl -X POST https://login.microsoftonline.com/8e129239-9e0b-4c0d-ac63-792a85bcc57f/oauth2/token --header "Content-Type: application/x-www-form-urlencoded" --data "grant_type=client_credentials&client_id=cd3474b9-1bed-44e3-970c-7040dad00df7&client_secret=$MS_CLIENT_SECRET&scope=https://api.store.microsoft.com/.default" | jq -r '.access_token')"
+  echo Submitting package
+  curl --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $ms_access_token" \
+    --request POST \
+    "https://api.store.microsoft.com/submission/v1/product/9NVN9SZ8KFD7/packages"
 }
 
 gh_request() {
@@ -208,7 +214,7 @@ submit_winget() {
   echo "-> Sumbitting $1 as a pull request to winget-pkgs"
   wingetdir="$CLONEDIR/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
   mkdir "$wingetdir"
-  export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$1"
+  export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$1")"
   export WINGET_CHECKSUM="$(cat "${1}.sha256sum")"
   envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.installer.yaml.in" \

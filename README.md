@@ -1,7 +1,7 @@
 # 🛠️ bsys6
 
 This repository should make it easy to build LibreWolf and various things
-arround it, via Docker or directly on your system. (Work in Progress, currently
+around it, via Docker or directly on your system. (Work in Progress, currently
 used in combination with
 [bsys5](https://gitlab.com/librewolf-community/browser/bsys5))
 

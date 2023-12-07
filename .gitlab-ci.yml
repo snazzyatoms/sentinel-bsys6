@@ -108,3 +108,181 @@ Release:
   except:
     - merge_requests
   script: ./bsys6 release
+
+
+Repositories:
+  stage: release
+  when: manual
+  allow_failure: false
+  image: ubuntu
+  needs:
+    - job: "Build"
+      artifacts: true
+  only:
+    - master
+  except:
+    - merge_requests
+  before_script:
+    - apt-get update
+    - apt-get install -y curl
+    - curl -L --output /usr/local/bin/release-cli
+      "https://release-cli-downloads.s3.amazonaws.com/latest/release-cli-linux-amd64"
+    - chmod +x /usr/local/bin/release-cli
+  script:
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.debian11.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.debian11.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.debian12.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.debian12.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.mint20.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.mint20.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-deb.deb librewolf-$FILEVER.en-US.mint21.x86_64.deb
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.en-US.mint21.x86_64.deb.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm librewolf-$FILEVER.fc37.x86_64.rpm
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.fc37.x86_64.rpm.sha256sum
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm librewolf-$FILEVER.fc38.x86_64.rpm
+    - cp librewolf-$FILEVER-linux-x86_64-rpm.rpm.sha256sum librewolf-$FILEVER.fc38.x86_64.rpm.sha256sum
+    - |
+      codeberg_release_body=""
+
+      function upload_package() {
+        echo "Uploading $1"
+        curl \
+          --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+          --upload-file "$1" \
+          "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/$1"
+        codeberg_release_body="${codeberg_release_body}[$1]($CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/$1)\n"
+      }
+
+      upload_package librewolf-$FILEVER.en-US.debian11.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.debian11.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.en-US.debian12.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.debian12.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.en-US.mint20.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.mint20.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.en-US.mint21.x86_64.deb
+      upload_package librewolf-$FILEVER.en-US.mint21.x86_64.deb.sha256sum
+      upload_package librewolf-$FILEVER.fc37.x86_64.rpm
+      upload_package librewolf-$FILEVER.fc37.x86_64.rpm.sha256sum
+      upload_package librewolf-$FILEVER.fc38.x86_64.rpm
+      upload_package librewolf-$FILEVER.fc38.x86_64.rpm.sha256sum
+
+      echo "Creating Codeberg release"
+      codeberg_release_body="${codeberg_release_body}\n[View on GitLab](https://gitlab.com/librewolf-community/browser/bsys5/-/releases/$FILEVER)"
+      curl -X 'POST' \
+        "https://codeberg.org/api/v1/repos/librewolf/bsys5/releases?token=$CODEBERG_TOKEN" \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -d "{
+        \"name\": \"$FILEVER\",
+        \"tag_name\": \"$FILEVER\",
+        \"body\": \"$codeberg_release_body\"
+      }"
+    - |
+      body=$(cat <<EOF
+      {
+        "token": "$REPO_DEPLOY_TOKEN",
+        "debs": [
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian11.x86_64.deb",
+            "distros": ["bullseye"]
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian12.x86_64.deb",
+            "distros": ["bookworm"]
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb",
+            "distros": ["focal"]
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb",
+            "distros": ["jammy"]
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint20.x86_64.deb",
+            "distros": ["uma", "una"]
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint21.x86_64.deb",
+            "distros": ["vanessa", "vera"]
+          }
+        ],
+        "rpms": [
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc37.x86_64.rpm"
+          },
+          {
+            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc38.x86_64.rpm"
+          }
+        ]
+      }
+      EOF
+      )
+
+      id=$(curl "https://updaterepos.librewolf.net/job" --request POST --data "$body")
+
+      echo "Submitted update request to LibreWolf Software Repository (https://updaterepos.librewolf.net/job?id=$id)"
+  release:
+    tag_name: "$FILEVER"
+    description:
+      "## LibreWolf bsys5 Release v$FILEVER\n\n- \n\n(Built on GitLab by
+      pipeline
+      [$CI_PIPELINE_ID](https://gitlab.com/librewolf-community/browser/bsys5/-/pipelines/$CI_PIPELINE_ID))"
+    assets:
+      links:
+        - name: Debian 11 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian11.x86_64.deb
+        - name: Debian 11 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian11.x86_64.deb.sha256sum
+        - name: Debian 12 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian12.x86_64.deb
+        - name: Debian 12 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.debian12.x86_64.deb.sha256sum
+        - name: Ubuntu 20 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb
+        - name: Ubuntu 20 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu20.x86_64.deb.sha256sum
+        - name: Ubuntu 22 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb
+        - name: Ubuntu 22 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.ubuntu22.x86_64.deb.sha256sum
+        - name: Linux Mint 20 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint20.x86_64.deb
+        - name: Linux Mint 20 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint20.x86_64.deb.sha256sum
+        - name: Linux Mint 21 (deb)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint21.x86_64.deb
+        - name: Linux Mint 21 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.en-US.mint21.x86_64.deb.sha256sum
+        - name: Fedora 37 (rpm)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc37.x86_64.rpm
+        - name: Fedora 37 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc37.x86_64.rpm.sha256sum
+        - name: Fedora 38 (rpm)
+          link_type: package
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc38.x86_64.rpm
+        - name: Fedora 38 (sha256sum)
+          link_type: other
+          url: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FILEVER/librewolf-$FILEVER.fc38.x86_64.rpm.sha256sum

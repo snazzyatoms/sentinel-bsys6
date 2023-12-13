@@ -116,7 +116,11 @@ Repositories:
   allow_failure: false
   image: ubuntu
   needs:
-    - job: "Build"
+    - job: "Linux"
+      artifacts: true
+    - job: "Windows"
+      artifacts: true
+    - job: "macOS"
       artifacts: true
   only:
     - master

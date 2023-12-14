@@ -20,6 +20,8 @@ Images:
     - ./bsys6 build_image
     - docker push registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET:latest
 
+# Because only the Repositories stage needs the `reports.env` file, we only have
+# to create that file in this stage.
 Linux:
   stage: build
   when: manual
@@ -38,12 +40,17 @@ Linux:
   script:
     - ./bsys6 package deb
     - ./bsys6 package rpm
+    - echo RELEASE=$(cat release) >> variables.env
+    - echo SOURCE_RELEASE=$(cat source_release) >> variables.env
+    - "t=$(cat version)-$(cat source_release) ; if ! grep 1 release; then t=$(cat version)-$(cat source_release)-$(cat release); fi; echo FILEVER=$t >> variables.env"
   artifacts:
     paths:
       - "*.deb"
       - "*.rpm"
       - "*.tar.bz2"
       - "*.sha256sum"
+    reports:
+      dotenv: variables.env
 
 macOS:
   stage: build
@@ -111,8 +118,6 @@ Release:
 
 
 Repositories:
-  variables:
-    FILEVER: "120.0.1-2"
   stage: release
   when: manual
   allow_failure: false

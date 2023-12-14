@@ -111,6 +111,8 @@ Release:
 
 
 Repositories:
+  variables:
+    FILEVER: "120.0.1-2"
   stage: release
   when: manual
   allow_failure: false
@@ -127,7 +129,6 @@ Repositories:
   except:
     - merge_requests
   before_script:
-    - export FILEVER=120.0.1-2
     - apt-get update
     - apt-get install -y curl
     - curl -L --output /usr/local/bin/release-cli

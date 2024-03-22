@@ -21,6 +21,10 @@ if [ -z "${SOURCE:-}" ]; then
       mv "$SOURCEDIR/../librewolf-$VERSION" "$SOURCEDIR" >&2
     fi
     rm "$WORKDIR/librewolf-$VERSION.source.tar.gz" >&2
+
+    echo "-> Sneaking in fresh taskcluster/ci/toolchain/macos-sdk.yml" >&2
+    rm "$SOURCEDIR/taskcluster/ci/toolchain/macos-sdk.yml"
+    $BSYS6/utils/download.sh "https://hg.mozilla.org/mozilla-central/raw-file/tip/taskcluster/ci/toolchain/macos-sdk.yml" "$SOURCEDIR/taskcluster/ci/toolchain/macos-sdk.yml"
   fi
 
   if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then

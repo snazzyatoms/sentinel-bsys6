@@ -8,5 +8,9 @@ if [ -n "${SIGNING_KEY:-}" ] && [ -z "${SIGNING_KEY_FPR:-}" ] && [ -f "$SIGNING_
   export SIGNING_KEY_FPR="$(gpg --with-colons --import-options show-only --import --fingerprint <"$SIGNING_KEY" | awk -F: '$1 == "fpr" {print $10;}' | head -n 1)"
   echo "   fingerprint is '$SIGNING_KEY_FPR'" >&2
   gpg --import "$SIGNING_KEY"
+  cat >>~/.rpmmacros <<EOF
+%_signature gpg
+%_gpg_name  LibreWolf Maintainers
+EOF
   rm "$SIGNING_KEY"
 fi

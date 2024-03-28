@@ -92,7 +92,7 @@ if [ $(print_arch) != "aarch64" ]; then
     if [ -n "${SIGNING_KEY_FPR:-}" ]; then
         echo "-> Signing the RPM" >&2
         export GPG_TTY=$(tty)
-        rpm --addsign *.rpm
+        rpm --addsign ./*.rpm
     fi
 
     # Publish and cleanup.

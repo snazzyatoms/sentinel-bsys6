@@ -12,5 +12,4 @@ if [ -n "${SIGNING_KEY:-}" ] && [ -z "${SIGNING_KEY_FPR:-}" ] && [ -f "$SIGNING_
 %_signature gpg
 %_gpg_name  LibreWolf Maintainers
 EOF
-  rm "$SIGNING_KEY"
 fi

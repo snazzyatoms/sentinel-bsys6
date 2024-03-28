@@ -20,8 +20,6 @@ Images:
     - ./bsys6 build_image
     - docker push registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET:latest
 
-# Because only the Repositories stage needs the `reports.env` file, we only have
-# to create that file in this stage.
 Linux:
   stage: build
   when: manual
@@ -38,16 +36,13 @@ Linux:
           - arm64
           - i686
   script:
-    - ./bsys6 package deb
-    - ./bsys6 package rpm
+    - ./bsys6 package deb rpm
   artifacts:
     paths:
       - "*.deb"
       - "*.rpm"
       - "*.tar.bz2"
       - "*.sha256sum"
-    reports:
-      dotenv: variables.env
 
 macOS:
   stage: build
@@ -112,116 +107,3 @@ Release:
   except:
     - merge_requests
   script: ./bsys6 release
-
-
-Repositories:
-  stage: release
-  when: manual
-  allow_failure: false
-  image: ubuntu
-  needs:
-    - job: "Linux"
-      artifacts: true
-    - job: "Windows"
-      artifacts: true
-    - job: "macOS"
-      artifacts: true
-  only:
-    - master
-  except:
-    - merge_requests
-  before_script:
-    - apt-get update
-    - apt-get install -y curl
-    - curl -L --output /usr/local/bin/release-cli
-      "https://release-cli-downloads.s3.amazonaws.com/latest/release-cli-linux-amd64"
-    - chmod +x /usr/local/bin/release-cli
-  script:
-    - BSYS6=/path/to/bsys6/src source /path/to/bsys6/src/exports/version.sh
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.debian11.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.debian11.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.debian12.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.debian12.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.ubuntu20.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.ubuntu20.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.ubuntu22.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.ubuntu22.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.mint20.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.mint20.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-deb.deb librewolf-$FULL_VERSION.en-US.mint21.x86_64.deb
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.en-US.mint21.x86_64.deb.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm librewolf-$FULL_VERSION.fc37.x86_64.rpm
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.fc37.x86_64.rpm.sha256sum
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm librewolf-$FULL_VERSION.fc38.x86_64.rpm
-    - cp librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm.sha256sum librewolf-$FULL_VERSION.fc38.x86_64.rpm.sha256sum
-    - |
-      function upload_package() {
-        echo "Uploading $1"
-        curl \
-          --header "JOB-TOKEN: $CI_JOB_TOKEN" \
-          --upload-file "$1" \
-          "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/$1"
-        codeberg_release_body="${codeberg_release_body}[$1]($CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/$1)\n"
-      }
-
-      upload_package librewolf-$FULL_VERSION.en-US.debian11.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.debian11.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.en-US.debian12.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.debian12.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.en-US.ubuntu20.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.ubuntu20.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.en-US.ubuntu22.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.ubuntu22.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.en-US.mint20.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.mint20.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.en-US.mint21.x86_64.deb
-      upload_package librewolf-$FULL_VERSION.en-US.mint21.x86_64.deb.sha256sum
-      upload_package librewolf-$FULL_VERSION.fc37.x86_64.rpm
-      upload_package librewolf-$FULL_VERSION.fc37.x86_64.rpm.sha256sum
-      upload_package librewolf-$FULL_VERSION.fc38.x86_64.rpm
-      upload_package librewolf-$FULL_VERSION.fc38.x86_64.rpm.sha256sum
-    - |
-      body=$(cat <<EOF
-      {
-        "token": "$REPO_DEPLOY_TOKEN",
-        "debs": [
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.debian11.x86_64.deb",
-            "distros": ["bullseye"]
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.debian12.x86_64.deb",
-            "distros": ["bookworm"]
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.ubuntu20.x86_64.deb",
-            "distros": ["focal"]
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.ubuntu22.x86_64.deb",
-            "distros": ["jammy"]
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.mint20.x86_64.deb",
-            "distros": ["uma", "una"]
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.en-US.mint21.x86_64.deb",
-            "distros": ["vanessa", "vera"]
-          }
-        ],
-        "rpms": [
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.fc37.x86_64.rpm"
-          },
-          {
-            "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION.fc38.x86_64.rpm"
-          }
-        ]
-      }
-      EOF
-      )
-
-      id=$(curl "https://updaterepos.librewolf.net/job" --request POST --data "$body")
-
-      echo "Submitted update request to LibreWolf Software Repository (https://updaterepos.librewolf.net/job?id=$id)"

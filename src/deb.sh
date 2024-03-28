@@ -7,6 +7,7 @@ set -eu
 source $BSYS6/exports/require_target.sh linux
 source $BSYS6/exports/require_artifact.sh package
 source $BSYS6/exports/version.sh
+source $BSYS6/exports/signing.sh
 
 src/utils/require_command.sh dpkg gpg
 
@@ -67,8 +68,8 @@ EOF
     dpkg-deb --build librewolf
 
     # Sign the deb file if private key is provided and we have dpkg-sig available
-    if [[ -f pk.asc ]] && command -v dpkg-sig &>/dev/null; then
-        gpg --import pk.asc
+    if [[ "$SIGNING" == "true" ]] && command -v dpkg-sig &>/dev/null; then
+        echo "-> Signing the DEB" >&2
         dpkg-sig --sign builder librewolf.deb
     fi
 }

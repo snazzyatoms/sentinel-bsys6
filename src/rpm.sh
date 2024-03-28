@@ -7,6 +7,7 @@ set -eu
 source $BSYS6/exports/require_target.sh linux
 source $BSYS6/exports/require_artifact.sh package
 source $BSYS6/exports/version.sh
+source $BSYS6/exports/signing.sh
 
 print_arch() {
     case "$ARCH" in
@@ -87,6 +88,12 @@ if [ $(print_arch) != "aarch64" ]; then
     echo "-> Running rpmbuild"
     (cd $tmpdir && export HOME=$(pwd) && head rpmbuild/SPECS/librewolf.spec && setarch $(print_arch) rpmbuild -bb --target $(print_arch) --quiet --define "_rpmdir $tmpdir" rpmbuild/SPECS/librewolf.spec)
     (cd $tmpdir && cp -v $(print_arch)/*.rpm .)
+
+    if [[ "$SIGNING" == "true" ]]; then
+        echo "-> Signing the RPM" >&2
+        export GPG_TTY=$(tty)
+        rpm --addsign *.rpm
+    fi
 
     # Publish and cleanup.
     source $BSYS6/exports/move_artifact.sh "RPM" "$tmpdir" ".*\.rpm"

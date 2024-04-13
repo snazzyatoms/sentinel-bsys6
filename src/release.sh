@@ -232,6 +232,35 @@ submit_winget() {
   gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
 }
 
+update_repo() {
+  body=$(
+    cat <<EOF
+{
+  "token": "$REPO_DEPLOY_TOKEN",
+  "debs": [
+    {
+      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-amd64-deb.deb",
+      "distros": ["distroless"]
+    },
+    {
+      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-deb.deb",
+      "distros": ["distroless"]
+    }
+  ],
+  "rpms": [
+    {
+      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm"
+    }
+  ]
+}
+EOF
+  )
+
+  id=$(curl "https://updaterepos-new.librewolf.net/job" --request POST --data "$body")
+
+  echo "Submitted update request to LibreWolf Software Repository (https://updaterepos-new.librewolf.net/job?id=$id)"
+}
+
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
   upload_asset "$file"
 done
@@ -247,3 +276,4 @@ done
 # for file in $(find -name "*windows-x86_64-setup.exe"); do
 #   submit_winget "$file"
 # done
+update_repo

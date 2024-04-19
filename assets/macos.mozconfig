@@ -16,3 +16,6 @@ export CC="$CROSS/clang/bin/clang"
 export CXX="$CROSS/clang/bin/clang++"
 export HOST_CC="$CROSS/clang/bin/clang"
 export HOST_CXX="$CROSS/clang/bin/clang++"
+
+ac_add_options --disable-bootstrap
+ac_add_options --with-macos-sdk="$MOZBUILD/MacOSX14.4.sdk"

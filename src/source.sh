@@ -21,11 +21,6 @@ if [ -z "${SOURCE:-}" ]; then
       mv "$SOURCEDIR/../librewolf-$VERSION" "$SOURCEDIR" >&2
     fi
     rm "$WORKDIR/librewolf-$VERSION.source.tar.gz" >&2
-
-    for patch in "$BSYS6/../assets/patches/"*.patch; do
-      echo "-> Applying $(basename "$patch")" >&2
-      patch -d "$SOURCEDIR" -p1 -i "$patch" >&2
-    done
   fi
 
   if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then

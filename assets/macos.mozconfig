@@ -19,7 +19,6 @@ export HOST_CXX="$CROSS/clang/bin/clang++"
 
 # The following options should be temporary until we can enable bootstrap at build time again
 ac_add_options --disable-bootstrap
-export NASM="$MOZBUILD/nasm/nasm"
 export CBINDGEN="$MOZBUILD/cbindgen/cbindgen"
 ac_add_options --with-macos-sdk="$MOZBUILD/MacOSX14.4.sdk"
-ac_add_options --without-wasm-sandboxed-libraries
+ac_add_options --with-wasi-sysroot="$MOZBUILD/sysroot-wasm32-wasi"

@@ -48,6 +48,16 @@ EOF
     )"
   fi
 
+# Total hack (temporary)
+  if [[ $TARGET == "macos" && $ARCH = "x86_64" ]]; then
+    mozconfig="$(
+      cat <<EOF
+$mozconfig
+export NASM="\$MOZBUILD/nasm/nasm"
+EOF
+    )"
+  fi
+
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 

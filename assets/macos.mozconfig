@@ -21,4 +21,4 @@ export HOST_CXX="$CROSS/clang/bin/clang++"
 ac_add_options --disable-bootstrap
 export CBINDGEN="$MOZBUILD/cbindgen/cbindgen"
 ac_add_options --with-macos-sdk="$MOZBUILD/MacOSX14.4.sdk"
-ac_add_options --with-wasi-sysroot="$MOZBUILD/sysroot-wasm32-wasi"
+ac_add_options --without-wasm-sandboxed-libraries

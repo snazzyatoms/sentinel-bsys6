@@ -92,7 +92,7 @@ if [ $(print_arch) != "aarch64" ]; then
     if [ -n "${SIGNING_KEY_FPR:-}" ]; then
         echo "-> Signing the RPM" >&2
         export GPG_TTY=$(tty)
-        rpm --addsign ./librewolf-$version.$(print_arch).rpm
+        rpm --addsign ./librewolf-$VERSION.$(print_arch).rpm
     fi
 
     # Publish and cleanup.

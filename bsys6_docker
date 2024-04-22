@@ -8,4 +8,4 @@ source $BSYS6/exports/target.sh
 
 set +u
 
-docker run --rm -it -v "$BSYS6/..":"/bsys6" -v "$WORKDIR":"/root/.local/share/bsys6/work" -e TARGET="$TARGET" -e ARCH="$ARCH" -e VERSION="$VERSION" "registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET" ./bsys6 $@
+docker run --rm -it -v "$BSYS6/..":"/bsys6" -v "$WORKDIR":"/root/.local/share/bsys6/work" --volume /etc/passwd:/etc/passwd:ro --volume /etc/group:/etc/group:ro --user $(id -u):$(id -g) -e HOME="/root" -e TARGET="$TARGET" -e ARCH="$ARCH" -e VERSION="$VERSION" "registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET" ./bsys6 $@

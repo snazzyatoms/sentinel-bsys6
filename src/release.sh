@@ -261,6 +261,7 @@ EOF
   echo "Submitted update request to LibreWolf Software Repository (https://updaterepos-new.librewolf.net/job?id=$id)"
 }
 
+# temporarily disable macOS: for file in $ (find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
   upload_asset "$file"
 done

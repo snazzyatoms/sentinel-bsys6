@@ -100,8 +100,8 @@ Release:
       artifacts: true
     - job: "Windows"
       artifacts: true
-    - job: "macOS"
-      artifacts: true
+#    - job: "macOS"
+#      artifacts: true
   only:
     - master
   except:

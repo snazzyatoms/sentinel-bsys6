@@ -8,7 +8,7 @@ case $TARGET in
 linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg jq" "python-pip curl dpkg rpm gnupg jq"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq" "python-pip curl dpkg rpm gnupg2 jq"
   # cross-compilation
   $BSYS6/utils/dependencies.sh "binutils-aarch64-linux-gnu" "aarch64-linux-gnu-binutils"
   source $BSYS6/exports/version.sh

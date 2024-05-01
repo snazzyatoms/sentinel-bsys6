@@ -36,10 +36,11 @@ Linux:
           - arm64
           - i686
   script:
-    - ./bsys6 package deb
+    - ./bsys6 package deb rpm
   artifacts:
     paths:
       - "*.deb"
+      - "*.rpm"
       - "*.tar.bz2"
       - "*.sha256sum"
 
@@ -99,8 +100,8 @@ Release:
       artifacts: true
     - job: "Windows"
       artifacts: true
-#    - job: "macOS"
-#      artifacts: true
+    - job: "macOS"
+      artifacts: true
   only:
     - master
   except:

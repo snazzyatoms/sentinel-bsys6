@@ -264,8 +264,7 @@ EOF
 #
 # temporarily disable macOS (and RPM too for now):
 #   
-# for file in $ (find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
-for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.deb"); do
+for file in $ (find -name "*.exe" -o -name "*.zip" -o -name "*.tar.bz2" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
   upload_asset "$file"
 done
 

@@ -223,7 +223,7 @@ update_repo() {
   "token": "$REPO_DEPLOY_TOKEN",
   "debs": [
     {
-      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-amd64-deb.deb",
+      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-deb.deb",
       "distros": ["distroless"]
     },
     {

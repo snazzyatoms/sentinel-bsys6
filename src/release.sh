@@ -260,7 +260,7 @@ for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
   push_nupkg "$file"
 done
 
-$BSYS6/utils/ms_push_msix $(find -name "*windows-*-msix.msix")
+# $BSYS6/utils/ms_push_msix $(find -name "*windows-*-msix.msix")
 
 # for file in $(find -name "*windows-x86_64-setup.exe"); do
 #   submit_winget "$file"

@@ -19,7 +19,7 @@ packages=""
 for msix in "$@"; do
   packages="$packages{\"fileName\":\"$(basename $msix)\"},"
 done
-ms_submission=$(echo $ms_submission | jq ".applicationPackages.[].fileStatus = \"PendingDelete\" | .applicationPackages += [${packages%,}]")
+ms_submission=$(echo $ms_submission | jq ".applicationPackages[].fileStatus = \"PendingDelete\" | .applicationPackages += [${packages%,}]")
 echo "Telling Microsoft Store about the files about to be uploaded"
 curl -s -X PUT https://manage.devcenter.microsoft.com/v1.0/my/applications/$ms_application_id/submissions/$ms_submission_id --header 'Content-Type: application/json' --header "Authorization: Bearer $MS_ACCESS_TOKEN" -d "$ms_submission" >/dev/null
 ms_file_upload_url="$(echo "$ms_submission" | jq -r '.fileUploadUrl')"

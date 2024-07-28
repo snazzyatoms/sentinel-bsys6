@@ -55,6 +55,7 @@ dind)
   $BSYS6/utils/dependencies.sh "docker-ce docker-ce-cli containerd.io docker-compose-plugin make wget lbzip2 zip" ""
   $BSYS6/utils/install_release_cli.sh
   $BSYS6/utils/install_chocolatey.sh
+  $BSYS6/utils/pip-dependencies.sh azure-storage-blob
   ;;
 
 *)

@@ -240,7 +240,7 @@ update_repo() {
 EOF
   )
 
-  id=$(curl "https://updaterepos-new.librewolf.net/job" --request POST --data "$body")
+  id=$(set -x && curl "https://updaterepos-new.librewolf.net/job" --request POST --data "$body")
 
   echo "Submitted update request to LibreWolf Software Repository (https://updaterepos-new.librewolf.net/job?id=$id)"
 }

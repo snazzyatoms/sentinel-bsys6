@@ -1,4 +1,4 @@
-ac_add_options --with-l10n-base=$(pwd)/browser/locales/l10n
+ac_add_options --with-l10n-base=$(pwd)/lw/l10n
 export MOZ_APP_REMOTINGNAME=LibreWolf
 
 # Packaging related

@@ -33,7 +33,6 @@ make_rpm_setup_folder() {
     rm -f librewolf/pingsender
     rm -f librewolf/precomplete
     rm -f librewolf/removed-files
-    rm -f librewolf/{glxtest,vaapitest} # fix: remove some tool binaries we don't want
 
     # Create and populate the source folder.
     rm -rf rpmbuild

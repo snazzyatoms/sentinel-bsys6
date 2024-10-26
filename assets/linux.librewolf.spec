@@ -38,6 +38,7 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/dependentlibs.list
 /usr/share/librewolf/distribution/policies.json
 /usr/share/librewolf/fonts/TwemojiMozilla.ttf
+/usr/share/librewolf/glxtest
 /usr/share/librewolf/gmp-clearkey/0.1/libclearkey.so
 /usr/share/librewolf/gmp-clearkey/0.1/manifest.json
 /usr/share/librewolf/libfreeblpriv3.so
@@ -65,4 +66,5 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/libxul.so
 /usr/share/librewolf/omni.ja
 /usr/share/librewolf/platform.ini
+/usr/share/librewolf/vaapitest
 /usr/share/librewolf/libgkcodecs.so

@@ -41,7 +41,7 @@ Linux:
     paths:
       - "*.deb"
       - "*.rpm"
-      - "*.tar.bz2"
+      - "*.tar.xz"
       - "*.sha256sum"
 
 macOS:
@@ -61,7 +61,7 @@ macOS:
   script: TARGET=macos ./bsys6 package
   artifacts:
     paths:
-      - "*.tar.bz2"
+      - "*.tar.xz"
       - "*.dmg"
       - "*.sha256sum"
 

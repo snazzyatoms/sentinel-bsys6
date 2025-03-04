@@ -2,13 +2,10 @@
 Type=Application
 Name=LibreWolf
 GenericName=Web Browser
-# Gnome and KDE 3 uses Comment.
-Comment=Web Browser
 StartupNotify=true
 Terminal=false
-Type=Application
 MimeType=application/json;application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
-Comment=LibreWolf Browser
+Comment=Browse the World Wide Web
 Categories=Network;WebBrowser;Security;
 StartupWMClass=librewolf-default
 Exec=MYDIR/librewolf %u

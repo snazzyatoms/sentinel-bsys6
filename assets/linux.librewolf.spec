@@ -42,7 +42,6 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/gmp-clearkey/0.1/libclearkey.so
 /usr/share/librewolf/gmp-clearkey/0.1/manifest.json
 /usr/share/librewolf/libfreeblpriv3.so
-/usr/share/librewolf/libipcclientcerts.so
 /usr/share/librewolf/liblgpllibs.so
 /usr/share/librewolf/libmozavcodec.so
 /usr/share/librewolf/libmozavutil.so
@@ -52,7 +51,6 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/libmozwayland.so
 /usr/share/librewolf/libnspr4.so
 /usr/share/librewolf/libnss3.so
-/usr/share/librewolf/libnssckbi.so
 /usr/share/librewolf/libnssutil3.so
 /usr/share/librewolf/libplc4.so
 /usr/share/librewolf/libplds4.so

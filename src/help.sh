@@ -30,8 +30,8 @@ command_descr() {
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
   update) echo "Update the version cache" ;;
   portable) printf "Build a zip containing a portable LibreWolf using\nhttps://codeberg.org/ltguillaume/librewolf-portable" ;;
-  deb) printf "Build the Debian .deb pacakge file";;
-  rpm) printf "Create a Redhat/Fedora-style .rpm package file";;
+  deb) printf "Build the Debian .deb pacakge file" ;;
+  rpm) printf "Create a Redhat/Fedora-style .rpm package file" ;;
   *) ;;
   esac
 }
@@ -68,10 +68,12 @@ done
 cat <<EOF
 
 Commands may be customized by setting the following environment variables:
-  TARGET  - The target platform (available: $AVAILABLE_TARGETS; currently: $TARGET)
-  ARCH    - The target architecture (available: $AVAILABLE_ARCHS; currently: $ARCH)
-  VERSION - The version of LibreWolf to build (default: latest)
-  WORKDIR - The directory to use for temporary files (currently: $WORKDIR)
+  TARGET     - The target platform (available: $AVAILABLE_TARGETS; currently: $TARGET)
+  ARCH       - The target architecture (available: $AVAILABLE_ARCHS; currently: $ARCH)
+  VERSION    - The version of LibreWolf to build (default: latest)
+  WORKDIR    - The directory to use for temporary files (currently: $WORKDIR)
+  SOURCE_TAR - Optionally, a path to a local source tarball to use instead of downloading
+               the VERSION-tarball from GitLab (currently: ${SOURCE_TAR:-"not set"})
 
   You can also persist these settings by creating a file named "env.sh" in the
   same directory as this script, and setting the variables there, for example:

@@ -6,6 +6,12 @@ export BSYS6="$(dirname $(readlink -f "$0"))/src"
 source $BSYS6/exports/vars.sh
 source $BSYS6/exports/target.sh
 
+if [ -d "${SOURCE_TAR:-}" ]; then
+  echo "-> Using local source tarball with docker, moving it into working directory" >&2
+  cp -v "$SOURCE_TAR" "$WORKDIR/librewolf.source.tar.gz"
+  export SOURCE_TAR="$WORKDIR/librewolf.source.tar.gz"
+fi
+
 set +u
 
-docker run --rm -it -v "$BSYS6/..":"/bsys6" -v "$WORKDIR":"/root/.local/share/bsys6/work" --volume /etc/passwd:/etc/passwd:ro --volume /etc/group:/etc/group:ro --user $(id -u):$(id -g) -e HOME="/root" -e TARGET="$TARGET" -e ARCH="$ARCH" -e VERSION="$VERSION" "registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET" ./bsys6 $@
+docker run --rm -it -v "$BSYS6/..":"/bsys6" -v "$WORKDIR":"/root/.local/share/bsys6/work" --volume /etc/passwd:/etc/passwd:ro --volume /etc/group:/etc/group:ro --user $(id -u):$(id -g) -e HOME="/root" -e TARGET="$TARGET" -e ARCH="$ARCH" -e VERSION="$VERSION" -e SOURCE_TAR="$SOURCE_TAR" "registry.gitlab.com/librewolf-community/browser/bsys6/$TARGET" ./bsys6 $@

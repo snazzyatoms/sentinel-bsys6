@@ -28,12 +28,13 @@ flowchart TB
 To view all commands, run `./bsys6 help`. Commands can be customized by setting
 environment variables, most importantly:
 
-| Environment variable | Description                                                                                          | Possible values (bold is default)                                                                           |
-| -------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `TARGET`             | The platform you want to build for.                                                                  | **`linux`** `windows`                                                                                       |
-| `ARCH`               | The architecture that you want to build for.                                                         | **`x86_64`** `arm64` `i686`                                                                                 |
-| `VERSION`            | The version of LibreWolf to build.                                                                   | **`[latest version]`** [`[version tag]`](https://gitlab.com/librewolf-community/browser/source/-/releases). |
-| `WORKDIR`            | The directory where the source code should be downloaded to and where the compilation should happen. | **`~/.local/share/bsys6/work`** `[any directory]`                                                           |
+| Environment variable | Description                                                                                                   | Possible values (bold is default)                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `TARGET`             | The platform you want to build for.                                                                           | **`linux`** `windows`                                                                                       |
+| `ARCH`               | The architecture that you want to build for.                                                                  | **`x86_64`** `arm64` `i686`                                                                                 |
+| `VERSION`            | The version of LibreWolf to build.                                                                            | **`[latest version]`** [`[version tag]`](https://gitlab.com/librewolf-community/browser/source/-/releases). |
+| `WORKDIR`            | The directory where the source code should be downloaded to and where the compilation should happen.          | **`~/.local/share/bsys6/work`** `[any directory]`                                                           |
+| `SOURCE_TAR`         | Optionally, a path to a local source tarball to use instead of downloading the `VERSION`-tarball from GitLab. | `[any filepath]`                                                                                            |
 
 For actually building LibreWolf, there are two options available:
 

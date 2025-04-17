@@ -6,21 +6,28 @@ source $BSYS6/exports/version.sh
 
 if [ -z "${SOURCE:-}" ]; then
   if [ ! -d "$SOURCEDIR" ]; then
-    echo "-> Fetching librewolf-$VERSION.source.tar.gz" >&2
 
     $BSYS6/utils/require_command.sh tar
 
     mkdir -p "$SOURCEDIR/.." >&2
     mkdir -p "$WORKDIR" >&2
 
-    curl -o "$WORKDIR/librewolf-$VERSION.source.tar.gz" "$SOURCE_URL" >&2
+    if [ -z "${SOURCE_TAR:-}" ]; then
+      echo "-> Fetching source tarball for version $VERSION" >&2
+      curl -o "$WORKDIR/librewolf-$VERSION.source.tar.gz" "$SOURCE_URL" >&2
+      export SOURCE_TAR="$WORKDIR/librewolf-$VERSION.source.tar.gz"
+    fi
 
-    echo "-> Extracting librewolf-$VERSION.source.tar.gz" >&2
-    tar xf "$WORKDIR/librewolf-$VERSION.source.tar.gz" -C "$SOURCEDIR/.." >&2
+    echo "-> Extracting source tarball" >&2
+    tar xf "$SOURCE_TAR" -C "$SOURCEDIR/.." >&2
     if [ "$(readlink -f "$SOURCEDIR")" != "$(readlink -f "$SOURCEDIR/../librewolf-$VERSION")" ]; then
       mv "$SOURCEDIR/../librewolf-$VERSION" "$SOURCEDIR" >&2
     fi
-    rm "$WORKDIR/librewolf-$VERSION.source.tar.gz" >&2
+
+    if [[ $SOURCE_TAR == $WORKDIR* ]]; then
+      echo "-> Cleaning up source tarball" >&2
+      rm "$SOURCE_TAR" >&2
+    fi
   fi
 
   if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then
@@ -48,7 +55,7 @@ EOF
     )"
   fi
 
-# Total hack (temporary)
+  # Total hack (temporary)
   if [[ $TARGET == "macos" && $ARCH = "x86_64" ]]; then
     mozconfig="$(
       cat <<EOF

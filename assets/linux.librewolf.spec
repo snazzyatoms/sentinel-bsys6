@@ -29,10 +29,6 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/browser/chrome/icons/default/default32.png
 /usr/share/librewolf/browser/chrome/icons/default/default48.png
 /usr/share/librewolf/browser/chrome/icons/default/default64.png
-/usr/share/librewolf/browser/features/formautofill@mozilla.org.xpi
-/usr/share/librewolf/browser/features/pictureinpicture@mozilla.org.xpi
-/usr/share/librewolf/browser/features/screenshots@mozilla.org.xpi
-/usr/share/librewolf/browser/features/webcompat@mozilla.org.xpi
 /usr/share/librewolf/browser/omni.ja
 /usr/share/librewolf/defaults/pref/channel-prefs.js
 /usr/share/librewolf/dependentlibs.list

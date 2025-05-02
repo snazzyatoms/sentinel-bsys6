@@ -17,4 +17,4 @@ export HOST_CC="$CROSS/clang/bin/clang"
 export HOST_CXX="$CROSS/clang/bin/clang++"
 
 # Only temporary
-ac_add_options --with-macos-sdk="$MOZBUILD/MacOSX14.4.sdk"
+ac_add_options --with-macos-sdk="$MOZBUILD/MacOSX15.4.sdk"

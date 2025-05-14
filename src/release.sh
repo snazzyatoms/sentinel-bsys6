@@ -131,9 +131,17 @@ EOF
   )"
   curl --header 'Content-Type: application/json' \
     --header 'accept: application/json' \
+    --header "Authorization: token $CODEBERG_TOKEN" \
     --data "$codeberg_body" \
     --request POST \
-    "https://codeberg.org/api/v1/repos/librewolf/bsys6/releases?token=$CODEBERG_TOKEN"
+    "https://codeberg.org/api/v1/repos/librewolf/bsys6/releases"
+
+  curl -X 'POST' \
+    'https://codeberg.org/api/v1/repos/librewolf/website/actions/workflows/deploy.yaml/dispatches' \
+    -H 'Accept: application/json' \
+    -H "Authorization: token $CODEBERG_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -d '{"ref": "master"}'
 }
 
 push_nupkg() {

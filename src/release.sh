@@ -136,8 +136,20 @@ EOF
     --request POST \
     "https://codeberg.org/api/v1/repos/librewolf/bsys6/releases"
 
+}
+
+dispatch_workflows() {
+  echo "-> Dispatching deploy workflow for librewolf.net"
   curl -X 'POST' \
     'https://codeberg.org/api/v1/repos/librewolf/website/actions/workflows/deploy.yaml/dispatches' \
+    -H 'Accept: application/json' \
+    -H "Authorization: token $CODEBERG_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -d '{"ref": "master"}'
+
+  echo "-> Dispatching deploy workflow for repo.librewolf.net"
+  curl -X 'POST' \
+    'https://codeberg.org/api/v1/repos/librewolf/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches' \
     -H 'Accept: application/json' \
     -H "Authorization: token $CODEBERG_TOKEN" \
     -H 'Content-Type: application/json' \
@@ -263,6 +275,8 @@ done
 packages_other+=("$(upload_to_registry "sha256sums.txt")")
 
 publish_release
+
+dispatch_workflows
 
 for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
   push_nupkg "$file"

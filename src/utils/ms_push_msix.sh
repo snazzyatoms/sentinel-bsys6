@@ -11,6 +11,13 @@ fi
 echo "-> Pushing msix packages to the Microsoft Store"
 source $BSYS6/exports/ms_access_token.sh
 ms_application_id="9NVN9SZ8KFD7"
+echo "Checking for pending submission"
+ms_application="$(curl -s -X GET "https://manage.devcenter.microsoft.com/v1.0/my/applications/$ms_application_id" --header "Authorization: Bearer $MS_ACCESS_TOKEN")"
+if [ "$(echo "$ms_application" | jq -r '.pendingApplicationSubmission')" != "null" ]; then
+  ms_old_submission_id="$(echo "$ms_application" | jq -r '.pendingApplicationSubmission.id')"
+  echo "Deleting pending submission with ID $ms_old_submission_id"
+  curl -s -X DELETE "https://manage.devcenter.microsoft.com/v1.0/my/applications/$ms_application_id/submissions/$ms_old_submission_id" --header 'Content-Type: application/json' --header "Authorization: Bearer $MS_ACCESS_TOKEN" -d ""
+fi
 echo "Creating new submission"
 ms_submission="$(curl -s -X POST https://manage.devcenter.microsoft.com/v1.0/my/applications/$ms_application_id/submissions --header 'Content-Type: application/json' --header "Authorization: Bearer $MS_ACCESS_TOKEN" -d "")"
 ms_submission_id="$(echo "$ms_submission" | jq -r '.id')"

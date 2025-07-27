@@ -9,7 +9,7 @@ while [[ $# -gt 0 ]]; do
   echo "-> Fetching toolchain artifact $1"
   case $1 in
     linux64-binutils)
-      $SOURCE/mach artifact toolchain --from-task JqrrfAabSU2BRwlxnEq9zQ:public/build/binutils.tar.zst
+      $SOURCE/mach artifact toolchain --from-task FYvJ426hRaWuQ-fmBbtmBQ:public/build/binutils.tar.zst
       ;;
     *)
       $SOURCE/mach artifact toolchain --from-build "$1"

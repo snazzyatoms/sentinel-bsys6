@@ -20,8 +20,8 @@ $BSYS6/utils/vc_redist.sh
 cd ..
 
 # ahk-tools by @ltGuillaume
-$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-winupdater" 'LibreWolf-WinUpdater.*\\.zip' "LibreWolf-WinUpdater.zip"
-$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-portable" 'LibreWolf-Portable.*\\.zip' "LibreWolf-Portable.zip"
+$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-winupdater" 'LibreWolf-WinUpdater_[.\\d]+\\.zip' "LibreWolf-WinUpdater.zip"
+$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-portable" 'LibreWolf-Portable_[.\\d]+\\.zip' "LibreWolf-Portable.zip"
 unzip LibreWolf-WinUpdater.zip
 unzip LibreWolf-Portable.zip
 rm LibreWolf-WinUpdater.zip LibreWolf-Portable.zip

@@ -150,14 +150,6 @@ continue:
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf Community"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$\"$INSTDIR\librewolf.exe$\" -osint -url $\"%1$\""
-
-	DetailPrint "Removing potentially broken WinUpdater Scheduled Task"
-	nsExec::ExecToLog 'schtasks.exe /delete /tn "LibreWolf WinUpdater" /f'
-
-	DetailPrint "Removing potentially broken WinUpdater start menu entry"
-	SetShellVarContext current
-	RmDir /r "$SMPROGRAMS\LibreWolf"
-	SetShellVarContext all
 SectionEnd
 
 Section /o "LibreWolf WinUpdater" winupdater

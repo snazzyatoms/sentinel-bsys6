@@ -42,6 +42,7 @@ cp -rv * "$RPM_BUILD_ROOT"
 /usr/share/librewolf/libmozavcodec.so
 /usr/share/librewolf/libmozavutil.so
 /usr/share/librewolf/libmozgtk.so
+/usr/share/librewolf/libmozinference.so
 /usr/share/librewolf/libmozsandbox.so
 /usr/share/librewolf/libmozsqlite3.so
 /usr/share/librewolf/libmozwayland.so

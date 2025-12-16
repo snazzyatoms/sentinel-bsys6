@@ -12,6 +12,7 @@ Images:
     matrix:
       - TARGET:
           - dind
+          - release
           - linux
           - macos
           - windows
@@ -94,7 +95,7 @@ Release:
   stage: release
   when: manual
   allow_failure: false
-  image: registry.gitlab.com/librewolf-community/browser/bsys6/dind
+  image: registry.gitlab.com/librewolf-community/browser/bsys6/release
   needs:
     - job: "Linux"
       artifacts: true

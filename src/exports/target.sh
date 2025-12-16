@@ -26,6 +26,7 @@ macos)
   fi
   ;;
 dind) ;;
+release) ;;
 *)
   echo "Unsupported target $TARGET"
   exit 1

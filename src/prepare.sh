@@ -53,6 +53,15 @@ dind)
   curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
   $BSYS6/utils/dependencies.sh "docker-ce docker-ce-cli containerd.io docker-compose-plugin make wget lbzip2 zip" ""
+  ;;
+
+release)
+  echo "-> Preparing build environment for the release script"
+
+  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release" ""
+  curl https://pkg.ossign.org/debian/repository.key -o /etc/apt/keyrings/gitea-ossign.asc
+  echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" | tee /etc/apt/sources.list.d/ossign.list
+  $BSYS6/utils/dependencies.sh "make wget lbzip2 zip ossign mono-complete jq gettext-base" ""
   $BSYS6/utils/install_release_cli.sh
   $BSYS6/utils/install_chocolatey.sh
   $BSYS6/utils/pip-dependencies.sh azure-storage-blob

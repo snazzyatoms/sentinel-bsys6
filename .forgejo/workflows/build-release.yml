@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Publish the release'
+        description: "Publish the release"
         required: false
         default: false
         type: boolean
       lto:
-        description: 'Build with LTO'
+        description: "Build with LTO"
         required: false
         default: false
         type: boolean
@@ -28,11 +28,10 @@ jobs:
 
       - name: Build Linux
         env:
-           ARCH: ${{ matrix.arch }}
-           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-           LTO: ${{ inputs.lto }}
-        run:
-          ./bsys6 package package_linux
+          ARCH: ${{ matrix.arch }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          LTO: ${{ inputs.lto }}
+        run: ./bsys6 package package_linux
 
       - name: Upload artifacts
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
@@ -48,7 +47,7 @@ jobs:
   build-windows:
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:windows 
+      image: codeberg.org/librewolf/bsys6:windows
     strategy:
       matrix:
         arch: [x86_64]
@@ -58,12 +57,13 @@ jobs:
 
       - name: Build Windows
         env:
-           TARGET: windows
-           ARCH: ${{ matrix.arch }}
-           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-           LTO: ${{ inputs.lto }}
-        run:
-          ./bsys6 package setup msix portable nupkg
+          TARGET: windows
+          ARCH: ${{ matrix.arch }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          LTO: ${{ inputs.lto }}
+          OSSIGN_CONFIG: ${{ secrets.OSSIGN_CONFIG }}
+          ENABLE_EXE_SIGNING: ${{ forgejo.ref_name == 'signing' }}
+        run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
@@ -80,7 +80,7 @@ jobs:
   build-macos:
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:macos 
+      image: codeberg.org/librewolf/bsys6:macos
     strategy:
       matrix:
         arch: [x86_64, arm64]
@@ -90,12 +90,11 @@ jobs:
 
       - name: Build MacOS
         env:
-           TARGET: macos
-           ARCH: ${{ matrix.arch }}
-           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-           LTO: ${{ inputs.lto }}
-        run:
-          ./bsys6 package
+          TARGET: macos
+          ARCH: ${{ matrix.arch }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          LTO: ${{ inputs.lto }}
+        run: ./bsys6 package
 
       - name: Upload artifacts
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
@@ -124,14 +123,13 @@ jobs:
 
       - name: Publish Release
         env:
-           FORGE_USER: ${{ vars.FORGE_USER }}
-           FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}
-           FORGE_REPO: ${{ forgejo.repository }}
-           FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}
-           REPO_DEPLOY_TOKEN: ${{ secrets.REPO_DEPLOY_TOKEN }}
-           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
-           MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
-           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        run:
-          ./bsys6 release
+          FORGE_USER: ${{ vars.FORGE_USER }}
+          FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}
+          FORGE_REPO: ${{ forgejo.repository }}
+          FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}
+          REPO_DEPLOY_TOKEN: ${{ secrets.REPO_DEPLOY_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+          MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        run: ./bsys6 release

@@ -14,3 +14,7 @@ if [ "${VERBOSE:-}" == "true" ]; then
 else
   (cd $SOURCE && ./mach build)
 fi
+
+if [ "$TARGET" == "windows" ]; then
+  $BSYS6/utils/sign_exe.sh "$SOURCE/obj-$MOZ_TARGET/dist/bin/librewolf.exe"
+fi

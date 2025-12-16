@@ -2,7 +2,7 @@
 set -eu
 
 if [ "$#" -ne 1 ]; then
-  echo "Usage: default_target.sh <target>" >&2
+  echo "Usage: require_target.sh <target>" >&2
   exit 1
 fi
 

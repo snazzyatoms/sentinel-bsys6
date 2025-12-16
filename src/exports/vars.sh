@@ -24,7 +24,7 @@ mkdir -p "$WORKDIR"
 
 export AVAILABLE_TARGETS="linux windows macos dind release"
 export AVAILABLE_ARCHS="x86_64 arm64 i686"
-export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX SETUP PORTABLE NUPKG DEB RPM"
+export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX SETUP PORTABLE NUPKG DEB RPM WINUPDATER"
 
 if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then
   echo "Unsupported architecture $ARCH"
@@ -41,4 +41,9 @@ fi
 
 if [ -z "${FORGE_REPO:-}" ]; then
   export FORGE_REPO="librewolf/bsys6"
+fi
+
+if [ -n "${OSSIGN_CONFIG:-}"  ] && [ -z "${OSSIGN_CONFIG_FILE:-}" ]; then
+  export OSSIGN_CONFIG_FILE="$(mktemp)"
+  echo "$OSSIGN_CONFIG" > "$OSSIGN_CONFIG_FILE"
 fi

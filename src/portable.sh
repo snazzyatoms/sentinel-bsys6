@@ -3,6 +3,7 @@ set -eu
 
 source $BSYS6/exports/require_target.sh windows
 source $BSYS6/exports/require_artifact.sh package
+source $BSYS6/exports/require_artifact.sh winupdater
 $BSYS6/utils/require_command.sh "jq" "zip" "unzip" "wget"
 
 echo "-> Building portable zip" >&2
@@ -20,14 +21,15 @@ $BSYS6/utils/vc_redist.sh
 cd ..
 
 # ahk-tools by @ltGuillaume
-$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-winupdater" 'LibreWolf-WinUpdater_[.\\d]+\\.zip' "LibreWolf-WinUpdater.zip"
 $BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-portable" 'LibreWolf-Portable_[.\\d]+\\.zip' "LibreWolf-Portable.zip"
-unzip LibreWolf-WinUpdater.zip
 unzip LibreWolf-Portable.zip
-rm LibreWolf-WinUpdater.zip LibreWolf-Portable.zip
+rm LibreWolf-Portable.zip
 
-# extra files from the zip files
 rm *.url
+
+$BSYS6/utils/sign_exe.sh LibreWolf-Portable.exe
+
+cp -rv "$WINUPDATER"/* .
 
 # make the final zip
 cd $tmpdir

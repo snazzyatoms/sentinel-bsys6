@@ -28,9 +28,7 @@ function build_deb() {
 Architecture: $(deb_arch "$ARCH")
 Depends: libasound2 (>= 1.0.16), libatk1.0-0 (>= 1.12.4), libc6 (>= 2.18), libcairo-gobject2 (>= 1.10.0), libcairo2 (>= 1.10.0), libdbus-1-3 (>= 1.5.12), libfontconfig1 (>= 2.11), libfreetype6 (>= 2.3.5), libgcc1 (>= 1:4.1.1), libgdk-pixbuf2.0-0 (>= 2.22.0) | libgdk-pixbuf-2.0-0 (>= 2.22.0), libglib2.0-0 (>= 2.37.0), libgtk-3-0 (>= 3.13.7), libpango-1.0-0 (>= 1.14.0), libpangocairo-1.0-0 (>= 1.14.0), libstdc++6 (>= 4.8), libx11-6, libx11-xcb1, libxcb-shm0, libxcb1, libxcomposite1 (>= 1:0.3-1), libxcursor1 (>> 1.1.2), libxdamage1 (>= 1:1.1), libxext6, libxfixes3, libxi6, libxrandr2 (>= 2:1.4.0), libxrender1
 Description: The Librewolf Browser
-Download-Size: 56.0 MB
 Essential: no
-Installed-Size: 204 MB
 Maintainer: Bert van der Weerd <bert@stanzabird.nl>
 Package: librewolf
 Priority: optional
@@ -62,6 +60,8 @@ EOF
     cp ../librewolf.desktop usr/share/applications/librewolf.desktop
 
     cd ..
+    INSTALLED_SIZE_KIB=$(du -sk librewolf | cut -f1)
+    echo "Installed-Size: $INSTALLED_SIZE_KIB" >> librewolf/DEBIAN/control
     dpkg-deb --build librewolf
 
     # Sign the deb file if private key is provided and we have dpkg-sig available

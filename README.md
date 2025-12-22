@@ -66,11 +66,11 @@ For actually building LibreWolf, there are two options available:
 
 ### Structure
 
-| Directory          | Contents                                                                                                | Arguments                                        | How to include |
-| ------------------ | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------- |
-| `src/{command}.sh` | Commands that can be run by the user with `./bsys6/{command}.sh`. Can export new environment variables. | Via environment variable                         | With `source`  |
-| `src/exports/*.sh` | Scripts that export environment variables, but shouldn't be run directly by the user.                   | Via environment variable                         | With `source`  |
-| `src/utils/*.sh`   | Scripts that don't export environment variables and shouldn't be run directly by the user.              | Via environment variable or positional arguments | Run directly   |
+| Directory          | Contents                                                                                             | Arguments                                        | How to include |
+| ------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------- |
+| `src/{command}.sh` | Commands that can be run by the user with `./bsys6 {command}`. Can export new environment variables. | Via environment variable                         | With `source`  |
+| `src/exports/*.sh` | Scripts that export environment variables, but shouldn't be run directly by the user.                | Via environment variable                         | With `source`  |
+| `src/utils/*.sh`   | Scripts that don't export environment variables and shouldn't be run directly by the user.           | Via environment variable or positional arguments | Run directly   |
 
 ## License
 

@@ -8,7 +8,7 @@ $BSYS6/utils/require_command.sh curl jq
 $BSYS6/utils/require_choco.sh
 
 abort="false"
-for required_var in "CI_JOB_TOKEN" "REPO_DEPLOY_TOKEN" "CODEBERG_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET"; do
+for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET"; do
   if [ -z "${!required_var:-}" ]; then
     echo "Error: '$required_var' is not set" >&2
     abort="true"
@@ -19,7 +19,7 @@ if [ "$abort" == "true" ]; then
   exit 1
 fi
 
-if curl -f --header "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases/$FULL_VERSION"; then
+if curl -f "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/source/releases/tags/$FULL_VERSION"; then
   echo "Error: Release $FULL_VERSION already exists" >&2
   exit 1
 fi
@@ -28,9 +28,9 @@ packages=()
 packages_other=()
 
 upload_to_registry() {
-  echo "-> Uploading $1 to GitLab package registry" >&2
-  package_url="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$1")"
-  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$1" "$package_url" >&2
+  echo "-> Uploading $1 to Codeberg package registry" >&2
+  package_url="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf-source/$FULL_VERSION/$(basename "$1")"
+  curl --http1.1 --user "$FORGE_USER:$FORGE_TOKEN" --upload-file "$1" "$package_url" >&2
   echo >&2
   echo "$package_url"
 }
@@ -61,97 +61,53 @@ publish_release() {
     description="$description- Upstream release, see the [Firefox $ffver Release Notes](https://www.mozilla.org/en-US/firefox/$ffver/releasenotes/)"
   fi
 
-  if [ ! -z "${CI_PIPELINE_ID:-}" ]; then
-    description="$description\n\n(Built on GitLab by pipeline [$CI_PIPELINE_ID](https://gitlab.com/librewolf-community/browser/bsys6/-/pipelines/$CI_PIPELINE_ID))"
+  if [ ! -z "${FORGEJO_RUN_NUMBER:-}" ]; then
+    description="$description\n\n(Built on Codeberg by workflow [$FORGEJO_RUN_NUMBER]($FORGE_URL/$FORGE_REPO/actions/runs/$FORGEJO_RUN_NUMBER))"
   fi
-
-  codeberg_description="$description\n"
-  assets=""
-
-  for package in "${packages[@]}"; do
-    name="$(basename "$package")"
-    assets="$(
-      cat <<-EOF
-$assets
-{
-  "name": "$name",
-  "url": "$package",
-  "link_type": "package"
-},
-EOF
-    )"
-    codeberg_description="$codeberg_description\n[$(basename "$package")]($package)"
-  done
-
-  for package in "${packages_other[@]}"; do
-    name="$(basename "$package")"
-    assets="$(
-      cat <<-EOF
-$assets
-{
-  "name": "$name",
-  "url": "$package",
-  "link_type": "other"
-},
-EOF
-    )"
-  done
 
   body="$(
     cat <<EOF
 {
   "name": "$FULL_VERSION",
   "tag_name": "$FULL_VERSION",
-  "ref": "master",
-  "description": "$description",
-  "assets": {
-    "links": [
-${assets:1:-1}
-    ]
-  }
+  "body": "$description"
 }
 EOF
   )"
-  echo "$body"
-  curl --header 'Content-Type: application/json' \
-    --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+  release_id=$(curl --header 'Content-Type: application/json' \
+    --header 'accept: application/json' \
+    --header "Authorization: token $FORGE_TOKEN" \
     --data "$body" \
     --request POST \
-    "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases"
+    "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases" | jq -r '.id')
 
-  codeberg_description="$codeberg_description\n\n[View on GitLab](https://gitlab.com/librewolf-community/browser/bsys6/-/releases/$FULL_VERSION)"
-  codeberg_body="$(
-    cat <<EOF
-{
-  "name": "$FULL_VERSION",
-  "tag_name": "$FULL_VERSION",
-  "body": "$codeberg_description"
-}
-EOF
-  )"
-  curl --header 'Content-Type: application/json' \
-    --header 'accept: application/json' \
-    --header "Authorization: token $CODEBERG_TOKEN" \
-    --data "$codeberg_body" \
-    --request POST \
-    "https://codeberg.org/api/v1/repos/librewolf/bsys6/releases"
+  echo "--> Release created with ID: $release_id" >&2
+
+  for package in "${packages[@]}" "${packages_other[@]}"; do
+    name="$(basename "$package")"
+    curl --header 'accept: application/json' \
+      --header "Authorization: token $FORGE_TOKEN" \
+      -F "external_url=$package" \
+      --request POST \
+      "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases/$release_id/assets?name=$(printf '%s' "$name" | jq -sRr @uri)"
+  done
 
 }
 
 dispatch_workflows() {
   echo "-> Dispatching deploy workflow for librewolf.net"
   curl -X 'POST' \
-    'https://codeberg.org/api/v1/repos/librewolf/website/actions/workflows/deploy.yaml/dispatches' \
+    "$FORGE_URL/api/v1/repos/librewolf/website/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
-    -H "Authorization: token $CODEBERG_TOKEN" \
+    -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
     -d '{"ref": "master"}'
 
   echo "-> Dispatching deploy workflow for repo.librewolf.net"
   curl -X 'POST' \
-    'https://codeberg.org/api/v1/repos/librewolf/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches' \
+    "$FORGE_URL/api/v1/repos/librewolf/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
-    -H "Authorization: token $CODEBERG_TOKEN" \
+    -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
     -d '{"ref": "master"}'
 }
@@ -222,7 +178,7 @@ submit_winget() {
   echo "-> Sumbitting $1 as a pull request to winget-pkgs"
   wingetdir="$CLONEDIR/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
   mkdir "$wingetdir"
-  export WINGET_FILE="$GL_API/packages/generic/librewolf/$FULL_VERSION/$(basename "$1")"
+  export WINGET_FILE="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/$(basename "$1")"
   export WINGET_CHECKSUM="$(cat "${1}.sha256sum")"
   envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
     <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.installer.yaml.in" \
@@ -243,17 +199,17 @@ update_repo() {
   "token": "$REPO_DEPLOY_TOKEN",
   "debs": [
     {
-      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-deb.deb",
+      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-deb.deb",
       "distros": ["distroless"]
     },
     {
-      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-deb.deb",
+      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-deb.deb",
       "distros": ["distroless"]
     }
   ],
   "rpms": [
     {
-      "file": "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm"
+      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm"
     }
   ]
 }

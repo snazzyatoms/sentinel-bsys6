@@ -17,7 +17,7 @@ if [ -z "${SOURCEDIR:-}" ]; then
 fi
 
 if [ -z "${SOURCE_URL:-}" ]; then
-  export SOURCE_URL="https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/$VERSION/librewolf-$VERSION.source.tar.gz"
+  export SOURCE_URL="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf-source/$VERSION/librewolf-$VERSION.source.tar.gz"
 fi
 
 if [ -z "${FULL_VERSION:-}" ]; then

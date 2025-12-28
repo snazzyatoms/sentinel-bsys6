@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-linux:
-    runs-on: docker
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:linux
     strategy:
@@ -34,7 +34,7 @@ jobs:
           retention-days: 7
 
   build-windows:
-    runs-on: docker
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:windows 
     strategy:
@@ -65,7 +65,7 @@ jobs:
           retention-days: 7
 
   build-macos:
-    runs-on: docker
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:macos 
     strategy:
@@ -94,7 +94,7 @@ jobs:
           retention-days: 7
 
   publish-release:
-    runs-on: docker
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:release
     needs: [build-linux, build-windows, build-macos]

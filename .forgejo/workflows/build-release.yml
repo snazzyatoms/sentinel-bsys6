@@ -109,7 +109,7 @@ jobs:
 
       - name: Publish Release
         env:
-           FORGE_USER: ${{ var.FORGE_USER }}
+           FORGE_USER: ${{ vars.FORGE_USER }}
            FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}
            FORGE_REPO: ${{ forgejo.repository }}
            FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}

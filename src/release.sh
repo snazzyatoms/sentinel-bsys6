@@ -29,7 +29,7 @@ packages_other=()
 
 upload_to_registry() {
   echo "-> Uploading $1 to Codeberg package registry" >&2
-  package_url="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf-source/$FULL_VERSION/$(basename "$1")"
+  package_url="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/$(basename "$1")"
   curl --http1.1 --user "$FORGE_USER:$FORGE_TOKEN" --upload-file "$1" "$package_url" >&2
   echo >&2
   echo "$package_url"

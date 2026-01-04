@@ -10,6 +10,6 @@ if [ -n "${SIGNING_KEY:-}" ] && [ -z "${SIGNING_KEY_FPR:-}" ]; then
   echo -e "$SIGNING_KEY" | gpg --import
   cat >>~/.rpmmacros <<EOF
 %_signature gpg
-%_gpg_name  LibreWolf Maintainers
+%_gpg_name  ${SIGNING_KEY_FPR}
 EOF
 fi

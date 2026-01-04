@@ -8,19 +8,19 @@ case $TARGET in
 linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq" "python-pip curl dpkg rpm gnupg jq"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq file nodejs" "python-pip curl dpkg rpm gnupg jq nodejs"
   # cross-compilation
   $BSYS6/utils/dependencies.sh "binutils-aarch64-linux-gnu" "aarch64-linux-gnu-binutils"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
-  $BSYS6/utils/rustup_target.sh "aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu"
+  $BSYS6/utils/rustup_target.sh "aarch64-unknown-linux-gnu"
   $BSYS6/utils/install_toolchain_artifact.sh "sysroot-wasm32-wasi" "linux64-cbindgen"
   ;;
 
 windows)
   echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq zip unzip wget mono-complete gettext-base pkg-config" "python-pip curl msitools zstd lib32-glibc p7zip jq zip unzip wget mono gettext pkgconf"
+  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq file nodejs zip unzip wget mono-complete gettext-base pkg-config" "python-pip curl msitools zstd lib32-glibc p7zip jq nodejs zip unzip wget mono gettext pkgconf"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc" "aarch64-pc-windows-msvc" "i686-pc-windows-msvc"
@@ -32,7 +32,7 @@ windows)
 macos)
   echo "-> Preparing build environment for cross-compilation to macOS (target: macos)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources jq" "python-pip curl rsync zip unzip python-testresources jq"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources jq file nodejs" "python-pip curl rsync zip unzip python-testresources jq nodejs"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"
@@ -49,7 +49,7 @@ dind)
 
   echo "-> Preparing dind container"
 
-  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release mono-complete jq gettext-base" ""
+  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release mono-complete jq nodejs gettext-base" ""
   curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
   $BSYS6/utils/dependencies.sh "docker-ce docker-ce-cli containerd.io docker-compose-plugin make wget lbzip2 zip" ""
@@ -58,7 +58,7 @@ dind)
 release)
   echo "-> Preparing build environment for the release script"
 
-  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release" ""
+  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release nodejs" ""
   curl https://pkg.ossign.org/debian/repository.key -o /etc/apt/keyrings/gitea-ossign.asc
   echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" | tee /etc/apt/sources.list.d/ossign.list
   $BSYS6/utils/dependencies.sh "make wget lbzip2 zip ossign mono-complete jq gettext-base" ""

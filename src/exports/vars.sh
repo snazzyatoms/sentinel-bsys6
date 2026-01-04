@@ -31,14 +31,14 @@ if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then
   exit 1
 fi
 
-if [ -z "${CI_API_V4_URL:-}" ]; then
-  export CI_API_V4_URL="https://gitlab.com/api/v4"
+if [ -z "${FORGE_URL:-}" ]; then
+  export FORGE_URL="https://codeberg.org"
 fi
 
-if [ -z "${CI_PROJECT_ID:-}" ]; then
-  export CI_PROJECT_ID="44042130"
+if [ -z "${FORGE_REPO_OWNER:-}" ]; then
+  export FORGE_REPO_OWNER="librewolf"
 fi
 
-if [ -z "${GL_API:-}" ]; then
-  export GL_API="$CI_API_V4_URL/projects/$CI_PROJECT_ID"
+if [ -z "${FORGE_REPO:-}" ]; then
+  export FORGE_REPO="librewolf/bsys6"
 fi

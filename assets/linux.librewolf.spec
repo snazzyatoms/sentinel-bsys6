@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 Name:           librewolf
 Version:        __VERSION__
 Release:        __RELEASE__%{?dist}

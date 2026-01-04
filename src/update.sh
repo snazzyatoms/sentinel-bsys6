@@ -6,10 +6,10 @@ $BSYS6/exports/vars.sh # for $WORKDIR
 
 echo "-> Fetching version" >&2
 
-export VERSION="$(curl 'https://gitlab.com/api/v4/projects/32320088/repository/tags?per_page=1' | jq -r '.[0].name' | sed 's/^v//')"
+export VERSION="$(curl 'https://codeberg.org/api/v1/repos/librewolf/source/tags?limit=1' | jq -r '.[0].name' | sed 's/^v//')"
 
 if [ "$VERSION" == "" ]; then
-  echo "Failed to fetch version from GitLab" >&2
+  echo "Failed to fetch version from Codeberg" >&2
   exit 1
 fi
 

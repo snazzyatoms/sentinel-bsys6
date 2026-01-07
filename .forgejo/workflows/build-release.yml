@@ -20,7 +20,7 @@ jobs:
            ARCH: ${{ matrix.arch }}
            SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         run:
-          ./bsys6 package deb rpm
+          ./bsys6 package package_linux
 
       - name: Upload artifacts
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4

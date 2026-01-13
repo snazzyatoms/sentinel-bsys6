@@ -58,7 +58,7 @@ jobs:
           name: windows-${{ matrix.arch }}
           path: |
             *.zip
-            *.setup.exe
+            *.exe
             *.msix
             *.nupkg
             *.sha256sum

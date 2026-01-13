@@ -19,7 +19,7 @@ if [ "$abort" == "true" ]; then
   exit 1
 fi
 
-if curl -f "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/source/releases/tags/$FULL_VERSION"; then
+if curl -f "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/bsys6/releases/tags/$FULL_VERSION"; then
   echo "Error: Release $FULL_VERSION already exists" >&2
   exit 1
 fi

@@ -39,7 +39,7 @@ jobs:
       image: codeberg.org/librewolf/bsys6:windows 
     strategy:
       matrix:
-        arch: [x86_64, i686]
+        arch: [x86_64]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

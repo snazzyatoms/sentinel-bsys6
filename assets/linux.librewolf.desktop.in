@@ -11,7 +11,7 @@ StartupWMClass=librewolf-default
 Exec=MYDIR/librewolf %u
 Icon=librewolf
 
-Actions=new-window;new-private-window;safe-mode;preferences;
+Actions=new-window;new-private-window;profile-manager-window;safe-mode;preferences;
 
 [Desktop Action new-window]
 Name=New Window
@@ -19,6 +19,9 @@ Exec=MYDIR/librewolf
 [Desktop Action new-private-window]
 Name=New Private Window
 Exec=MYDIR/librewolf --private-window %u
+[Desktop Action profile-manager-window]
+Name=Open the Profile Manager
+Exec=MYDIR/librewolf --ProfileManager
 [Desktop Action safe-mode]
 Name=Start in Safe Mode
 Exec=MYDIR/librewolf --safe-mode

@@ -2,6 +2,12 @@ name: Build & Publish Release
 
 on:
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish the release'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build-linux:
@@ -94,6 +100,7 @@ jobs:
           retention-days: 7
 
   publish-release:
+    if: ${{ inputs.release }}
     runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:release

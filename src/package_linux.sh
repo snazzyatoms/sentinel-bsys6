@@ -125,6 +125,8 @@ arch=$(deb_arch)
 outpkg="$tmpdir/${pkgname}-${VERSION}.${arch}.deb"
 
 (cd "$tmpdir/librewolf-$version" && \
+    mkdir -p etc/apparmor.d/local/librewolf && \
+    cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/local/librewolf && \
     mkdir -p assets/deb && \
     cp "$BSYS6/../assets/deb/postinst" assets/deb/postinst && \
     cp "$BSYS6/../assets/deb/prerm" assets/deb/prerm && \

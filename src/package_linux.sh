@@ -124,13 +124,12 @@ echo "-> Building Debian package" >&2
 arch=$(deb_arch)
 outpkg="$tmpdir/${pkgname}-${VERSION}.${arch}.deb"
 
+chmod +x "$BSYS6/../assets/deb/postinst" "$BSYS6/../assets/deb/prerm"
+
 (cd "$tmpdir/librewolf-$version" && \
-    mkdir -p etc/apparmor.d/local/librewolf && \
-    cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/local/librewolf && \
-    mkdir -p assets/deb && \
-    cp "$BSYS6/../assets/deb/postinst" assets/deb/postinst && \
-    cp "$BSYS6/../assets/deb/prerm" assets/deb/prerm && \
-    chmod +x assets/deb/postinst assets/deb/prerm )
+    mkdir -p etc/apparmor.d/local && \
+    cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/local/librewolf \ &&
+    chmod 644 etc/apparmor.d/local/librewolf)
 
 echo "-> Running fpm"
 
@@ -146,8 +145,8 @@ echo "-> Running fpm"
         --description "The LibreWolf browser for privacy, with uBlock and tweaked settings." \
         --chdir . \
         --package "$outpkg" \
-        --after-install "assets/deb/postinst" \
-        --before-remove "assets/deb/prerm" \
+        --after-install "$BSYS6/../assets/deb/postinst" \
+        --before-remove "$BSYS6/../assets/deb/prerm" \
         -d 'debianutils >= 1.16' \
         -d 'fontconfig' \
         -d 'libasound2t64 >= 1.0.16' \

@@ -178,7 +178,7 @@ echo "-> Running fpm"
         -d 'libxrandr2 >= 2:1.4.0' \
         -d 'procps' \
         -d 'zlib1g >= 1:1.2.3.4' \
-        usr )
+        usr etc)
 
 if [ -n "${SIGNING_KEY_FPR:-}" ] && command -v dpkg-sig &>/dev/null; then
     echo "-> Signing the DEB" >&2

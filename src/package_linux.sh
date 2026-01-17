@@ -147,37 +147,33 @@ echo "-> Running fpm"
         --package "$outpkg" \
         --after-install "$BSYS6/../assets/deb/postinst" \
         --before-remove "$BSYS6/../assets/deb/prerm" \
-        -d 'debianutils >= 1.16' \
-        -d 'fontconfig' \
-        -d 'libasound2t64 >= 1.0.16' \
-        -d 'libatk1.0-0t64 >= 1.12.4' \
-        -d 'libc6 >= 2.39' \
+        -d 'libasound2 >= 1.0.16' \
+        -d 'libatk1.0-0 >= 1.12.4' \
+        -d 'libc6 >= 2.18' \
         -d 'libcairo-gobject2 >= 1.10.0' \
         -d 'libcairo2 >= 1.10.0' \
-        -d 'libdbus-1-3 >= 1.10' \
-        -d 'libevent-2.1-7t64 >= 2.1.8-stable' \
-        -d 'libffi8 >= 3.4' \
-        -d 'libfontconfig1 >= 2.12.6' \
+        -d 'libdbus-1-3 >= 1.5.12' \
+        -d 'libfontconfig1 >= 2.11' \
         -d 'libfreetype6 >= 2.3.5' \
-        -d 'libgcc-s1 >= 4.5' \
-        -d 'libgdk-pixbuf-2.0-0' \
-        -d 'libglib2.0-0t64 >= 2.38.0' \
-        -d 'libgtk-3-0t64 >= 3.13.7' \
-        -d 'libnspr4 >= 2:4.32~' \
+        -d 'libgcc1 >= 1:4.1.1' \
+        -d 'libgdk-pixbuf2.0-0 >= 2.22.0 | libgdk-pixbuf-2.0-0 >= 2.22.0' \
+        -d 'libglib2.0-0 >= 2.37.0' \
+        -d 'libgtk-3-0 >= 3.13.7' \
         -d 'libpango-1.0-0 >= 1.14.0' \
-        -d 'libstdc++6 >= 12' \
-        -d 'libvpx9 >= 1.12.0' \
+        -d 'libpangocairo-1.0-0 >= 1.14.0' \
+        -d 'libstdc++6 >= 4.8' \
         -d 'libx11-6' \
         -d 'libx11-xcb1' \
         -d 'libxcb-shm0' \
         -d 'libxcb1' \
-        -d 'libxcomposite1 >= 1:0.4.6' \
+        -d 'libxcomposite1 >= 1:0.3-1' \
+        -d 'libxcursor1 >> 1.1.2' \
         -d 'libxdamage1 >= 1:1.1' \
         -d 'libxext6' \
         -d 'libxfixes3' \
+        -d 'libxi6' \
         -d 'libxrandr2 >= 2:1.4.0' \
-        -d 'procps' \
-        -d 'zlib1g >= 1:1.2.3.4' \
+        -d 'libxrender1' \
         usr etc)
 
 if [ -n "${SIGNING_KEY_FPR:-}" ] && command -v dpkg-sig &>/dev/null; then

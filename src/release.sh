@@ -210,6 +210,9 @@ update_repo() {
   "rpms": [
     {
       "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm"
+    },
+    {
+      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-rpm.rpm"
     }
   ]
 }

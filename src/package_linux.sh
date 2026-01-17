@@ -69,6 +69,7 @@ tmpdir=$(mktemp -d)
 
 pkgname="librewolf"
 version="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/version)"
+release="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/release)"
 
 echo "-> Building Redhat package" >&2
 arch=$(rpm_arch)
@@ -80,7 +81,7 @@ echo "-> Running fpm"
     fpm -s dir -t rpm \
         --name "$pkgname" \
         --version "$version" \
-        --iteration "$RELEASE" \
+        --iteration "$release" \
         --architecture "$arch" \
         --vendor "LibreWolf Community" \
         --url "https://librewolf.net/" \
@@ -137,7 +138,7 @@ echo "-> Running fpm"
     fpm -s dir -t deb \
         --name "$pkgname" \
         --version "$version" \
-        --iteration "$RELEASE" \
+        --iteration "$release" \
         --architecture "$arch" \
         --vendor "LibreWolf Community" \
         --url "https://librewolf.net/" \

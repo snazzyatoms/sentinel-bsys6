@@ -175,7 +175,7 @@ echo "-> Running fpm"
         -d 'libxi6' \
         -d 'libxrandr2 >= 2:1.4.0' \
         -d 'libxrender1' \
-        usr etc/apparmor.d/local)
+        usr etc/apparmor.d)
 
 if [ -n "${SIGNING_KEY_FPR:-}" ] && command -v dpkg-sig &>/dev/null; then
     echo "-> Signing the DEB" >&2

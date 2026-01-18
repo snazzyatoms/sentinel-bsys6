@@ -128,9 +128,9 @@ outpkg="$tmpdir/${pkgname}-${VERSION}.${arch}.deb"
 chmod +x "$BSYS6/../assets/deb/postinst" "$BSYS6/../assets/deb/prerm"
 
 (cd "$tmpdir/librewolf-$version" && \
-    mkdir -p etc/apparmor.d/local && \
-    cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/local/librewolf && \
-    chmod 644 etc/apparmor.d/local/librewolf)
+    mkdir -p etc/apparmor.d && \
+    cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/librewolf && \
+    chmod 644 etc/apparmor.d/librewolf)
 
 echo "-> Running fpm"
 

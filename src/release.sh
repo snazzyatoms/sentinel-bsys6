@@ -192,38 +192,6 @@ submit_winget() {
   gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
 }
 
-update_repo() {
-  body=$(
-    cat <<EOF
-{
-  "token": "$REPO_DEPLOY_TOKEN",
-  "debs": [
-    {
-      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-deb.deb",
-      "distros": ["distroless"]
-    },
-    {
-      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-deb.deb",
-      "distros": ["distroless"]
-    }
-  ],
-  "rpms": [
-    {
-      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-x86_64-rpm.rpm"
-    },
-    {
-      "file": "$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/librewolf-$FULL_VERSION-linux-arm64-rpm.rpm"
-    }
-  ]
-}
-EOF
-  )
-
-  id=$(set -x && curl "https://updaterepos-new.librewolf.net/job" --request POST --data "$body")
-
-  echo "Submitted update request to LibreWolf Software Repository (https://updaterepos-new.librewolf.net/job?id=$id)"
-}
-
 #
 # temporarily disable macOS (and RPM too for now):
 #
@@ -240,8 +208,6 @@ dispatch_workflows
 for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
   push_nupkg "$file"
 done
-
-update_repo
 
 $BSYS6/utils/ms_push_msix.sh $(find -name "*windows-*-msix.msix")
 

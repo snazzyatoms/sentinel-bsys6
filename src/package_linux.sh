@@ -97,22 +97,13 @@ echo "-> Running fpm"
         -d 'glibc' \
         -d 'libX11' \
         -d 'libX11-xcb' \
-        -d 'libdrm' \
         -d 'libgcc' \
-        -d 'libjpeg-turbo' \
         -d 'libstdc++' \
-        -d 'libvpx' \
-        -d 'mesa-libgbm' \
-        -d 'nspr' \
-        -d 'nss' \
-        -d 'nss-util' \
         -d 'p11-kit-trust' \
         -d 'pango' \
         -d 'pciutils-libs' \
-        -d 'pipewire-libs' \
         -d 'pixman' \
         -d 'systemd-udev' \
-        -d 'zlib-ng-compat' \
         usr )
     
 if [ -n "${SIGNING_KEY_FPR:-}" ]; then

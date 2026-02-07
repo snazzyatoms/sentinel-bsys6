@@ -92,7 +92,7 @@ echo "-> Running fpm"
         --package "$outpkg" \
         -d 'alsa-lib' \
         -d 'atk' \
-        -d 'gdk-pixbuf2' \
+        -d 'libgdk_pixbuf-2.0.so.0()(64bit)' \
         -d 'glib2' \
         -d 'glibc' \
         -d 'libX11' \

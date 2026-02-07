@@ -16,6 +16,15 @@ if command -v cmp >/dev/null 2>&1; then
   fi
 fi
 
+if command -v dpkg-query >/dev/null 2>&1; then
+  ver=$(dpkg-query -W -f='${Version}\n' apparmor)
+  major=${ver%%.*}
+  [ -z "$major" ] && major=0
+  if [ "$major" -lt 4 ] 2>/dev/null; then
+    [ -f /etc/apparmor.d/librewolf ] && rm -f /etc/apparmor.d/librewolf
+  fi
+fi
+
 if command -v systemctl >/dev/null 2>&1; then
   if systemctl list-unit-files | grep -q '^apparmor\.service'; then
     systemctl restart apparmor.service || true

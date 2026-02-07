@@ -7,7 +7,7 @@ Terminal=false
 MimeType=application/json;application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
 Comment=Browse the World Wide Web
 Categories=Network;WebBrowser;Security;
-StartupWMClass=librewolf-default
+StartupWMClass=librewolf
 Exec=MYDIR/librewolf %u
 Icon=librewolf
 

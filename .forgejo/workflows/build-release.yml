@@ -8,6 +8,11 @@ on:
         required: false
         default: false
         type: boolean
+      lto:
+        description: 'Build with LTO'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build-linux:
@@ -25,6 +30,7 @@ jobs:
         env:
            ARCH: ${{ matrix.arch }}
            SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+           LTO: ${{ inputs.lto }}
         run:
           ./bsys6 package package_linux
 
@@ -55,6 +61,7 @@ jobs:
            TARGET: windows
            ARCH: ${{ matrix.arch }}
            SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+           LTO: ${{ inputs.lto }}
         run:
           ./bsys6 package setup msix portable nupkg
 
@@ -86,6 +93,7 @@ jobs:
            TARGET: macos
            ARCH: ${{ matrix.arch }}
            SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+           LTO: ${{ inputs.lto }}
         run:
           ./bsys6 package
 

@@ -65,6 +65,25 @@ EOF
     )"
   fi
 
+  if [[ $LTO ]]; then
+    if [[ $TARGET == "windows" ]]; then
+      mozconfig="$(
+        cat <<EOF
+$mozconfig
+ac_add_options --enable-lto=full
+EOF
+      )"
+    else
+      mozconfig="$(
+        cat <<EOF
+$mozconfig
+ac_add_options --enable-lto=full,cross
+EOF
+      )"
+    fi
+  fi
+
+
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 

@@ -70,6 +70,7 @@ EOF
       mozconfig="$(
         cat <<EOF
 $mozconfig
+ac_add_options --enable-lto=thin
 EOF
       )"
     else

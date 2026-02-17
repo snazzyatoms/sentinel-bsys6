@@ -90,20 +90,40 @@ echo "-> Running fpm"
         --rpm-os linux \
         --chdir . \
         --package "$outpkg" \
-        -d 'alsa-lib' \
-        -d 'atk' \
+        -d 'libX11-xcb.so.1()(64bit)' \
+        -d 'libX11.so.6()(64bit)' \
+        -d 'libXcomposite.so.1()(64bit)' \
+        -d 'libXcursor.so.1()(64bit)' \
+        -d 'libXdamage.so.1()(64bit)' \
+        -d 'libXext.so.6()(64bit)' \
+        -d 'libXfixes.so.3()(64bit)' \
+        -d 'libXi.so.6()(64bit)' \
+        -d 'libXrandr.so.2()(64bit)' \
+        -d 'libXrender.so.1()(64bit)' \
+        -d 'libasound.so.2()(64bit)' \
+        -d 'libatk-1.0.so.0()(64bit)' \
+        -d 'libcairo-gobject.so.2()(64bit)' \
+        -d 'libcairo.so.2()(64bit)' \
+        -d 'libdbus-1.so.3()(64bit)' \
+        -d 'libdl.so.2()(64bit)' \
+        -d 'libfontconfig.so.1()(64bit)' \
+        -d 'libfreetype.so.6()(64bit)' \
+        -d 'libgcc_s.so.1()(64bit)' \
+        -d 'libgdk-3.so.0()(64bit)' \
         -d 'libgdk_pixbuf-2.0.so.0()(64bit)' \
-        -d 'glib2' \
-        -d 'glibc' \
-        -d 'libX11' \
-        -d 'libX11-xcb' \
-        -d 'libgcc' \
-        -d 'libstdc++' \
-        -d 'p11-kit-trust' \
-        -d 'pango' \
-        -d 'pciutils-libs' \
-        -d 'pixman' \
-        -d 'systemd-udev' \
+        -d 'libgio-2.0.so.0()(64bit)' \
+        -d 'libglib-2.0.so.0()(64bit)' \
+        -d 'libgobject-2.0.so.0()(64bit)' \
+        -d 'libgtk-3.so.0()(64bit)' \
+        -d 'libm.so.6()(64bit)' \
+        -d 'libpango-1.0.so.0()(64bit)' \
+        -d 'libpangocairo-1.0.so.0()(64bit)' \
+        -d 'libpthread.so.0()(64bit)' \
+        -d 'libresolv.so.2()(64bit)' \
+        -d 'librt.so.1()(64bit)' \
+        -d 'libstdc++.so.6()(64bit)' \
+        -d 'libxcb-shm.so.0()(64bit)' \
+        -d 'libxcb.so.1()(64bit)' \
         usr )
     
 if [ -n "${SIGNING_KEY_FPR:-}" ]; then

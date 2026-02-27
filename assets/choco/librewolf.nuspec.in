@@ -6,10 +6,10 @@
     <title>LibreWolf</title>
     <authors>LibreWolf contributors</authors>
     <projectUrl>https://librewolf.net</projectUrl>
-    <iconUrl>https://glcdn.githack.com/librewolf-community/branding/-/raw/master/icon/icon.svg</iconUrl>
+    <iconUrl>https://codeberg.org/librewolf/branding/raw/branch/master/icon/icon.svg</iconUrl>
     <licenseUrl>https://codeberg.org/librewolf/source/src/branch/main/LICENSE</licenseUrl>
     <packageSourceUrl>https://codeberg.org/librewolf/bsys6/src/branch/master/assets/choco</packageSourceUrl>
-    <releaseNotes>https://gitlab.com/librewolf-community/browser/bsys6/-/releases</releaseNotes>
+    <releaseNotes>https://codeberg.org/librewolf/bsys6/releases</releaseNotes>
     <docsUrl>https://librewolf.net/docs</docsUrl>
     <bugTrackerUrl>https://codeberg.org/librewolf/issues</bugTrackerUrl>
     <projectSourceUrl>https://codeberg.org/librewolf</projectSourceUrl>

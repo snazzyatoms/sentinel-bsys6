@@ -29,6 +29,7 @@ windows)
   $BSYS6/utils/install_toolchain_artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
   $BSYS6/utils/winsdk.sh
   $BSYS6/utils/install_chocolatey.sh
+  $BSYS6/utils/install_ossign.sh
   ;;
 
 macos)
@@ -61,11 +62,10 @@ release)
   echo "-> Preparing build environment for the release script"
 
   $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release nodejs" ""
-  curl https://pkg.ossign.org/debian/repository.key -o /etc/apt/keyrings/gitea-ossign.asc
-  echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" | tee /etc/apt/sources.list.d/ossign.list
   $BSYS6/utils/dependencies.sh "make wget lbzip2 zip ossign mono-complete jq gettext-base" ""
   $BSYS6/utils/install_release_cli.sh
   $BSYS6/utils/install_chocolatey.sh
+  $BSYS6/utils/install_ossign.sh
   $BSYS6/utils/pip-dependencies.sh azure-storage-blob
   ;;
 

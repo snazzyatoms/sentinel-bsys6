@@ -8,7 +8,7 @@ $BSYS6/utils/require_command.sh curl jq
 $BSYS6/utils/require_choco.sh
 
 abort="false"
-for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET" "OSSIGN_CONFIG_FILE"; do
+for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET" "OSSIGN_CONFIG_FILE" "S3_ENDPOINT" "S3_BUCKET" "S3_KEY" "S3_SECRET" "S3_PUBLIC_URL"; do
   if [ -z "${!required_var:-}" ]; then
     echo "Error: '$required_var' is not set" >&2
     abort="true"
@@ -35,18 +35,32 @@ upload_to_registry() {
   echo "$package_url"
 }
 
+upload_to_s3() {
+  echo "-> Uploading $1 to S3" >&2
+  s3_path="/librewolf/$FULL_VERSION/$(basename "$1")"
+  s3cmd put "$1" "s3://$S3_BUCKET$s3_path" \
+    --access_key="$S3_KEY" \
+    --secret_key="$S3_SECRET" \
+    --host="$S3_ENDPOINT" \
+    --host-bucket="$S3_ENDPOINT" >&2
+  echo "${S3_PUBLIC_URL}${s3_path}"
+}
+
 upload_asset() {
   asset="$(echo "$1" | sed 's/^.\///')"
   sha256sum "$asset" >>"sha256sums.txt"
-  packages+=("$(upload_to_registry "$asset")")
+  upload_to_registry "$asset"
+  packages+=("$(upload_to_s3 "$asset")")
   if [ -f "$asset.sha256sum" ]; then
-    packages_other+=("$(upload_to_registry "$asset.sha256sum")")
+    upload_to_registry "$asset.sha256sum"
+    packages_other+=("$(upload_to_s3 "$asset.sha256sum")")
   fi
   if [ -n "${SIGNING_KEY_FPR:-}" ]; then
     echo "-> Creating and uploading signature for '$asset' with key '$SIGNING_KEY_FPR'" >&2
     gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$asset"
     if [ -f "$asset.sig" ]; then
-      packages_other+=("$(upload_to_registry "$asset.sig")")
+      upload_to_registry "$asset.sig"
+      packages_other+=("$(upload_to_s3 "$asset.sig")")
     fi
   fi
 }
@@ -199,7 +213,8 @@ for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.xz" -o -name "
   upload_asset "$file"
 done
 
-packages_other+=("$(upload_to_registry "sha256sums.txt")")
+upload_to_registry "sha256sums.txt"
+packages_other+=("$(upload_to_s3 "sha256sums.txt")")
 
 publish_release
 

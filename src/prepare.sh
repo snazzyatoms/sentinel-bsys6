@@ -61,7 +61,7 @@ dind)
 release)
   echo "-> Preparing build environment for the release script"
 
-  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release nodejs" ""
+  $BSYS6/utils/dependencies.sh "ca-certificates curl gnupg lsb-release nodejs s3cmd" ""
   $BSYS6/utils/dependencies.sh "make wget lbzip2 zip mono-complete jq gettext-base" ""
   $BSYS6/utils/install_release_cli.sh
   $BSYS6/utils/install_chocolatey.sh

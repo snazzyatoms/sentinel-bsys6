@@ -33,6 +33,10 @@ cp -rv "$WINUPDATER"/* .
 
 # make the final zip
 cd $tmpdir
-zip -r9 librewolf-$VERSION.en-US.win64-portable.zip librewolf-$VERSION
+case "$ARCH" in
+  arm64) win_arch_suffix="winarm64" ;;
+  *)     win_arch_suffix="win64" ;;
+esac
+zip -r9 librewolf-$VERSION.en-US.$win_arch_suffix-portable.zip librewolf-$VERSION
 
 source $BSYS6/exports/move_artifact.sh "PORTABLE" "$tmpdir" "librewolf-.*\.zip"

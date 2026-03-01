@@ -18,6 +18,9 @@ linux)
   ;;
 windows)
   export MOZ_TARGET="$ARCH-pc-mingw32"
+  if [ "${ARCH:-}" == "arm64" ]; then
+    export MOZ_TARGET="aarch64-pc-windows-msvc"
+  fi
   ;;
 macos)
   export MOZ_TARGET="$ARCH-apple-darwin"

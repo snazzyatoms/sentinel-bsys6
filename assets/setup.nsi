@@ -14,7 +14,7 @@
 !define MUI_WELCOMEFINISHPAGE_BITMAP "banner.bmp"
 
 Name "${APPNAME}"
-OutFile "${PROGNAME}-${PROG_VERSION}.en-US.win64-setup.exe"
+OutFile "${PROGNAME}-${PROG_VERSION}.en-US.pkg_arch_suffix-setup.exe"
 InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation"
 InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin
@@ -88,8 +88,8 @@ continue:
 	# Install Visual C++ Redistributable (only if not silent)
 	IfSilent +4 0
 	InitPluginsDir
-	File /oname=$PLUGINSDIR\vc_redist.x64.exe vc_redist.x64.exe
-	ExecWait "$PLUGINSDIR\vc_redist.x64.exe /install /quiet /norestart"
+	File /oname=$PLUGINSDIR\vc_redist.exe pkg_vc_redist
+	ExecWait "$PLUGINSDIR\vc_redist.exe /install /quiet /norestart"
 
 	# Copy files
 	SetOutPath $INSTDIR

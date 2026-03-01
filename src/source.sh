@@ -28,6 +28,11 @@ if [ -z "${SOURCE:-}" ]; then
       echo "-> Cleaning up source tarball" >&2
       rm "$SOURCE_TAR" >&2
     fi
+
+    # Add support for aarch64 targets
+    if [ "${TARGET:-}" == "windows" ] && [ "${ARCH:-}" == "arm64" ]; then
+      sed -i '/"x86_64": \["--win64", "-m64"\],/a\        "aarch64": ["--win64", "-m64"],' "$SOURCEDIR/toolkit/moz.configure"
+    fi
   fi
 
   if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then
@@ -61,6 +66,16 @@ EOF
       cat <<EOF
 $mozconfig
 export NASM="\$MOZBUILD/nasm/nasm"
+EOF
+    )"
+  fi
+
+  # Use system widl for arm64 Windows builds
+  if [[ $TARGET == "windows" && "${ARCH:-}" == "arm64" ]]; then
+    mozconfig="$(
+      cat <<EOF
+$mozconfig
+export MIDL="$(which widl)"
 EOF
     )"
   fi

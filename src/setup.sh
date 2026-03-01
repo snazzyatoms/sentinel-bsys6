@@ -15,10 +15,24 @@ echo "-> Building installer with nsis"
 cp -v "$BSYS6/../assets/librewolf.ico" "$tmpdir/LibreWolf/librewolf.ico"
 mkdir -p "$tmpdir/x86-ansi"
 cp -v "$BSYS6/../assets/nsProcess.dll" "$tmpdir/x86-ansi/nsProcess.dll"
-$BSYS6/utils/download.sh "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$tmpdir/vc_redist.x64.exe"
+case "$ARCH" in
+  arm64)
+    nsis_arch_suffix="winarm64"
+    nsis_vc_redist="vc_redist.arm64.exe"
+    $BSYS6/utils/download.sh "https://aka.ms/vs/17/release/vc_redist.arm64.exe" "$tmpdir/vc_redist.arm64.exe"
+    ;;
+  *)
+    nsis_arch_suffix="win64"
+    nsis_vc_redist="vc_redist.x64.exe"
+    $BSYS6/utils/download.sh "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$tmpdir/vc_redist.x64.exe"
+    ;;
+esac
 $BSYS6/utils/vc_redist.sh "$tmpdir/LibreWolf"
 cp -rv "$WINUPDATER"/* "$tmpdir"
-sed "s/pkg_version/$FULL_VERSION/g" <"$BSYS6/../assets/setup.nsi" >"$tmpdir/setup.nsi"
+sed -e "s/pkg_version/$FULL_VERSION/g" \
+    -e "s/pkg_arch_suffix/$nsis_arch_suffix/g" \
+    -e "s/pkg_vc_redist/$nsis_vc_redist/g" \
+    <"$BSYS6/../assets/setup.nsi" >"$tmpdir/setup.nsi"
 cp "$BSYS6/../assets/librewolf.ico" "$tmpdir"
 cp "$BSYS6/../assets/banner.bmp" "$tmpdir"
 printf "Running nsis... "

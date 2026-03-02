@@ -5,7 +5,7 @@ case "$1" in
 configure|abort-upgrade)
   if [ -x /usr/bin/librewolf ]; then
     update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/librewolf 70 || true
-    update-alternatives --install /usr/bin/gnome-web-browser gnome-web-browser /usr/bin/librewolf 70 || true
+    update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/librewolf 70 || true
   fi
 ;;
 esac

@@ -7,7 +7,7 @@ source $BSYS6/source.sh
 
 msix_arch() {
   case "$1" in
-  i686) echo "x86" ;;
+  arm64) echo "aarch64" ;;
   *) echo "$1" ;;
   esac
 }

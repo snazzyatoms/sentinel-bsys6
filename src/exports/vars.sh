@@ -42,8 +42,3 @@ fi
 if [ -z "${FORGE_REPO:-}" ]; then
   export FORGE_REPO="librewolf/bsys6"
 fi
-
-if [ -n "${OSSIGN_CONFIG:-}"  ] && [ -z "${OSSIGN_CONFIG_FILE:-}" ]; then
-  export OSSIGN_CONFIG_FILE="$(mktemp)"
-  echo "$OSSIGN_CONFIG" > "$OSSIGN_CONFIG_FILE"
-fi

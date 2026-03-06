@@ -17,10 +17,5 @@ if [ "${ENABLE_EXE_SIGNING:-}" != "true" ]; then
   exit 0
 fi
 
-if [ -z "${OSSIGN_CONFIG_FILE:-}" ]; then
-  echo "Error: Unable to sign $in because OSSIGN_CONFIG_FILE is not set" >&2
-  exit 1
-fi
-
 echo "-> Signing $in with ossign"
-ossign -c "$OSSIGN_CONFIG_FILE" -t pecoff -o "$out" "$in"
+ossign -t pecoff -o "$out" "$in"

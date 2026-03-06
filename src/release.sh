@@ -8,7 +8,7 @@ $BSYS6/utils/require_command.sh curl jq
 $BSYS6/utils/require_choco.sh
 
 abort="false"
-for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET" "OSSIGN_CONFIG_FILE" "S3_ENDPOINT" "S3_BUCKET" "S3_KEY" "S3_SECRET" "S3_PUBLIC_URL"; do
+for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET" "S3_ENDPOINT" "S3_BUCKET" "S3_KEY" "S3_SECRET" "S3_PUBLIC_URL"; do
   if [ -z "${!required_var:-}" ]; then
     echo "Error: '$required_var' is not set" >&2
     abort="true"

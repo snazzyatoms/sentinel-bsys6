@@ -80,7 +80,7 @@ EOF
     )"
   fi
 
-  if [[ -n "${LTO-}" ]]; then
+  if [[ "${LTO:-false}" == "true" ]]; then
     if [[ $TARGET == "windows" ]]; then
       mozconfig="$(
         cat <<EOF

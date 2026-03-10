@@ -220,11 +220,12 @@ publish_release
 
 dispatch_workflows
 
+# Windows arm64 builds are still experimental, do not publish them to external distribution channels.
 for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
   push_nupkg "$file"
 done
 
-$BSYS6/utils/ms_push_msix.sh $(find -name "*windows-*-msix.msix")
+$BSYS6/utils/ms_push_msix.sh $(find -name "*windows-x86_64-msix.msix")
 
 # for file in $(find -name "*windows-x86_64-setup.exe"); do
 #   submit_winget "$file"

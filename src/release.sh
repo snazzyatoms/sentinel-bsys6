@@ -206,9 +206,6 @@ submit_winget() {
   gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
 }
 
-#
-# temporarily disable macOS (and RPM too for now):
-#
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.xz" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm"); do
   upload_asset "$file"
 done

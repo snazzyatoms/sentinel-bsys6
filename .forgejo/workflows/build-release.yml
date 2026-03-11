@@ -13,6 +13,12 @@ on:
         required: false
         default: false
         type: boolean
+      sign_exe:
+        description: "Sign Windows executables"
+        required: false
+        default: true
+        type: boolean
+
 
 jobs:
   build-linux:
@@ -62,7 +68,7 @@ jobs:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           LTO: ${{ inputs.lto }}
           OSSIGN_CONFIG: ${{ secrets.OSSIGN_CONFIG }}
-          ENABLE_EXE_SIGNING: ${{ forgejo.ref_name == 'signing' }}
+          ENABLE_EXE_SIGNING: ${{ inputs.sign_exe }}
         run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts

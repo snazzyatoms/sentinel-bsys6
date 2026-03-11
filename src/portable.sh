@@ -20,8 +20,8 @@ rmdir librewolf
 $BSYS6/utils/vc_redist.sh
 cd ..
 
-# ahk-tools by @ltGuillaume
-$BSYS6/utils/download_codeberg.sh "ltguillaume/librewolf-portable" 'LibreWolf-Portable_[.\\d]+\\.zip$' "LibreWolf-Portable.zip"
+# ahk-tools by @ltguillaume
+$BSYS6/utils/download_codeberg.sh "librewolf/librewolf-portable" 'LibreWolf-Portable_[.\\d]+\\.zip$' "LibreWolf-Portable.zip"
 unzip LibreWolf-Portable.zip
 rm LibreWolf-Portable.zip
 

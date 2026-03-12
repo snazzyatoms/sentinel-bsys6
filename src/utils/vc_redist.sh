@@ -13,7 +13,6 @@ if [ -n "${VC_REDIST_URL:-}" ]; then
 
   case "$ARCH" in
   x86_64) TO_EXTRACT="2026/x64/System64/msvcp140.dll 2026/x64/System64/vcruntime140.dll 2026/x64/System64/vcruntime140_1.dll" ;;
-  i686) TO_EXTRACT="2026/x86/System/msvcp140.dll 2026/x86/System/vcruntime140.dll 2026/x86/System/vcruntime140_1.dll" ;;
   arm64) TO_EXTRACT="2026/arm64/System64/msvcp140.dll 2026/arm64/System64/vcruntime140.dll 2026/arm64/System64/vcruntime140_1.dll" ;;
   esac
 

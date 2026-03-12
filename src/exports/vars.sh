@@ -23,7 +23,7 @@ fi
 mkdir -p "$WORKDIR"
 
 export AVAILABLE_TARGETS="linux windows macos dind release"
-export AVAILABLE_ARCHS="x86_64 arm64 i686"
+export AVAILABLE_ARCHS="x86_64 arm64"
 export AVAILABLE_ARTIFACTS="SOURCE PACKAGE MSIX SETUP PORTABLE NUPKG DEB RPM WINUPDATER"
 
 if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then

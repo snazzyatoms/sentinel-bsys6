@@ -27,8 +27,6 @@ rm LibreWolf-Portable.zip
 
 rm *.url
 
-$BSYS6/utils/sign_exe.sh LibreWolf-Portable.exe
-
 cp -rv "$WINUPDATER"/* .
 
 # make the final zip

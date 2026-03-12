@@ -14,6 +14,4 @@ unzip LibreWolf-WinUpdater.zip
 rm LibreWolf-WinUpdater.zip
 rm *.url
 
-$BSYS6/utils/sign_exe.sh LibreWolf-WinUpdater.exe
-
 export WINUPDATER="$tmpdir"

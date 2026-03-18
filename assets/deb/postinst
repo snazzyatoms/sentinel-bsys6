@@ -17,9 +17,10 @@ if command -v cmp >/dev/null 2>&1; then
 fi
 
 if command -v dpkg-query >/dev/null 2>&1; then
-  ver=$(dpkg-query -W -f='${Version}\n' apparmor)
-  if dpkg --compare-versions "$ver" lt "4.0"; then
-    rm -f /etc/apparmor.d/librewolf
+  if ver=$(dpkg-query -W -f='${Version}\n' apparmor 2>/dev/null); then
+    if dpkg --compare-versions "$ver" lt "4.0"; then
+      rm -f /etc/apparmor.d/librewolf
+    fi
   fi
 fi
 

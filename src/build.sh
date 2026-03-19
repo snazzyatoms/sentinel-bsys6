@@ -16,5 +16,7 @@ else
 fi
 
 if [ "$TARGET" == "windows" ]; then
-  $BSYS6/utils/sign_exe.sh "$SOURCE/obj-$MOZ_TARGET/dist/bin/librewolf.exe"
+  find "$SOURCE/obj-$MOZ_TARGET/dist/bin" -type f -name "*.exe" | while IFS= read -r file; do
+    $BSYS6/utils/sign_exe.sh "$file"
+  done
 fi

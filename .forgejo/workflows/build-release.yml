@@ -21,11 +21,32 @@ on:
 
 
 jobs:
+  kickstart:
+    runs-on: codeberg-tiny
+    outputs:
+      completion_url: ${{ steps.kickstart.outputs.completion_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: kickstart
+        uses: https://codeberg.org/alyx161/kickstart@main
+        with:
+          mode: spawn
+          auth_token: ${{ secrets.KICKSTART_TOKEN }}
+          count: '6'
+          ttl-minutes: '120'
+          provider: auto
+          plan: compute-xlarge
+          swap-gb: 120
+          name-prefix: bsys6
+          labels: '["bsys6-kickstart"]'
+          
   build-linux:
-    runs-on: epsilon
+    needs: kickstart
+    runs-on: bsys6-kickstart
     container:
       image: codeberg.org/librewolf/bsys6:linux
     strategy:
+      max-parallel: 2
       matrix:
         arch: [x86_64, arm64]
     steps:
@@ -51,10 +72,12 @@ jobs:
           retention-days: 7
 
   build-windows:
-    runs-on: epsilon
+    needs: kickstart
+    runs-on: bsys6-kickstart
     container:
       image: codeberg.org/librewolf/bsys6:windows
     strategy:
+      max-parallel: 2
       matrix:
         arch: [x86_64, arm64]
     steps:
@@ -84,10 +107,12 @@ jobs:
           retention-days: 7
 
   build-macos:
-    runs-on: epsilon
+    needs: kickstart
+    runs-on: bsys6-kickstart
     container:
       image: codeberg.org/librewolf/bsys6:macos
     strategy:
+      max-parallel: 2
       matrix:
         arch: [x86_64, arm64]
     steps:
@@ -112,6 +137,22 @@ jobs:
             *.sha256sum
           retention-days: 7
 
+  cleanup:
+    if: always()
+    needs:
+      - kickstart
+      - build-linux
+      - build-windows
+      - build-macos
+    runs-on: codeberg-tiny
+    steps:
+      - uses: actions/checkout@v4
+      - id: cleanup
+        uses: https://codeberg.org/alyx161/kickstart@main
+        with:
+          mode: cleanup
+          completion-url: ${{ needs.kickstart.outputs.completion_url }}
+  
   publish-release:
     if: ${{ inputs.release }}
     runs-on: epsilon

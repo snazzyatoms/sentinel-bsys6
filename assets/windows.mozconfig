@@ -1,4 +1,4 @@
-ac_add_options --enable-bootstrap
+ac_add_options --disable-bootstrap
 ac_add_options --with-l10n-base=$(pwd)/lw/l10n
 export WINSYSROOT="$MOZBUILD/win-cross/vs"
 export MIDL="$MOZBUILD/wine/bin/widl"

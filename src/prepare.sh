@@ -26,7 +26,7 @@ windows)
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc" "aarch64-pc-windows-msvc"
-  $BSYS6/utils/install_toolchain_artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
+  $BSYS6/utils/install_toolchain_artifact.sh "linux64-binutils" "linux64-cbindgen" "linux64-clang-21" "linux64-dump_syms" "linux64-nasm" "linux64-node" "linux64-rust-cross" "linux64-winchecksec" "linux64-wine" "linux64-msix-packaging" "linux64-mingw-fxc2-x86" "nsis" "sysroot-x86_64-linux-gnu"
   $BSYS6/utils/winsdk.sh
   $BSYS6/utils/install_chocolatey.sh
   $BSYS6/utils/install_ossign.sh

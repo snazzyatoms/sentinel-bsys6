@@ -22,7 +22,7 @@ on:
 
 jobs:
   kickstart:
-    runs-on: codeberg-tiny
+    runs-on: epsilon
     outputs:
       completion_url: ${{ steps.kickstart.outputs.completion_url }}
     steps:
@@ -144,7 +144,7 @@ jobs:
       - build-linux
       - build-windows
       - build-macos
-    runs-on: codeberg-tiny
+    runs-on: epsilon
     steps:
       - uses: actions/checkout@v4
       - id: cleanup

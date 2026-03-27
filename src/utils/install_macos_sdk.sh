@@ -6,7 +6,7 @@ source $BSYS6/source.sh
 echo "-> Fetching macos sdk"
 $SOURCE/mach python --virtualenv build \
   $SOURCE/taskcluster/scripts/misc/unpack-sdk.py \
-  "https://swcdn.apple.com/content/downloads/60/22/089-71960-A_W8BL1RUJJ6/5zkyplomhk1cm7z6xja2ktgapnhhti6wwd/CLTools_macOSNMOS_SDK.pkg" \
-  "f3785f1bbc3b8323121b66fc28ef59083b4f508c7bdabb9d8d916f142ee89b01cb8030eba469eb9107b416d1c9d523a1d2e009cddb83536a819a3704a5d3ce17" \
-  "Library/Developer/CommandLineTools/SDKs/MacOSX26.2.sdk" \
-  "$MOZBUILD/MacOSX26.2.sdk"
+  "https://swcdn.apple.com/content/downloads/32/53/047-96692-A_OAHIHT53YB/ybtshxmrcju8m2qvw3w5elr4rajtg1x3y3/CLTools_macOSNMOS_SDK.pkg" \
+  "8c0571820cbf6eb977610a08922a2158ff3ed86389d4faa7eba34288f467047c6bacccc23aa6991f0d18450e393dd56cf581b08010fac45254db2c649610e9fc" \
+  "Library/Developer/CommandLineTools/SDKs/MacOSX26.4.sdk" \
+  "$MOZBUILD/MacOSX26.4.sdk"

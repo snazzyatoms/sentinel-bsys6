@@ -14,9 +14,3 @@ if [ "${VERBOSE:-}" == "true" ]; then
 else
   (cd $SOURCE && ./mach build)
 fi
-
-if [ "$TARGET" == "windows" ]; then
-  find "$SOURCE/obj-$MOZ_TARGET/dist/bin" -type f -name "*.exe" | while IFS= read -r file; do
-    $BSYS6/utils/sign_exe.sh "$file"
-  done
-fi

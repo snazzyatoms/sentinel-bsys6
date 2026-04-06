@@ -25,7 +25,6 @@ RequestExecutionLevel admin
 
 !define MUI_WELCOMEPAGE_TITLE "Welcome to the LibreWolf Setup"
 !define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of LibreWolf.$\r$\n$\r$\n\
-If you don't have it installed already, this will also install the latest Visual C++ Redistributable.$\r$\n$\r$\n\
 Click Next to continue."
 
 !define MUI_COMPONENTSPAGE_SMALLDESC
@@ -84,12 +83,6 @@ continue:
 			${EndIf}
 		${EndIf}
 	${EndIf}
-
-	# Install Visual C++ Redistributable (only if not silent)
-	IfSilent +4 0
-	InitPluginsDir
-	File /oname=$PLUGINSDIR\vc_redist.exe pkg_vc_redist
-	ExecWait "$PLUGINSDIR\vc_redist.exe /install /quiet /norestart"
 
 	# Copy files
 	SetOutPath $INSTDIR

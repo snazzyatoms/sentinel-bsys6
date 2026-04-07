@@ -22,7 +22,7 @@ linux)
 windows)
   echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 jq file nodejs zip unzip wget mono-complete gettext-base pkg-config mingw-w64-tools" "python-pip curl msitools zstd lib32-glibc jq nodejs zip unzip wget mono gettext pkgconf"
+  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq file nodejs zip unzip wget mono-complete gettext-base pkg-config mingw-w64-tools" "python-pip curl msitools zstd lib32-glibc p7zip jq nodejs zip unzip wget mono gettext pkgconf"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc" "aarch64-pc-windows-msvc"

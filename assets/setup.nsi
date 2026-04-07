@@ -151,6 +151,7 @@ SectionEnd
 Section /o "Schedule Automatic Updates" autoupdate
 	DetailPrint "Creating scheduled update task"
 	Exec '"$INSTDIR\LibreWolf-WinUpdater.exe" /CreateTask'
+	Sleep 3000
 SectionEnd
 
 Section "-Remove WinUpdater" delwinupdater

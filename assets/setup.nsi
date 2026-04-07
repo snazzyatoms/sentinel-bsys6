@@ -20,11 +20,11 @@ InstallDir $PROGRAMFILES64\${APPNAME}
 RequestExecutionLevel admin
 
 # Pages
-
 !define MUI_ABORTWARNING
 
-!define MUI_WELCOMEPAGE_TITLE "Welcome to the LibreWolf Setup"
-!define MUI_WELCOMEPAGE_TEXT "This setup will guide you through the installation of LibreWolf.$\r$\n$\r$\n\
+!define MUI_WELCOMEPAGE_TITLE "Welcome to LibreWolf Setup"
+!define MUI_WELCOMEPAGE_TEXT "LibreWolf is a custom version of Firefox, focused on privacy, security and freedom.$\r$\n$\r$\n\
+This setup will guide you through the installation.$\r$\n$\r$\n\
 Click Next to continue."
 
 !define MUI_COMPONENTSPAGE_SMALLDESC
@@ -95,7 +95,7 @@ continue:
 	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\${PROGNAME}.exe" "" "$INSTDIR\${MUI_ICON}"
 	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" ""
 
-	# Uninstaller 
+	# Uninstaller
 	writeUninstaller "$INSTDIR\uninstall.exe"
 
 	# Registry information for add/remove programs
@@ -112,12 +112,8 @@ continue:
 	# Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${ESTIMATED_SIZE}
 
-
-	#
 	# Registry information to let Windows pick us up in the list of available browsers
-	#
-	
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"	
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"
 
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationDescription" "LibreWolf"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
@@ -131,9 +127,9 @@ continue:
 
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
 	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "$INSTDIR\librewolf.exe"
-	
+
 	WriteRegStr HKLM "Software\RegisteredApplications" "LibreWolf" "Software\Clients\StartMenuInternet\LibreWolf\Capabilities"
-	
+
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "" "LibreWolf Handler"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "AppUserModelId" "LibreWolf"
 	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "AppUserModelId" "LibreWolf"
@@ -152,6 +148,20 @@ Section /o "LibreWolf WinUpdater" winupdater
 	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" "$INSTDIR\LibreWolf-WinUpdater.exe" "" "$INSTDIR\LibreWolf-WinUpdater.exe"
 SectionEnd
 
+Section /o "Schedule Automatic Updates" autoupdate
+	DetailPrint "Creating scheduled update task"
+	Exec '"$INSTDIR\LibreWolf-WinUpdater.exe" /CreateTask'
+SectionEnd
+
+Section "-Remove WinUpdater" delwinupdater
+	SectionGetFlags ${winupdater} $0
+	IntCmp $0 ${SF_SELECTED} +1 +2
+	Return
+	Call RemoveWinUpdater
+	Delete "$INSTDIR\LibreWolf-WinUpdater.*"
+	Delete "$INSTDIR\*.ps1"
+SectionEnd
+
 # Uninstaller
 section "Uninstall"
 
@@ -163,53 +173,55 @@ section "Uninstall"
 		nsProcess::_KillProcess "${EXECUTABLE}"
 		Sleep 2000
 	${EndIf}
-	
+
 	SetShellVarContext all
 
 	# Remove the Start Menu folder
 	RmDir /r "$SMPROGRAMS\LibreWolf"
- 
+
 	# Remove files
 	RmDir /r $INSTDIR
 
 	# Remove uninstaller information from the registry
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
-	
-	#
+
 	# Windows default browser integration
-	#
-	
 	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\LibreWolf"
 	DeleteRegKey HKLM "Software\RegisteredApplications"
 	DeleteRegKey HKLM "Software\Classes\LibreWolfHTM"
 
-
-	DetailPrint "Removing WinUpdater"
-
-	SetShellVarContext current
-	FindFirst $0 $1 $PROFILE\..\*
-	loop:
-		StrCmp $1 "" done
-
-		RmDir /r "$PROFILE\..\$1\AppData\Roaming\LibreWolf\WinUpdater"
-
-		FindNext $0 $1
-		Goto loop
-	done:
-	FindClose $0
-	SetShellVarContext all
-
-
-	DetailPrint "Removing WinUpdater Scheduled Task(s)"
-	nsExec::ExecToLog `powershell -Command "Get-ScheduledTask 'LibreWolf*' | Unregister-ScheduledTask -Confirm:$$false"`
-
+	# Remove WinUpdater
+	Call un.RemoveWinUpdater
 sectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${main} "Install the browser for all users"
-  !insertmacro MUI_DESCRIPTION_TEXT ${winupdater} "A companion tool to update LibreWolf with a single click"
+  !insertmacro MUI_DESCRIPTION_TEXT ${main} "Install the browser for all users."
+  !insertmacro MUI_DESCRIPTION_TEXT ${winupdater} "A companion tool to update LibreWolf with a single click."
+  !insertmacro MUI_DESCRIPTION_TEXT ${autoupdate} "Run LibreWolf WinUpdater to create a scheduled task for automatic updates."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
+; Shared function
+!macro RemoveWinUpdater un
+  Function ${un}RemoveWinUpdater
+		DetailPrint "Removing WinUpdater"
+		SetShellVarContext current
+		FindFirst $0 $1 $PROFILE\..\*
+		loop:
+			StrCmp $1 "" done
+			RmDir /r "$PROFILE\..\$1\AppData\Roaming\LibreWolf\WinUpdater"
+			FindNext $0 $1
+			Goto loop
+		done:
+		FindClose $0
+		SetShellVarContext all
+
+		DetailPrint "Removing scheduled update task(s) if present"
+		nsExec::ExecToLog `powershell -Command "Get-ScheduledTask 'LibreWolf*' | Unregister-ScheduledTask -Confirm:$$false"`
+  FunctionEnd
+!macroend
+; Function for installer and uninstaller
+!insertmacro RemoveWinUpdater ""
+!insertmacro RemoveWinUpdater "un."
 
 Function .onInit
 	Var /GLOBAL DEFAULT_INSTDIR
@@ -221,11 +233,18 @@ Function .onInit
 	SetShellVarContext all
 	IfFileExists "$INSTDIR\LibreWolf-WinUpdater.exe" +1 +2
 	SectionSetFlags ${winupdater} ${SF_SELECTED}
+	IfFileExists "$INSTDIR\librewolf.exe" +2 +1
+	SectionSetFlags ${winupdater} ${SF_SELECTED}
 	SetShellVarContext all
 FunctionEnd
 
+Function .onSelChange
+	SectionGetFlags ${winupdater} $0
+	IntCmp $0 ${SF_SELECTED} +2 +1
+	SectionSetFlags ${autoupdate} 0
+FunctionEnd
 
-Function "CreateDesktopShortcut"
+Function CreateDesktopShortcut
 	SetShellVarContext all
 	CreateShortCut "$DESKTOP\LibreWolf.lnk" "$INSTDIR\librewolf.exe" "" "$INSTDIR\librewolf.exe" 0
 FunctionEnd

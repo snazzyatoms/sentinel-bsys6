@@ -28,6 +28,7 @@ esac
 cp -v "$BSYS6/../assets/librewolf.ico" "$tmpdir/LibreWolf/librewolf.ico"
 mkdir -p "$tmpdir/x86-ansi"
 cp -v "$BSYS6/../assets/nsProcess.dll" "$tmpdir/x86-ansi/nsProcess.dll"
+$BSYS6/utils/sign_exe.sh "$tmpdir/x86-ansi/nsProcess.dll"
 $BSYS6/utils/vc_redist.sh "$tmpdir/LibreWolf"
 cp -rv "$WINUPDATER"/* "$tmpdir"
 sed -e "s/pkg_version/$FULL_VERSION/g" \

@@ -15,7 +15,7 @@ for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "C
   fi
 done
 if [ "$abort" == "true" ]; then
-  echo "Notice: This script is only meant to be run on GitLab CI" >&2
+  echo "Notice: This script is only meant to be run on Forgejo CI" >&2
   exit 1
 fi
 
@@ -79,7 +79,7 @@ publish_release() {
   fi
 
   if [ ! -z "${FORGEJO_RUN_NUMBER:-}" ]; then
-    description="$description\n\n(Built on Codeberg by workflow [$FORGEJO_RUN_NUMBER]($FORGE_URL/$FORGE_REPO/actions/runs/$FORGEJO_RUN_NUMBER))"
+    description="$description\n\n(Built by workflow [$FORGEJO_RUN_NUMBER]($FORGE_URL/$FORGE_REPO/actions/runs/$FORGEJO_RUN_NUMBER))"
   fi
 
   body="$(
@@ -119,7 +119,7 @@ EOF
 dispatch_workflows() {
   echo "-> Dispatching deploy workflow for librewolf.net"
   curl -X 'POST' \
-    "$FORGE_URL/api/v1/repos/librewolf/website/actions/workflows/deploy.yaml/dispatches" \
+    "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/website/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
     -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
@@ -127,7 +127,7 @@ dispatch_workflows() {
 
   echo "-> Dispatching deploy workflow for repo.librewolf.net"
   curl -X 'POST' \
-    "$FORGE_URL/api/v1/repos/librewolf/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches" \
+    "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
     -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
@@ -231,7 +231,3 @@ for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
 done
 
 $BSYS6/utils/ms_push_msix.sh $(find -name "*windows-x86_64-msix.msix")
-
-# for file in $(find -name "*windows-x86_64-setup.exe"); do
-#   submit_winget "$file"
-# done

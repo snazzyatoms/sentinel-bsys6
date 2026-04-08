@@ -98,6 +98,11 @@ EOF
     --request POST \
     "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases" | jq -r '.id')
 
+  if [ -z "$release_id" ] || [ "$release_id" == "null" ]; then
+    echo "Error: Failed to create release, got null release ID" >&2
+    exit 1
+  fi
+
   echo "--> Release created with ID: $release_id" >&2
 
   for package in "${packages[@]}" "${packages_other[@]}"; do

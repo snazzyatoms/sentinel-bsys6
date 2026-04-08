@@ -38,11 +38,14 @@ upload_to_registry() {
 upload_to_s3() {
   echo "-> Uploading $1 to S3" >&2
   s3_path="/librewolf/$FULL_VERSION/$(basename "$1")"
-  s3cmd put "$1" "s3://$S3_BUCKET$s3_path" \
+  if ! s3cmd put "$1" "s3://$S3_BUCKET$s3_path" \
     --access_key="$S3_KEY" \
     --secret_key="$S3_SECRET" \
     --host="$S3_ENDPOINT" \
-    --host-bucket="$S3_ENDPOINT" >&2
+    --host-bucket="$S3_ENDPOINT" >&2; then
+    echo "Error: Failed to upload $1 to S3" >&2
+    exit 1
+  fi
   echo "${S3_PUBLIC_URL}${s3_path}"
 }
 

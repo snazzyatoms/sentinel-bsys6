@@ -42,7 +42,9 @@ upload_to_s3() {
     --access_key="$S3_KEY" \
     --secret_key="$S3_SECRET" \
     --host="$S3_ENDPOINT" \
-    --host-bucket="$S3_ENDPOINT" >&2; then
+    --host-bucket="$S3_ENDPOINT" \
+    --guess-mime-type \
+    --no-mime-magic >&2; then
     echo "Error: Failed to upload $1 to S3" >&2
     exit 1
   fi

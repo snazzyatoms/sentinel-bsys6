@@ -4,25 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  kickstart:
-    runs-on: epsilon
-    outputs:
-      completion_url: ${{ steps.kickstart.outputs.completion_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - id: kickstart
-        uses: https://codeberg.org/alyx161/kickstart@main
-        with:
-          mode: spawn
-          auth_token: ${{ secrets.KICKSTART_TOKEN }}
-          count: '1'
-          ttl-minutes: '45'
-          provider: auto
-          plan: compute-large
-          name-prefix: bsys6
-          labels: '["bsys6-kickstart"]'
   build-images:
-    runs-on: bsys6-kickstart
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:dind
     strategy:
@@ -51,17 +34,3 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push codeberg.org/${{ forgejo.repository_owner }}/bsys6:${{ matrix.target }}
-
-  cleanup:
-    if: always()
-    needs:
-      - kickstart
-      - build-images
-    runs-on: epsilon
-    steps:
-      - uses: actions/checkout@v4
-      - id: cleanup
-        uses: https://codeberg.org/alyx161/kickstart@main
-        with:
-          mode: cleanup
-          completion-url: ${{ needs.kickstart.outputs.completion_url }}

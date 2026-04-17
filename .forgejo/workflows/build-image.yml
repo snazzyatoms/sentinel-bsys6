@@ -15,7 +15,7 @@ jobs:
         with:
           mode: spawn
           auth_token: ${{ secrets.KICKSTART_TOKEN }}
-          count: '5'
+          count: '1'
           ttl-minutes: '45'
           provider: auto
           plan: compute-large

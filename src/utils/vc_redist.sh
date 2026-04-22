@@ -18,4 +18,5 @@ if [ -n "${ARCH:-}" ]; then
 
   unzip vc_redist.zip
   rm vc_redist.zip
+  cd "$pwd"
 fi

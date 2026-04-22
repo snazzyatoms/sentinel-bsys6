@@ -32,9 +32,6 @@ LibreWolf is designed to increase protection against tracking and fingerprinting
 
 For more details read the full [feature list](https://librewolf.net/docs/features).
 </description>
-    <dependencies>
-      <dependency id="vcredist140" version="14.0" />
-    </dependencies>
   </metadata>
   <files>
     <file src="tools/**" target="tools" />

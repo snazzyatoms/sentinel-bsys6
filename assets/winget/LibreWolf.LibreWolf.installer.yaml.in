@@ -13,10 +13,6 @@ FileExtensions:
   - htm
   - html
   - url
-Dependencies:
-  PackageDependencies:
-    - PackageIdentifier: Microsoft.VCRedist.2015+.x64
-      MinimumVersion: 14.38.33135.0
 Installers:
   - InstallerLocale: en-US
     Architecture: x64

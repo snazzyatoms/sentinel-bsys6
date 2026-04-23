@@ -8,7 +8,7 @@ case $TARGET in
 linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq nodejs ruby-full git-lfs" "python-pip curl dpkg rpm gnupg jq nodejs ruby git-lfs"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq nodejs ruby-full git-lfs file appstream" "python-pip curl dpkg rpm gnupg jq nodejs ruby git-lfs file appstream"
   # install fpm
   /usr/bin/gem install fpm
   # cross-compilation

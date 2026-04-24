@@ -56,7 +56,7 @@ jobs:
       - name: Build Linux
         env:
           ARCH: ${{ matrix.arch }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
           LTO: ${{ inputs.lto }}
         run: ./bsys6 package package_linux
 
@@ -88,10 +88,10 @@ jobs:
         env:
           TARGET: windows
           ARCH: ${{ matrix.arch }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
           LTO: ${{ inputs.lto }}
-          OSSIGN_CONFIG: ${{ secrets.OSSIGN_CONFIG }}
-          ENABLE_EXE_SIGNING: ${{ inputs.sign_exe }}
+          OSSIGN_CONFIG: ${{ forgejo.ref == 'refs/heads/master' && secrets.OSSIGN_CONFIG || '' }}
+          ENABLE_EXE_SIGNING: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_exe || false }}
         run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts
@@ -123,7 +123,7 @@ jobs:
         env:
           TARGET: macos
           ARCH: ${{ matrix.arch }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
           LTO: ${{ inputs.lto }}
         run: ./bsys6 package
 
@@ -178,7 +178,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
           MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
           S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
           S3_KEY: ${{ secrets.S3_KEY }}

@@ -158,7 +158,7 @@ jobs:
           completion-url: ${{ needs.kickstart.outputs.completion_url }}
   
   publish-release:
-    if: ${{ inputs.release }}
+    if: forgejo.ref == 'refs/heads/master' && inputs.release
     runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:release

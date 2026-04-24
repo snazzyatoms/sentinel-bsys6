@@ -22,6 +22,7 @@ on:
 
 jobs:
   kickstart:
+    if: forgejo.ref == 'refs/heads/master'
     runs-on: epsilon
     outputs:
       completion_url: ${{ steps.kickstart.outputs.completion_url }}
@@ -42,7 +43,8 @@ jobs:
           
   build-linux:
     needs: kickstart
-    runs-on: bsys6-kickstart
+    if: always() && !failure() && !cancelled()
+    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
     container:
       image: codeberg.org/librewolf/bsys6:linux
     strategy:
@@ -73,7 +75,8 @@ jobs:
 
   build-windows:
     needs: kickstart
-    runs-on: bsys6-kickstart
+    if: always() && !failure() && !cancelled()
+    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
     container:
       image: codeberg.org/librewolf/bsys6:windows
     strategy:
@@ -108,7 +111,8 @@ jobs:
 
   build-macos:
     needs: kickstart
-    runs-on: bsys6-kickstart
+    if: always() && !failure() && !cancelled()
+    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
     container:
       image: codeberg.org/librewolf/bsys6:macos
     strategy:
@@ -138,7 +142,7 @@ jobs:
           retention-days: 7
 
   cleanup:
-    if: always()
+    if: always() && forgejo.ref == 'refs/heads/master'
     needs:
       - kickstart
       - build-linux

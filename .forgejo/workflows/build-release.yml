@@ -21,30 +21,8 @@ on:
 
 
 jobs:
-  kickstart:
-    if: forgejo.ref == 'refs/heads/master'
-    runs-on: epsilon
-    outputs:
-      completion_url: ${{ steps.kickstart.outputs.completion_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - id: kickstart
-        uses: https://codeberg.org/alyx161/kickstart@main
-        with:
-          mode: spawn
-          auth_token: ${{ secrets.KICKSTART_TOKEN }}
-          count: '6'
-          ttl-minutes: '120'
-          provider: auto
-          plan: compute-xlarge
-          swap-gb: 120
-          name-prefix: bsys6
-          labels: '["bsys6-kickstart"]'
-          
   build-linux:
-    needs: kickstart
-    if: always() && !failure() && !cancelled()
-    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:linux
     strategy:
@@ -74,9 +52,7 @@ jobs:
           retention-days: 7
 
   build-windows:
-    needs: kickstart
-    if: always() && !failure() && !cancelled()
-    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:windows
     strategy:
@@ -110,9 +86,7 @@ jobs:
           retention-days: 7
 
   build-macos:
-    needs: kickstart
-    if: always() && !failure() && !cancelled()
-    runs-on: ${{ forgejo.ref == 'refs/heads/master' && 'bsys6-kickstart' || 'epsilon' }}
+    runs-on: epsilon
     container:
       image: codeberg.org/librewolf/bsys6:macos
     strategy:
@@ -141,22 +115,6 @@ jobs:
             *.sha256sum
           retention-days: 7
 
-  cleanup:
-    if: always() && forgejo.ref == 'refs/heads/master'
-    needs:
-      - kickstart
-      - build-linux
-      - build-windows
-      - build-macos
-    runs-on: epsilon
-    steps:
-      - uses: actions/checkout@v4
-      - id: cleanup
-        uses: https://codeberg.org/alyx161/kickstart@main
-        with:
-          mode: cleanup
-          completion-url: ${{ needs.kickstart.outputs.completion_url }}
-  
   publish-release:
     if: forgejo.ref == 'refs/heads/master' && inputs.release
     runs-on: epsilon
@@ -182,7 +140,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
           MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
-          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
           S3_BUCKET: ${{ vars.S3_BUCKET }}
           S3_KEY: ${{ secrets.S3_KEY }}

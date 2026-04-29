@@ -93,15 +93,20 @@ publish_release() {
 }
 EOF
   )"
-  release_id=$(curl --header 'Content-Type: application/json' \
+  api_response=$(curl --header 'Content-Type: application/json' \
     --header 'accept: application/json' \
     --header "Authorization: token $FORGE_TOKEN" \
     --data "$body" \
     --request POST \
-    "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases" | jq -r '.id')
+    "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases")
+
+  release_id=$(echo "$api_response" | jq -r '.id') || {
+    echo "Error: Failed to parse API response: $api_response" >&2
+    exit 1
+  }
 
   if [ -z "$release_id" ] || [ "$release_id" == "null" ]; then
-    echo "Error: Failed to create release, got null release ID" >&2
+    echo "Error: Failed to create release, got null release ID. API response: $api_response" >&2
     exit 1
   fi
 

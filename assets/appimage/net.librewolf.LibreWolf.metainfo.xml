@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-	<id>io.gitlab.LibreWolf</id>
+	<id>net.librewolf.LibreWolf</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>MPL-2.0</project_license>
 	<name>LibreWolf</name>
@@ -10,7 +10,7 @@
 
 LibreWolf is designed to increase protection against tracking and fingerprinting techniques, while also including a few security improvements. This is achieved through our privacy and security oriented settings and patches. LibreWolf also aims to remove all the telemetry, data collection and annoyances, as well as disabling anti-freedom features like DRM.</p>
 	</description>
-	<launchable type="desktop-id">io.gitlab.LibreWolf.desktop</launchable>
+	<launchable type="desktop-id">net.librewolf.LibreWolf.desktop</launchable>
 	<url type="homepage">https://librewolf.net/</url>
 	<screenshots>
 		<screenshot type="default">
@@ -18,6 +18,6 @@ LibreWolf is designed to increase protection against tracking and fingerprinting
 		</screenshot>
 	</screenshots>
 	<provides>
-		<id>io.gitlab.LibreWolf.desktop</id>
+		<id>net.librewolf.LibreWolf.desktop</id>
 	</provides>
 </component>

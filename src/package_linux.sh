@@ -63,11 +63,39 @@ make_setup_folder() {
   rm "librewolf-$version/usr/share/librewolf/librewolf.desktop.in"
 }
 
-tmpdir=$(mktemp -d)
-(cd "$tmpdir" && tar xf "$PACKAGE")
-(cd "$tmpdir" && make_setup_folder)
+build_appimage() {
+  mkdir -p "LibreWolf.AppDir/usr/bin/"
+  mkdir -p "LibreWolf.AppDir/usr/share/metainfo/"
+  mkdir -p "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
+  mkdir -p "LibreWolf.AppDir/usr/share/applications/"
+  cp "$BSYS6/../assets/appimage/librewolf.png" "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
+  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/usr/share/applications/"
+  ln "LibreWolf.AppDir/usr/share/applications/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/net.librewolf.LibreWolf.desktop"
+  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.metainfo.xml" "LibreWolf.AppDir/usr/share/metainfo/net.librewolf.LibreWolf.appdata.xml"
+  cp $BSYS6/../assets/appimage/* "LibreWolf.AppDir/"
+  cp -r librewolf/* "LibreWolf.AppDir/usr/bin/"
+  curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool"
+  chmod +x appimagetool
+  arch=$(rpm_arch)
+  ./appimagetool --appimage-extract
+  APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
+  -u "zsync|https://gitlab.com/api/v4/projects/24386000/packages/generic/librewolf/latest/LibreWolf.${ARCH}.AppImage.zsync" \
+  LibreWolf.AppDir
+  chmod +x ${pkgname}-${VERSION}-${arch}.AppImage
+}
 
 pkgname="librewolf"
+
+tmpdir=$(mktemp -d)
+(cd "$tmpdir" && tar xf "$PACKAGE")
+
+echo "-> Building AppImage" >&2
+
+(cd "$tmpdir" && build_appimage)
+
+
+(cd "$tmpdir" && make_setup_folder)
+
 version="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/version)"
 release="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/release)"
 
@@ -196,33 +224,8 @@ if [ -n "${SIGNING_KEY_FPR:-}" ] && command -v dpkg-sig &>/dev/null; then
   dpkg-sig --sign builder "$outpkg"
 fi
 
-echo "-> Building AppImage" >&2
 
-build_appimage() {
-  mkdir -p "LibreWolf.AppDir/usr/bin/"
-  mkdir -p "LibreWolf.AppDir/usr/share/metainfo/"
-  mkdir -p "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
-  mkdir -p "LibreWolf.AppDir/usr/share/applications/"
-  cp "$BSYS6/../assets/appimage/librewolf.png" "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
-  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/usr/share/applications/"
-  ln "LibreWolf.AppDir/usr/share/applications/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/net.librewolf.LibreWolf.desktop"
-  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.metainfo.xml" "LibreWolf.AppDir/usr/share/metainfo/net.librewolf.LibreWolf.appdata.xml"
-  cp $BSYS6/../assets/appimage/* "LibreWolf.AppDir/"
-  cp -r librewolf/* "LibreWolf.AppDir/usr/bin/"
-  curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool"
-  chmod +x appimagetool
-  arch=$(rpm_arch)
-  ./appimagetool --appimage-extract
-  APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
-  -u "zsync|https://gitlab.com/api/v4/projects/24386000/packages/generic/librewolf/latest/LibreWolf.${ARCH}.AppImage.zsync" \
-  LibreWolf.AppDir
-  chmod +x ${pkgname}-${VERSION}-${arch}.AppImage
-}
-
-tmpdir2=$(mktemp -d)
-(cd "$tmpdir2" && tar xf "$PACKAGE")
-(cd "$tmpdir2" && build_appimage)
-
-source $BSYS6/exports/move_artifact.sh "RPM" "$tmpdir" ".*\.rpm"
-source $BSYS6/exports/move_artifact.sh "DEB" "$tmpdir" ".*\.deb"
-source $BSYS6/exports/move_artifact.sh "APPIMAGE" "$tmpdir2" ".*\.AppImage"
+source $BSYS6/exports/move_artifact.sh "RPM"      "$tmpdir" ".*\.rpm"
+source $BSYS6/exports/move_artifact.sh "DEB"      "$tmpdir" ".*\.deb"
+source $BSYS6/exports/move_artifact.sh "APPIMAGE" "$tmpdir" ".*\.AppImage"
+source $BSYS6/exports/move_artifact.sh "APPIMAGE" "$tmpdir" ".*\.AppImage.zsync"

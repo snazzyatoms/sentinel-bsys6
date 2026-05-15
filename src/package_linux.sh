@@ -159,6 +159,8 @@ echo "-> Running fpm"
         --package "$outpkg" \
         --after-install "$BSYS6/../assets/deb/postinst" \
         --before-remove "$BSYS6/../assets/deb/prerm" \
+        --provides "www-browser" \
+        --provides "gnome-www-browser" \
         -d 'libasound2 >= 1.0.16' \
         -d 'libatk1.0-0 >= 1.12.4' \
         -d 'libc6 >= 2.18' \

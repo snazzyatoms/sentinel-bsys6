@@ -125,7 +125,7 @@ echo "-> Running fpm"
         -d 'libxcb-shm.so.0()(64bit)' \
         -d 'libxcb.so.1()(64bit)' \
         usr )
-    
+
 if [ -n "${SIGNING_KEY_FPR:-}" ]; then
     echo "-> Signing the RPM" >&2
     export GPG_TTY=$(tty)
@@ -164,19 +164,19 @@ echo "-> Running fpm"
         --category "web" \
         -d 'libasound2 >= 1.0.16' \
         -d 'libatk1.0-0 >= 1.12.4' \
-        -d 'libc6 >= 2.18' \
+        -d 'libc6 >= 2.28' \
         -d 'libcairo-gobject2 >= 1.10.0' \
         -d 'libcairo2 >= 1.10.0' \
-        -d 'libdbus-1-3 >= 1.5.12' \
-        -d 'libfontconfig1 >= 2.11' \
-        -d 'libfreetype6 >= 2.3.5' \
-        -d 'libgcc1 >= 1:4.1.1' \
+        -d 'libdbus-1-3 >= 1.9.14' \
+        -d 'libfontconfig1 >= 2.12.6' \
+        -d 'libfreetype6 >= 2.3.9' \
+        -d 'libgcc1 >= 1:4.5' \
         -d 'libgdk-pixbuf-2.0-0 >= 2.22.0' \
-        -d 'libglib2.0-0 >= 2.37.0' \
+        -d 'libglib2.0-0 >= 2.37.3' \
         -d 'libgtk-3-0 >= 3.13.7' \
         -d 'libpango-1.0-0 >= 1.14.0' \
         -d 'libpangocairo-1.0-0 >= 1.14.0' \
-        -d 'libstdc++6 >= 4.8' \
+        -d 'libstdc++6 >= 5' \
         -d 'libx11-6' \
         -d 'libx11-xcb1' \
         -d 'libxcb-shm0' \

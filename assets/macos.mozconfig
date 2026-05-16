@@ -8,7 +8,7 @@ export DMG_TOOL="$MOZBUILD/dmg/dmg"
 export HFS_TOOL="$MOZBUILD/dmg/hfsplus"
 
 ## Bundle identifier
-ac_add_options --with-distribution-id='io.gitlab.librewolf-community'
+ac_add_options --with-distribution-id='net.librewolf.librewolf'
 
 # Build related
 CROSS=$MOZBUILD

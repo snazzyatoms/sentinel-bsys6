@@ -7,7 +7,7 @@ $BSYS6/utils/require_command.sh tar
 echo "-> Installing chocolatey" >&2
 rm -rf "$MOZBUILD/chocolatey"
 mkdir -p "$MOZBUILD/chocolatey"
-curl -Lo "$MOZBUILD/chocolatey/chocolatey.tar.gz" "https://github.com/chocolatey/choco/releases/download/2.7.1/chocolatey.v2.7.1.tar.gz"
+curl -Lo "$MOZBUILD/chocolatey/chocolatey.tar.gz" "https://github.com/chocolatey/choco/releases/download/2.7.2/chocolatey.v2.7.2.tar.gz"
 tar -C "$MOZBUILD/chocolatey" -xf "$MOZBUILD/chocolatey/chocolatey.tar.gz"
 rm "$MOZBUILD/chocolatey/chocolatey.tar.gz"
 cat >"$MOZBUILD/chocolatey/choco" <<EOF

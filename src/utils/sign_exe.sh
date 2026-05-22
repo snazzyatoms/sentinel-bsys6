@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -eu
 
-
 if [ "$#" -eq 1 ]; then
   in="$1"
   out="$1"

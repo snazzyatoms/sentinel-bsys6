@@ -1,0 +1,13 @@
+[attr]crlf eol=crlf
+
+* text=auto eol=lf
+
+*.nsi crlf
+*.ps1 crlf
+/assets/choco/* crlf
+/assets/winget/* crlf
+
+*.ini       linguist-detectable
+*.mozconfig linguist-language=Shell
+*.yml       linguist-language=YAML
+*.yaml      linguist-detectable

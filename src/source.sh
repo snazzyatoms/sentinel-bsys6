@@ -98,7 +98,6 @@ EOF
     fi
   fi
 
-
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 

@@ -32,8 +32,8 @@ $BSYS6/utils/sign_exe.sh "$tmpdir/x86-ansi/nsProcess.dll"
 $BSYS6/utils/vc_redist.sh "$tmpdir/LibreWolf"
 cp -rv "$WINUPDATER"/* "$tmpdir"
 sed -e "s/pkg_version/$FULL_VERSION/g" \
-    -e "s/pkg_arch_suffix/$nsis_arch_suffix/g" \
-    <"$BSYS6/../assets/setup.nsi" >"$tmpdir/setup.nsi"
+  -e "s/pkg_arch_suffix/$nsis_arch_suffix/g" \
+  <"$BSYS6/../assets/setup.nsi" >"$tmpdir/setup.nsi"
 cp "$BSYS6/../assets/librewolf.ico" "$tmpdir"
 cp "$BSYS6/../assets/banner.bmp" "$tmpdir"
 printf "Running nsis... "

@@ -27,10 +27,8 @@ jobs:
 
       - name: Build Docker Image
         env:
-           TARGET: ${{ matrix.target }}
-        run:
-          ./bsys6 build_image
-
+          TARGET: ${{ matrix.target }}
+        run: ./bsys6 build_image
       - name: Push Docker Image
         run: |
           docker push codeberg.org/${{ forgejo.repository_owner }}/bsys6:${{ matrix.target }}

@@ -47,7 +47,7 @@ jobs:
           name: linux-${{ matrix.arch }}
           path: |
             *.AppImage
-            *.AppImage.zsync
+            *.zsync
             *.deb
             *.rpm
             *.tar.xz

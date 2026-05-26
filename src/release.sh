@@ -51,6 +51,22 @@ upload_to_s3() {
   echo "${S3_PUBLIC_URL}${s3_path}"
 }
 
+upload_to_s3_latest() {
+  echo "-> Uploading $1 to latest path" >&2
+  s3_latest_path="/librewolf/latest/$(basename "$1" | sed 's/-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*-[0-9][0-9]*-/-latest-/')"
+  if ! s3cmd put "$1" "s3://$S3_BUCKET$s3_latest_path" \
+    --access_key="$S3_KEY" \
+    --secret_key="$S3_SECRET" \
+    --host="$S3_ENDPOINT" \
+    --host-bucket="$S3_ENDPOINT" \
+    --guess-mime-type \
+    --no-mime-magic >&2; then
+    echo "Error: Failed to upload $1 to latest path" >&2
+    # exit 1 # Not fail on error for now
+  fi
+  echo "${S3_PUBLIC_URL}${s3_latest_path}"
+}
+
 upload_asset() {
   asset="$(echo "$1" | sed 's/^.\///')"
   sha256sum "$asset" >>"sha256sums.txt"
@@ -223,6 +239,10 @@ submit_winget() {
 
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.xz" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" -o -name "*.zsync"); do
   upload_asset "$file"
+done
+
+for file in $(find -name "*.zsync"); do
+  upload_to_s3_latest "$file"
 done
 
 upload_to_registry "sha256sums.txt"

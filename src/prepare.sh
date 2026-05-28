@@ -8,7 +8,7 @@ case $TARGET in
 linux)
   echo "-> Preparing build environment for native linux build (target: linux)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq nodejs ruby-full" "python-pip curl dpkg rpm gnupg jq nodejs ruby"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rpm gnupg2 jq nodejs ruby-full git-lfs" "python-pip curl dpkg rpm gnupg jq nodejs ruby git-lfs"
   # install fpm
   /usr/bin/gem install fpm
   # cross-compilation
@@ -22,7 +22,7 @@ linux)
 windows)
   echo "-> Preparing build environment for cross-compilation to windows (target: windows)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq file nodejs zip unzip wget mono-complete gettext-base pkg-config mingw-w64-tools" "python-pip curl msitools zstd lib32-glibc p7zip jq nodejs zip unzip wget mono gettext pkgconf"
+  $BSYS6/utils/dependencies.sh "python3-pip curl msitools zstd libc6-i386 p7zip-full jq file nodejs zip unzip wget mono-complete gettext-base pkg-config mingw-w64-tools git-lfs" "python-pip curl msitools zstd lib32-glibc p7zip jq nodejs zip unzip wget mono gettext pkgconf git-lfs"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-pc-windows-msvc" "aarch64-pc-windows-msvc"
@@ -35,7 +35,7 @@ windows)
 macos)
   echo "-> Preparing build environment for cross-compilation to macOS (target: macos)"
 
-  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources jq file nodejs" "python-pip curl rsync zip unzip python-testresources jq nodejs"
+  $BSYS6/utils/dependencies.sh "python3-pip curl rsync zip unzip python3-testresources jq file nodejs git-lfs" "python-pip curl rsync zip unzip python-testresources jq nodejs git-lfs"
   source $BSYS6/exports/version.sh
   $BSYS6/bootstrap.sh
   $BSYS6/utils/rustup_target.sh "x86_64-apple-darwin" "aarch64-apple-darwin"

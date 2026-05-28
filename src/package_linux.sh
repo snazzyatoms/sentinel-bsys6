@@ -79,7 +79,7 @@ build_appimage() {
   arch=$(rpm_arch)
   ./appimagetool --appimage-extract
   APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
-  -u "zsync|https://gitlab.com/api/v4/projects/24386000/packages/generic/librewolf/latest/LibreWolf.${ARCH}.AppImage.zsync" \
+  -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${arch}-appimage.zsync" \
   LibreWolf.AppDir
   chmod +x ${pkgname}-${VERSION}-${arch}.AppImage
 }

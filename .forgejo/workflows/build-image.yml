@@ -28,6 +28,8 @@ jobs:
       - name: Build Docker Image
         env:
           TARGET: ${{ matrix.target }}
+          FORGE_REPO: ${{ forgejo.repository }}
+          FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}
         run: ./bsys6 build_image
       - name: Push Docker Image
         run: |

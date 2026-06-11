@@ -1,11 +1,12 @@
 [attr]crlf eol=crlf
+[attr]lfs filter=lfs diff=lfs merge=lfs -text
 * text=auto eol=lf
-*.nsi crlf
-*.ps1 crlf
-/assets/choco/* crlf
+*.profdata       lfs
+*.nsi            crlf
+*.ps1            crlf
+/assets/choco/*  crlf
 /assets/winget/* crlf
-*.ini       linguist-detectable
-*.mozconfig linguist-language=Shell
-*.yml       linguist-language=YAML
-*.yaml      linguist-detectable
-*.profdata filter=lfs diff=lfs merge=lfs -text
+*.ini            linguist-detectable
+*.mozconfig      linguist-language=Shell
+*.yml            linguist-language=YAML
+*.yaml           linguist-detectable

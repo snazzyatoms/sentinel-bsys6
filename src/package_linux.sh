@@ -81,6 +81,18 @@ build_appimage() {
   APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
   -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${arch}-appimage.zsync" \
   LibreWolf.AppDir
+  if [ "$arch" == "aarch64" ]; then
+    sed -i \
+      -e "s|^Filename: .*|Filename: LibreWolf.aarch64.AppImage|" \
+      -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-arm64-appimage.AppImage|" \
+      "${pkgname}-${VERSION}-${arch}.AppImage.zsync"
+  else
+    sed -i \
+      -e "s|^Filename: .*|Filename: LibreWolf.x86_64.AppImage|" \
+      -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-x86_64-appimage.AppImage|" \
+      "${pkgname}-${VERSION}-${arch}.AppImage.zsync"
+  fi
+
   chmod +x ${pkgname}-${VERSION}-${arch}.AppImage
 }
 

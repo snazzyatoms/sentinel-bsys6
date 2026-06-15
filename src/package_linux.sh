@@ -79,7 +79,7 @@ build_appimage() {
   arch=$(rpm_arch)
   ./appimagetool --appimage-extract
   APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
-  -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${arch}-appimage.zsync" \
+  -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
   LibreWolf.AppDir
   if [ "$arch" == "aarch64" ]; then
     sed -i \

@@ -76,24 +76,26 @@ build_appimage() {
   cp -r librewolf/* "LibreWolf.AppDir/usr/bin/"
   curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool"
   chmod +x appimagetool
-  arch=$(rpm_arch)
+  arch_appimage=$(rpm_arch)
   ./appimagetool --appimage-extract
   APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
   -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
   LibreWolf.AppDir
+
+  # Fix zsync location
   if [ "$arch" == "aarch64" ]; then
     sed -i \
       -e "s|^Filename: .*|Filename: LibreWolf.aarch64.AppImage|" \
       -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-arm64-appimage.AppImage|" \
-      "${pkgname}-${VERSION}-${arch}.AppImage.zsync"
+      "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
   else
     sed -i \
       -e "s|^Filename: .*|Filename: LibreWolf.x86_64.AppImage|" \
       -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-x86_64-appimage.AppImage|" \
-      "${pkgname}-${VERSION}-${arch}.AppImage.zsync"
+      "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
   fi
 
-  chmod +x ${pkgname}-${VERSION}-${arch}.AppImage
+  chmod +x ${pkgname}-${VERSION}-${arch_appimage}.AppImage
 }
 
 pkgname="librewolf"

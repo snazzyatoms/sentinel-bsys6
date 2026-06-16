@@ -83,7 +83,7 @@ build_appimage() {
   LibreWolf.AppDir
 
   # Fix zsync location
-  if [ "$arch" == "aarch64" ]; then
+  if [ "$arch_appimage" == "aarch64" ]; then
     sed -i \
       -e "s|^Filename: .*|Filename: LibreWolf.aarch64.AppImage|" \
       -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-arm64-appimage.AppImage|" \

@@ -53,7 +53,7 @@ upload_to_s3() {
 
 upload_to_s3_latest() {
   echo "-> Uploading $1 to latest path" >&2
-  s3_latest_path="/librewolf/latest/$(basename "$1" | sed 's/-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*-[0-9][0-9]*-/-latest-/')"
+  s3_latest_path="/librewolf/latest/$(basename "$1" | sed 's/-[0-9][0-9]*\(\.[0-9][0-9]*\)*-[0-9][0-9]*-/-latest-/')"
   if ! s3cmd put "$1" "s3://$S3_BUCKET$s3_latest_path" \
     --access_key="$S3_KEY" \
     --secret_key="$S3_SECRET" \

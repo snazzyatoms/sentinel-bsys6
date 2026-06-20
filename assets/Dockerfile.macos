@@ -1,0 +1,43 @@
+FROM debian:trixie-slim
+
+ARG VERSION
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 https://apt.llvm.org/llvm-snapshot.gpg.key -o /etc/apt/trusted.gpg.d/apt.llvm.org.asc && \
+    echo "deb http://apt.llvm.org/trixie/ llvm-toolchain-trixie-22 main" > /etc/apt/sources.list.d/llvm.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-pip rsync zip unzip python3-testresources \
+        jq file nodejs git-lfs make && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Download LibreWolf source
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz -o librewolf-${VERSION}.source.tar.gz \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz.sha512sum -o librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    sha512sum -c librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    tar -xf librewolf-${VERSION}.source.tar.gz && \
+    rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    # Download needed build artifacts
+    ./librewolf-${VERSION}/mach artifact toolchain --from-build \
+        linux64-clang-21 sysroot-wasm32-wasi linux64-cbindgen linux64-libdmg \
+        linux64-cctools-port linux64-binutils linux64-nasm sysroot-x86_64-linux-gnu linux64-hfsplus && \
+    cd librewolf-${VERSION} && \
+    ./mach --no-interactive python --virtualenv build \
+        taskcluster/scripts/misc/unpack-sdk.py \
+        https://swcdn.apple.com/content/downloads/09/08/047-91568-A_Y1CFZWQCD4/4xekpyz43i26dbp4enxfro8eb1q7wiujh5/CLTools_macOSNMOS_SDK.pkg \
+        5db8b5a06a489a7d3ec587ebb7e01be55163128029923fc24edcad47faecd67830193c0d91e2643ee0e92f2ccca37adf20e4c42cf8de5784666f8663638b5cc5 \
+        Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk \
+        /root/.mozbuild/MacOSX26.5.sdk && \
+    cd .. && \
+    # Move artifacts to .mozbuild
+    mv  clang sysroot-wasm32-wasi cbindgen dmg cctools binutils nasm sysroot-x86_64-linux-gnu hfsplus \
+        /root/.mozbuild/ && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target x86_64-apple-darwin --target aarch64-apple-darwin && \
+    # Cleanup
+    rm -rf \
+        /root/.mozbuild/toolchains librewolf-${VERSION} \
+        /root/.mozbuild/srcdirs /root/.mozbuild/mach_func_cache \
+        /root/.mozbuild/glean /root/.cache

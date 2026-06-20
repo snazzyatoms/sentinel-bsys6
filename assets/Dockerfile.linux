@@ -1,0 +1,35 @@
+FROM debian:trixie-slim
+
+ARG VERSION
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-pip rpm gnupg jq nodejs ruby git-lfs curl xz-utils \
+        file appstream binutils tar make unzip ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    gem install fpm && gem cleanup && \
+    # Download LibreWolf source
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz -o librewolf-${VERSION}.source.tar.gz \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz.sha512sum -o librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    sha512sum -c librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    tar -xf librewolf-${VERSION}.source.tar.gz && \
+    rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    # Download needed build artifacts
+    ./librewolf-${VERSION}/mach artifact toolchain --from-build \
+        linux64-clang-21 sysroot-x86_64-linux-gnu linux64-pkgconf \
+        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-21 \
+        onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu && \
+    # Move artifacts to .mozbuild
+    mv clang sysroot-x86_64-linux-gnu pkgconf \
+        cbindgen node nasm sysroot-wasm32-wasi \
+        onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu /root/.mozbuild/ && \
+    # Install rust
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target aarch64-unknown-linux-gnu && \
+    # Cleanup
+    rm -rf \
+        /root/.mozbuild/toolchains librewolf-${VERSION} \
+        /root/.mozbuild/srcdirs /root/.mozbuild/mach_func_cache \
+        /root/.mozbuild/glean /root/.cache

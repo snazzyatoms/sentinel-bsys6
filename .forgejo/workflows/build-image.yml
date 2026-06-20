@@ -30,7 +30,10 @@ jobs:
           TARGET: ${{ matrix.target }}
           FORGE_REPO: ${{ forgejo.repository }}
           FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}
-        run: ./bsys6 build_image
+        run: |
+          echo "Building docker for target: $TARGET using assets/Dockerfile.$TARGET"
+          VERSION=$(curl -qfA "" --no-sessionid --proto =https --tlsv1.2 https://codeberg.org/api/v1/repos/librewolf/source/releases/latest | jq -r '.tag_name')
+          docker build --progress=plain -t "codeberg.org/$FORGE_REPO_OWNER/bsys6:$TARGET" --build-arg VERSION="$VERSION" . -f assets/Dockerfile.$TARGET
       - name: Push Docker Image
         run: |
           docker push codeberg.org/${{ forgejo.repository_owner }}/bsys6:${{ matrix.target }}

@@ -1,0 +1,59 @@
+FROM debian:trixie-slim
+
+ARG VERSION
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
+        https://apt.llvm.org/llvm-snapshot.gpg.key -o /etc/apt/trusted.gpg.d/apt.llvm.org.asc \
+        https://pkg.ossign.org/debian/repository.key -o /etc/apt/keyrings/gitea-ossign.asc && \
+    echo "deb http://apt.llvm.org/trixie/ llvm-toolchain-trixie-22 main" > /etc/apt/sources.list.d/llvm.list && \
+    echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" > /etc/apt/sources.list.d/ossign.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-pip msitools zstd libc6-i386 jq file \
+        nodejs zip unzip mono-complete gettext-base pkg-config \
+        mingw-w64-tools git-lfs ossign make && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Download LibreWolf source
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz -o librewolf-${VERSION}.source.tar.gz \
+        https://codeberg.org/api/packages/librewolf/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz.sha512sum -o librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    sha512sum -c librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    tar -xf librewolf-${VERSION}.source.tar.gz && \
+    rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
+    # Download needed build artifacts
+    ./librewolf-${VERSION}/mach artifact toolchain --from-build \
+        linux64-clang-21 sysroot-x86_64-linux-gnu linux64-pkgconf \
+        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-21 \
+        onnxruntime-x86_64-linux-gnu \
+        linux64-winchecksec dxc-aarch64-pc-windows-msvc dxc-x86_64-pc-windows-msvc \
+        winappsdk-x86_64-pc-windows-msvc winappsdk-aarch64-pc-windows-msvc \
+        linux64-wine linux64-msix-packaging linux64-mingw-fxc2-x86 nsis fetch-windows-rs linux64-7zz && \
+    cd librewolf-${VERSION} && \
+    ./mach --no-interactive python --virtualenv build \
+        taskcluster/scripts/misc/get_vs.py build/vs/vs2026.yaml \
+        /root/.mozbuild/win-cross/vs && \
+    cd .. && \
+    # Move artifacts to .mozbuild
+    mv  clang sysroot-x86_64-linux-gnu pkgconf \
+        cbindgen node nasm sysroot-wasm32-wasi \
+        onnxruntime-x86_64-linux-gnu winchecksec \
+        wine msix-packaging fxc2 nsis dxc-aarch64-pc-windows-msvc \
+        dxc-x86_64-pc-windows-msvc winappsdk-x86_64-pc-windows-msvc winappsdk-aarch64-pc-windows-msvc windows-rs 7zz \
+        /root/.mozbuild/ && \
+    # Install rust
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target x86_64-pc-windows-msvc --target aarch64-pc-windows-msvc && \
+    # Install chocolatey
+    mkdir -p /root/.mozbuild/chocolatey && \
+    curl -qfLA "" --no-sessionid --proto =https --tlsv1.2 https://github.com/chocolatey/choco/releases/download/2.7.2/chocolatey.v2.7.2.tar.gz | \
+        tar -C /root/.mozbuild/chocolatey -xz && \
+    printf '#!/bin/bash\nset -e\nmono "$(dirname $(readlink -f "$0"))/choco.exe" "$@"\n' > /root/.mozbuild/chocolatey/choco && \
+    chmod +x /root/.mozbuild/chocolatey/choco && \
+    # Cleanup
+    rm -rf \
+        /root/.mozbuild/toolchains librewolf-${VERSION} \
+        /root/.mozbuild/srcdirs /root/.mozbuild/mach_func_cache \
+        /root/.mozbuild/glean /root/.cache

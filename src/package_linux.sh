@@ -78,9 +78,15 @@ build_appimage() {
   chmod +x appimagetool
   arch_appimage=$(rpm_arch)
   ./appimagetool --appimage-extract
-  APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
-  -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
-  LibreWolf.AppDir
+  if [ -z "$SIGNING_KEY" ]; then
+    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun \
+    -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
+    LibreWolf.AppDir
+  else
+    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
+    -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
+    LibreWolf.AppDir
+  fi
 
   # Fix zsync location
   if [ "$arch_appimage" == "aarch64" ]; then

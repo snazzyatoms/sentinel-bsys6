@@ -3,7 +3,7 @@ set -eu
 
 source $BSYS6/exports/require_target.sh windows
 source $BSYS6/exports/require_artifact.sh winupdater
-$BSYS6/utils/require_command.sh "jq" "zip" "unzip" "wget"
+$BSYS6/utils/require_command.sh "jq" "zip" "unzip"
 
 echo "-> Building portable zip" >&2
 

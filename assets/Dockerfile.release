@@ -8,7 +8,7 @@ RUN apt-get update && \
     echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" > /etc/apt/sources.list.d/ossign.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        gnupg lsb-release nodejs s3cmd ossign \
+        gnupg lsb-release nodejs s3cmd ossign gawk git \
         make lbzip2 zip mono-complete jq gettext-base python3-pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \

@@ -22,6 +22,7 @@ on:
 jobs:
   build-linux:
     runs-on: epsilon
+    timeout-minutes: 480
     container:
       image: codeberg.org/librewolf/bsys6:linux
     strategy:
@@ -30,11 +31,13 @@ jobs:
         arch: [x86_64, arm64]
     steps:
       - name: Checkout Repository
+        timeout-minutes: 240
         uses: actions/checkout@v6
         with:
           lfs: true
 
       - name: Build Linux
+        timeout-minutes: 240
         env:
           ARCH: ${{ matrix.arch }}
           SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
@@ -42,6 +45,7 @@ jobs:
         run: ./bsys6 package package_linux
 
       - name: Upload artifacts
+        timeout-minutes: 240
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: linux-${{ matrix.arch }}
@@ -56,6 +60,7 @@ jobs:
 
   build-windows:
     runs-on: epsilon
+    timeout-minutes: 480
     container:
       image: codeberg.org/librewolf/bsys6:windows
     strategy:
@@ -64,11 +69,13 @@ jobs:
         arch: [x86_64, arm64]
     steps:
       - name: Checkout Repository
+        timeout-minutes: 240
         uses: actions/checkout@v6
         with:
           lfs: true
 
       - name: Build Windows
+        timeout-minutes: 240
         env:
           TARGET: windows
           ARCH: ${{ matrix.arch }}
@@ -79,6 +86,7 @@ jobs:
         run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts
+        timeout-minutes: 240
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}
@@ -92,6 +100,7 @@ jobs:
 
   build-macos:
     runs-on: epsilon
+    timeout-minutes: 480
     container:
       image: codeberg.org/librewolf/bsys6:macos
     strategy:
@@ -100,11 +109,13 @@ jobs:
         arch: [x86_64, arm64]
     steps:
       - name: Checkout Repository
+        timeout-minutes: 240
         uses: actions/checkout@v6
         with:
           lfs: true
 
       - name: Build MacOS
+        timeout-minutes: 240
         env:
           TARGET: macos
           ARCH: ${{ matrix.arch }}
@@ -113,6 +124,7 @@ jobs:
         run: ./bsys6 package
 
       - name: Upload artifacts
+        timeout-minutes: 240
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: macos-${{ matrix.arch }}
@@ -125,19 +137,23 @@ jobs:
   publish-release:
     if: forgejo.ref == 'refs/heads/master' && inputs.release
     runs-on: epsilon
+    timeout-minutes: 480
     container:
       image: codeberg.org/librewolf/bsys6:release
     needs: [build-linux, build-windows, build-macos]
     steps:
       - name: Checkout Repository
+        timeout-minutes: 240
         uses: actions/checkout@v6
 
       - name: Download artifacts
+        timeout-minutes: 240
         uses: https://data.forgejo.org/forgejo/download-artifact@v4
         with:
           merge-multiple: true
 
       - name: Publish Release
+        timeout-minutes: 240
         env:
           FORGE_USER: ${{ vars.FORGE_USER }}
           FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}

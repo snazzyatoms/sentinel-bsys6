@@ -1,7 +1,7 @@
 ac_add_options --enable-sandbox
 ac_add_options --with-l10n-base=$(pwd)/lw/l10n
-ac_add_options --enable-profile-use
-ac_add_options --with-pgo-profile-path=/workspace/librewolf/bsys6/assets/windows.profdata
+#ac_add_options --enable-profile-use
+#ac_add_options --with-pgo-profile-path=/workspace/librewolf/bsys6/assets/windows.profdata
 export WINSYSROOT="$MOZBUILD/win-cross/vs"
 export MIDL="$MOZBUILD/wine/bin/widl"
 export FXC="$MOZBUILD/fxc2/bin/fxc2.exe"

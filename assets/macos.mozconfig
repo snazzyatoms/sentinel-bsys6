@@ -1,7 +1,7 @@
 ac_add_options --with-l10n-base=$(pwd)/lw/l10n
 ac_add_options --enable-sandbox
-#ac_add_options --enable-profile-use
-#ac_add_options --with-pgo-profile-path=/workspace/librewolf/bsys6/assets/macos.profdata
+ac_add_options --enable-profile-use
+ac_add_options --with-pgo-profile-path=/workspace/librewolf/bsys6/assets/macos.profdata
 export MOZ_APP_REMOTINGNAME=LibreWolf
 
 # Packaging related

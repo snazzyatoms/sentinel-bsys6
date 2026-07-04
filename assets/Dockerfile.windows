@@ -12,7 +12,7 @@ RUN apt-get update && \
     echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" > /etc/apt/sources.list.d/ossign.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        python3-pip msitools zstd libc6-i386 jq file \
+        python3-pip msitools zstd libc6-i386 jq file xz-utils \
         nodejs zip unzip mono-complete gettext-base pkg-config \
         mingw-w64-tools git-lfs ossign make patch pigz gnupg && \
     apt-get clean && \

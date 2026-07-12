@@ -98,6 +98,16 @@ EOF
     fi
   fi
 
+# Taking care of pgo-file
+  if [ -f "$BSYS6/../assets/$TARGET.profdata" ]; then
+      mozconfig="$(
+        cat <<EOF
+$mozconfig
+ac_add_options --with-pgo-profile-path="$BSYS6/../assets/$TARGET.profdata"
+EOF
+      )"
+  fi
+
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 

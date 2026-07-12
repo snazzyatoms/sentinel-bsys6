@@ -104,6 +104,7 @@ EOF
         cat <<EOF
 $mozconfig
 ac_add_options --with-pgo-profile-path="$BSYS6/../assets/$TARGET.profdata"
+ac_add_options --enable-profile-use
 EOF
       )"
   fi

@@ -4,12 +4,8 @@ ARG VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl ca-certificates && \
-    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 https://apt.llvm.org/llvm-snapshot.gpg.key -o /etc/apt/trusted.gpg.d/apt.llvm.org.asc && \
-    echo "deb http://apt.llvm.org/trixie/ llvm-toolchain-trixie-22 main" > /etc/apt/sources.list.d/llvm.list && \
-    apt-get update && \
     apt-get install -y --no-install-recommends \
-        python3-pip rsync zip unzip python3-testresources \
+        curl ca-certificates python3-pip rsync zip unzip python3-testresources \
         jq file nodejs git-lfs make patch pigz gnupg xz-utils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \

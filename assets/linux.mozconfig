@@ -5,4 +5,3 @@ ac_add_options --enable-sandbox
 ac_add_options --enable-forkserver
 export CFLAGS="-O3 $CFLAGS"
 export CXXFLAGS="-O3 $CXXFLAGS"
-export MOZ_APP_REMOTINGNAME=LibreWolf

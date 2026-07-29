@@ -4,8 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl ca-certificates && \
-    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 https://pkg.ossign.org/debian/repository.key -o /etc/apt/keyrings/gitea-ossign.asc && \
-    echo "deb [signed-by=/etc/apt/keyrings/gitea-ossign.asc] https://pkg.ossign.org/debian all main" > /etc/apt/sources.list.d/ossign.list && \
+    curl -qfA "" --no-sessionid --proto =https --tlsv1.2 https://vcs.fi/api/packages/OSSign/debian/repository.key -o /etc/apt/keyrings/forgejo-OSSign.asc && \
+    echo "deb [signed-by=/etc/apt/keyrings/forgejo-OSSign.asc] https://vcs.fi/api/packages/OSSign/debian stable main" > /etc/apt/sources.list.d/forgejo.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         gnupg lsb-release nodejs s3cmd ossign gawk git \

@@ -5,6 +5,8 @@ around it, via Docker or directly on your system.
 
 ## Usage
 
+## Disclaimer: bsys6 is currently undergoing changes and some of the documentation does not reflect the current state of the repository
+
 Right now this repository is only meant to be used on a x86_64 Linux system.
 You always run `./bsys6`, followed by a chain of commands you want to run.
 The most important commands are the following,

@@ -23,7 +23,7 @@ jobs:
   build-linux:
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:linux
+      image: librewolf.dev/librewolf/bsys6:linux
     strategy:
       max-parallel: 2
       matrix:
@@ -57,7 +57,7 @@ jobs:
   build-windows:
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:windows
+      image: librewolf.dev/librewolf/bsys6:windows
     strategy:
       max-parallel: 2
       matrix:
@@ -93,7 +93,7 @@ jobs:
   build-macos:
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:macos
+      image: librewolf.dev/librewolf/bsys6:macos
     strategy:
       max-parallel: 2
       matrix:
@@ -126,7 +126,7 @@ jobs:
     if: forgejo.ref == 'refs/heads/master' && inputs.release
     runs-on: epsilon
     container:
-      image: codeberg.org/librewolf/bsys6:release
+      image: librewolf.dev/librewolf/bsys6:release
     needs: [build-linux, build-windows, build-macos]
     steps:
       - name: Checkout Repository
@@ -139,12 +139,17 @@ jobs:
 
       - name: Publish Release
         env:
+          FORGE_URL: ${{ forgejo.server_url }}
           FORGE_USER: ${{ vars.FORGE_USER }}
           FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}
           FORGE_REPO: ${{ forgejo.repository }}
           FORGE_REPO_OWNER: ${{ forgejo.repository_owner }}
+          MIRROR_FORGE_URL: ${{ vars.MIRROR_FORGE_URL }}
+          MIRROR_FORGE_REPO: ${{ vars.MIRROR_FORGE_REPO }}
+          MIRROR_FORGE_REPO_OWNER: ${{ vars.MIRROR_FORGE_REPO_OWNER }}
+          MIRROR_FORGE_USER: ${{ vars.MIRROR_FORGE_USER }}
+          MIRROR_FORGE_TOKEN: ${{ secrets.MIRROR_FORGE_TOKEN }}
           REPO_DEPLOY_TOKEN: ${{ secrets.REPO_DEPLOY_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
           MS_CLIENT_SECRET: ${{ secrets.MS_CLIENT_SECRET }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}

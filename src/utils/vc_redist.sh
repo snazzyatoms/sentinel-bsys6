@@ -14,7 +14,7 @@ if [ -n "${ARCH:-}" ]; then
     cd "$1"
   fi
 
-  $BSYS6/utils/download.sh "https://codeberg.org/librewolf/vc_redist/releases/download/latest/vc_redist_$VC_ARCH.zip" "vc_redist.zip"
+  $BSYS6/utils/download.sh "$FORGE_URL/$FORGE_REPO_OWNER/vc_redist/releases/download/latest/vc_redist_$VC_ARCH.zip" "vc_redist.zip"
 
   unzip vc_redist.zip
   rm vc_redist.zip

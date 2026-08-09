@@ -14,7 +14,7 @@ mv LibreWolf librewolf-$VERSION/LibreWolf
 cd librewolf-$VERSION
 
 # ahk-tools by @ltguillaume
-$BSYS6/utils/download_codeberg.sh "librewolf/portable" 'LibreWolf-Portable_[.\\d]+\\.zip$' "lwp.zip"
+$BSYS6/utils/download_forge.sh "$FORGE_REPO_OWNER/portable" 'LibreWolf-Portable_[.\\d]+\\.zip$' "lwp.zip"
 unzip lwp.zip
 rm lwp.zip
 

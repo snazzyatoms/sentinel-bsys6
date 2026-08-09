@@ -7,4 +7,4 @@ if [ "$#" -ne 2 ]; then
 fi
 
 echo "'$1' -> '$2'"
-curl -fL "$1" -o "$2"
+curl -fLA "" "$1" -o "$2"

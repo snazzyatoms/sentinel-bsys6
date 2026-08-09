@@ -5,10 +5,9 @@ shopt -s nullglob
 source $BSYS6/exports/version.sh
 source $BSYS6/exports/setup_signing.sh
 $BSYS6/utils/require_command.sh curl jq
-$BSYS6/utils/require_choco.sh
 
 abort="false"
-for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "GH_TOKEN" "CHOCO_API_KEY" "MS_CLIENT_SECRET" "S3_ENDPOINT" "S3_BUCKET" "S3_KEY" "S3_SECRET" "S3_PUBLIC_URL"; do
+for required_var in "REPO_DEPLOY_TOKEN" "FORGE_USER" "FORGE_TOKEN" "MS_CLIENT_SECRET" "S3_ENDPOINT" "S3_BUCKET" "S3_KEY" "S3_SECRET" "S3_PUBLIC_URL"; do
   if [ -z "${!required_var:-}" ]; then
     echo "Error: '$required_var' is not set" >&2
     abort="true"
@@ -19,20 +18,59 @@ if [ "$abort" == "true" ]; then
   exit 1
 fi
 
-if curl -f "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/bsys6/releases/tags/$FULL_VERSION"; then
-  echo "Error: Release $FULL_VERSION already exists" >&2
+mirror_enabled() {
+  [ -n "${MIRROR_FORGE_TOKEN:-}" ]
+}
+
+choco_enabled() {
+  [ -n "${CHOCO_API_KEY:-}" ]
+}
+
+if choco_enabled; then
+  $BSYS6/utils/require_choco.sh
+else
+  echo "Notice: 'CHOCO_API_KEY' is not set, skipping the Chocolatey push" >&2
+fi
+
+if [ -z "${MIRROR_FORGE_TOKEN:-}" ]; then
+  echo "Notice: 'MIRROR_FORGE_TOKEN' is not set, skipping the release mirror" >&2
+elif [ -z "${MIRROR_FORGE_USER:-}" ]; then
+  echo "Error: 'MIRROR_FORGE_TOKEN' is set but 'MIRROR_FORGE_USER' is not" >&2
+  exit 1
+fi
+
+release_exists() {
+  curl -fs -o /dev/null "$1/api/v1/repos/$2/releases/tags/$FULL_VERSION"
+}
+
+if release_exists "$FORGE_URL" "$FORGE_REPO"; then
+  echo "Error: Release $FULL_VERSION already exists on $FORGE_URL" >&2
   exit 1
 fi
 
 packages=()
 packages_other=()
 
+# upload_to_registry <forge_url> <owner> <user> <token> <file>
 upload_to_registry() {
-  echo "-> Uploading $1 to Codeberg package registry" >&2
-  package_url="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/$(basename "$1")"
-  curl --http1.1 --user "$FORGE_USER:$FORGE_TOKEN" --upload-file "$1" "$package_url" >&2
+  echo "-> Uploading $5 to $1 package registry" >&2
+  package_url="$1/api/packages/$2/generic/librewolf/$FULL_VERSION/$(basename "$5")"
+  status=0
+  curl -fsS --http1.1 --user "$3:$4" --upload-file "$5" "$package_url" >&2 || status=$?
   echo >&2
   echo "$package_url"
+  return $status
+}
+
+# Uploads to the primary registry, and to the mirror when one is configured
+publish_to_registries() {
+  upload_to_registry "$FORGE_URL" "$FORGE_REPO_OWNER" "$FORGE_USER" "$FORGE_TOKEN" "$1" ||
+    echo "Warning: Failed to upload $1 to the $FORGE_URL package registry" >&2
+  if mirror_enabled; then
+    upload_to_registry "$MIRROR_FORGE_URL" "$MIRROR_FORGE_REPO_OWNER" \
+      "$MIRROR_FORGE_USER" "$MIRROR_FORGE_TOKEN" "$1" >/dev/null ||
+      echo "Warning: Failed to upload $1 to the $MIRROR_FORGE_URL package registry" >&2
+  fi
 }
 
 upload_to_s3() {
@@ -70,25 +108,23 @@ upload_to_s3_latest() {
 upload_asset() {
   asset="$(echo "$1" | sed 's/^.\///')"
   sha256sum "$asset" >>"sha256sums.txt"
-  upload_to_registry "$asset"
+  publish_to_registries "$asset"
   packages+=("$(upload_to_s3 "$asset")")
   if [ -f "$asset.sha256sum" ]; then
-    upload_to_registry "$asset.sha256sum"
+    publish_to_registries "$asset.sha256sum"
     packages_other+=("$(upload_to_s3 "$asset.sha256sum")")
   fi
   if [ -n "${SIGNING_KEY_FPR:-}" ]; then
     echo "-> Creating and uploading signature for '$asset' with key '$SIGNING_KEY_FPR'" >&2
     gpg --local-user "$SIGNING_KEY_FPR" --detach-sign "$asset"
     if [ -f "$asset.sig" ]; then
-      upload_to_registry "$asset.sig"
+      publish_to_registries "$asset.sig"
       packages_other+=("$(upload_to_s3 "$asset.sig")")
     fi
   fi
 }
 
-publish_release() {
-  echo "-> Publishing release $FULL_VERSION" >&2
-
+release_description() {
   description="## LibreWolf bsys6 Release v$FULL_VERSION\n\n"
 
   if [ "$(echo "$FULL_VERSION" | cut -d'-' -f2)" == "1" ]; then
@@ -96,34 +132,44 @@ publish_release() {
     description="$description- Upstream release, see the [Firefox $ffver Release Notes](https://www.mozilla.org/en-US/firefox/$ffver/releasenotes/)"
   fi
 
+  # Always links back to the primary forge, that is where the build ran.
   if [ ! -z "${FORGEJO_RUN_NUMBER:-}" ]; then
     description="$description\n\n(Built by workflow [$FORGEJO_RUN_NUMBER]($FORGE_URL/$FORGE_REPO/actions/runs/$FORGEJO_RUN_NUMBER))"
   fi
+
+  echo "$description"
+}
+
+# publish_release <forge_url> <repo> <token>
+# The assets are attached as external links to the S3 copies, so both forges
+# reference the same artifacts.
+publish_release() {
+  echo "-> Publishing release $FULL_VERSION on $1" >&2
 
   body="$(
     cat <<EOF
 {
   "name": "$FULL_VERSION",
   "tag_name": "$FULL_VERSION",
-  "body": "$description"
+  "body": "$(release_description)"
 }
 EOF
   )"
   api_response=$(curl --header 'Content-Type: application/json' \
     --header 'accept: application/json' \
-    --header "Authorization: token $FORGE_TOKEN" \
+    --header "Authorization: token $3" \
     --data "$body" \
     --request POST \
-    "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases")
+    "$1/api/v1/repos/$2/releases")
 
   release_id=$(echo "$api_response" | jq -r '.id') || {
     echo "Error: Failed to parse API response: $api_response" >&2
-    exit 1
+    return 1
   }
 
   if [ -z "$release_id" ] || [ "$release_id" == "null" ]; then
     echo "Error: Failed to create release, got null release ID. API response: $api_response" >&2
-    exit 1
+    return 1
   fi
 
   echo "--> Release created with ID: $release_id" >&2
@@ -131,12 +177,24 @@ EOF
   for package in "${packages[@]}" "${packages_other[@]}"; do
     name="$(basename "$package")"
     curl --header 'accept: application/json' \
-      --header "Authorization: token $FORGE_TOKEN" \
+      --header "Authorization: token $3" \
       -F "external_url=$package" \
       --request POST \
-      "$FORGE_URL/api/v1/repos/$FORGE_REPO/releases/$release_id/assets?name=$(printf '%s' "$name" | jq -sRr @uri)"
+      "$1/api/v1/repos/$2/releases/$release_id/assets?name=$(printf '%s' "$name" | jq -sRr @uri)"
   done
+}
 
+# A failing mirror release is a warning, the primary release already succeeded.
+publish_mirror_release() {
+  mirror_enabled || return 0
+
+  if release_exists "$MIRROR_FORGE_URL" "$MIRROR_FORGE_REPO"; then
+    echo "Warning: Release $FULL_VERSION already exists on $MIRROR_FORGE_URL, skipping" >&2
+    return 0
+  fi
+
+  publish_release "$MIRROR_FORGE_URL" "$MIRROR_FORGE_REPO" "$MIRROR_FORGE_TOKEN" ||
+    echo "Warning: Failed to publish the release on $MIRROR_FORGE_URL" >&2
 }
 
 dispatch_workflows() {
@@ -159,82 +217,7 @@ dispatch_workflows() {
 
 push_nupkg() {
   echo "-> Pushing $1 to Chocolatey"
-  "$MOZBUILD/chocolatey/choco" push "$1" --source https://push.chocolatey.org/ -k $CHOCO_API_KEY
-}
-
-gh_request() {
-  response="$(curl -s -H "Authorization: token $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" "$@")"
-  if [ "$(echo "$response" | jq 'type')" == "object" ]; then
-    if [ "$(echo "$response" | jq 'has("message")')" == "true" ]; then
-      echo "Error with GitHub API: $(echo "$response" | jq -r '.message')" >&2
-      exit 1
-    fi
-    if [ "$(echo "$response" | jq 'has("errors")')" == "true" ]; then
-      echo "Error(s) with GitHub API:" >&2
-      echo "$pr_response" | jq -r '.errors | .[].message' >&2
-      exit 1
-    fi
-  fi
-  echo "$response"
-}
-
-gh_prepare_repo() {
-  username=$(gh_request "https://api.github.com/user" | jq -r .login)
-  if ! curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/$username/$2" >/dev/null; then
-    printf "Forking $1/$2...\r"
-    gh_request -X POST "https://api.github.com/repos/$1/$2/forks" >/dev/null
-    echo "Forked $1/$2 to $username/$2"
-  fi
-  CLONEDIR="$WORKDIR/$2"
-  if [ ! -d "$CLONEDIR/.git" ]; then
-    git clone https://github.com/$username/$2.git "$CLONEDIR"
-    (
-      cd "$CLONEDIR"
-      git remote add upstream https://github.com/$1/$2.git
-      git config user.name "LibreWolf"
-      git config user.email "bsys6@librewolf.net"
-      git config commit.gpgSign "false"
-    )
-  fi
-  (
-    cd "$CLONEDIR"
-    git fetch upstream
-    git switch -C bsys6_automation
-    git reset --hard upstream/master
-  )
-}
-
-gh_submit_pr() {
-  username=$(gh_request "https://api.github.com/user" | jq -r .login)
-  (
-    cd "$CLONEDIR"
-    git add .
-    git commit -m "$3"
-    git remote set-url --push origin https://$username:$GH_TOKEN@github.com/$username/$2.git
-    git push origin bsys6_automation --force
-  )
-  printf "Creating pull request...\r"
-  pr_response=$(gh_request "https://api.github.com/repos/$1/$2/pulls" -d "{\"head\":\"$username:bsys6_automation\",\"base\":\"master\",\"title\":\"$3\",\"body\":\"(This pull-request was auto-generated, ping @maltejur)\"}")
-  echo "Pull request created: $(echo "$pr_response" | jq -r .html_url)"
-}
-
-submit_winget() {
-  gh_prepare_repo "microsoft" "winget-pkgs"
-  echo "-> Sumbitting $1 as a pull request to winget-pkgs"
-  wingetdir="$CLONEDIR/manifests/l/LibreWolf/LibreWolf/$FULL_VERSION"
-  mkdir "$wingetdir"
-  export WINGET_FILE="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/$(basename "$1")"
-  export WINGET_CHECKSUM="$(cat "${1}.sha256sum")"
-  envsubst '$FULL_VERSION $WINGET_FILE $WINGET_CHECKSUM' \
-    <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.installer.yaml.in" \
-    >"$wingetdir/LibreWolf.LibreWolf.installer.yaml"
-  envsubst '$FULL_VERSION' \
-    <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.locale.en-US.yaml.in" \
-    >"$wingetdir/LibreWolf.LibreWolf.locale.en-US.yaml"
-  envsubst '$FULL_VERSION' \
-    <"$BSYS6/../assets/winget/LibreWolf.LibreWolf.yaml.in" \
-    >"$wingetdir/LibreWolf.LibreWolf.yaml"
-  gh_submit_pr "microsoft" "winget-pkgs" "Update LibreWolf.LibreWolf to v$FULL_VERSION"
+  "$MOZBUILD/chocolatey/choco" push "$1" --source https://push.chocolatey.org/ -k "$CHOCO_API_KEY"
 }
 
 for file in $(find -name "*.exe" -o -name "*.zip" -o -name "*.tar.xz" -o -name "*.msix" -o -name "*.dmg" -o -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" -o -name "*.zsync"); do
@@ -245,15 +228,19 @@ for file in $(find -name "*.zsync"); do
   upload_to_s3_latest "$file"
 done
 
-upload_to_registry "sha256sums.txt"
+publish_to_registries "sha256sums.txt"
 packages_other+=("$(upload_to_s3 "sha256sums.txt")")
 
-publish_release
+publish_release "$FORGE_URL" "$FORGE_REPO" "$FORGE_TOKEN"
+
+publish_mirror_release
 
 dispatch_workflows
 
-for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
-  push_nupkg "$file"
-done
+if choco_enabled; then
+  for file in $(find -name "*windows-x86_64-nupkg.nupkg"); do
+    push_nupkg "$file"
+  done
+fi
 
 $BSYS6/utils/ms_push_msix.sh $(find -name "*windows-*-msix.msix")

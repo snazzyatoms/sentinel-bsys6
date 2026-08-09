@@ -9,7 +9,7 @@ tmpdir="$(mktemp -d)"
 
 cd $tmpdir
 
-$BSYS6/utils/download_codeberg.sh "librewolf/winupdater" 'LibreWolf-WinUpdater_[.\\d]+\\.zip$' "lwu.zip"
+$BSYS6/utils/download_forge.sh "$FORGE_REPO_OWNER/winupdater" 'LibreWolf-WinUpdater_[.\\d]+\\.zip$' "lwu.zip"
 unzip lwu.zip
 rm lwu.zip
 rm *.url

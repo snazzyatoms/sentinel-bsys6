@@ -26,7 +26,7 @@ deb_arch() {
 make_setup_folder() {
   # This line is stolen from $BSYS/update.sh
   # * We need a version here without the release number
-  version="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/version)"
+  version="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/version")"
 
   # Copy the needed assets.
   cp $BSYS6/../assets/linux.librewolf.desktop.in librewolf/librewolf.desktop.in
@@ -116,8 +116,8 @@ echo "-> Building AppImage" >&2
 
 (cd "$tmpdir" && make_setup_folder)
 
-version="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/version)"
-release="$(curl -sfS https://codeberg.org/librewolf/source/raw/branch/main/release)"
+version="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/version")"
+release="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/release")"
 
 echo "-> Building Redhat package" >&2
 arch=$(rpm_arch)

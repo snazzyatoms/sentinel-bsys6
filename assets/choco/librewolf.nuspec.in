@@ -6,13 +6,13 @@
     <title>LibreWolf</title>
     <authors>LibreWolf contributors</authors>
     <projectUrl>https://librewolf.net</projectUrl>
-    <iconUrl>https://codeberg.org/librewolf/branding/raw/branch/master/icon/icon.svg</iconUrl>
+    <iconUrl>https://librewolf.dev/librewolf/branding/raw/branch/master/icon/icon.svg</iconUrl>
     <licenseUrl>https://codeberg.org/librewolf/source/src/branch/main/LICENSE</licenseUrl>
-    <packageSourceUrl>https://codeberg.org/librewolf/bsys6/src/branch/master/assets/choco</packageSourceUrl>
-    <releaseNotes>https://codeberg.org/librewolf/bsys6/releases</releaseNotes>
+    <packageSourceUrl>https://librewolf.dev/librewolf/bsys6/src/branch/master/assets/choco</packageSourceUrl>
+    <releaseNotes>https://librewolf.dev/librewolf/bsys6/releases</releaseNotes>
     <docsUrl>https://librewolf.net/docs</docsUrl>
     <bugTrackerUrl>https://codeberg.org/librewolf/issues</bugTrackerUrl>
-    <projectSourceUrl>https://codeberg.org/librewolf</projectSourceUrl>
+    <projectSourceUrl>https://librewolf.dev/librewolf</projectSourceUrl>
     <tags>browser librewolf firefox fork</tags>
     <summary>A fork of Firefox, focused on privacy, security and freedom.</summary>
     <description>This project is an independent fork of Firefox, with the primary goals of privacy, security and user freedom.
@@ -28,7 +28,7 @@ LibreWolf is designed to increase protection against tracking and fingerprinting
 - **Content Blocker Included** — [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin) is already included for your convenience.
 - **Enhanced Privacy** — Hardened to maximize privacy, without sacrificing usability.
 - **Fast Updates** — LibreWolf is always built from the latest Firefox stable source, for up-to-date security and features along with stability.
-- **Open Source** — Everyone can participate in the development of LibreWolf. Join us on [GitLab](https://codeberg.org/librewolf) and [Matrix](https://matrix.to/#/#librewolf:matrix.org).
+- **Open Source** — Everyone can participate in the development of LibreWolf. Join us on [our forge](https://librewolf.dev/librewolf) and [Matrix](https://matrix.to/#/#librewolf:matrix.org).
 
 For more details read the full [feature list](https://librewolf.net/docs/features).
 </description>

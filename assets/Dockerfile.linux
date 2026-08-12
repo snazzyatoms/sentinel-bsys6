@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3-pip rpm gnupg jq nodejs ruby git-lfs curl xz-utils pigz \
-        file appstream binutils tar make unzip ca-certificates patch && \
+        file appstream binutils tar make unzip ca-certificates patch s3cmd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     gem install fpm && gem cleanup && \

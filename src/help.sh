@@ -25,6 +25,9 @@ command_descr() {
   package_docker) echo "Run the 'package' command inside Docker" ;;
   prepare) echo "Prepare the build enviroment and install dependencies" ;;
   release) printf "Publish all the various artifacts\n(Should only be used in CI)" ;;
+  upload_artifacts) printf "Upload the build artifacts to the artifacts S3 bucket\n(Should only be used in CI)" ;;
+  download_artifacts) printf "Download all build artifacts of this workflow run\nfrom the artifacts S3 bucket (Should only be used in CI)" ;;
+  cleanup_artifacts) printf "Delete old objects from the artifacts S3 bucket\n(Should only be used in CI)" ;;
   run) echo "Start the built browser" ;;
   setup) echo "Build the installer for Windows with nsis" ;;
   source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;

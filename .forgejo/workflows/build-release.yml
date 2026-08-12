@@ -46,17 +46,13 @@ jobs:
         run: ./bsys6 package package_linux
 
       - name: Upload artifacts
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
-        with:
-          name: linux-${{ matrix.arch }}
-          path: |
-            *.AppImage
-            *.zsync
-            *.deb
-            *.rpm
-            *.tar.xz
-            *.sha256sum
-          retention-days: 7
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 upload_artifacts
 
   build-windows:
     runs-on: epsilon
@@ -87,16 +83,13 @@ jobs:
         run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
-        with:
-          name: windows-${{ matrix.arch }}
-          path: |
-            *.zip
-            *.exe
-            *.msix
-            *.nupkg
-            *.sha256sum
-          retention-days: 7
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 upload_artifacts
 
   build-macos:
     runs-on: epsilon
@@ -125,14 +118,13 @@ jobs:
         run: ./bsys6 package
 
       - name: Upload artifacts
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
-        with:
-          name: macos-${{ matrix.arch }}
-          path: |
-            *.tar.xz
-            *.dmg
-            *.sha256sum
-          retention-days: 7
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 upload_artifacts
 
   publish-release:
     if: forgejo.ref == 'refs/heads/master' && inputs.release
@@ -145,9 +137,13 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download artifacts
-        uses: https://data.forgejo.org/forgejo/download-artifact@v4
-        with:
-          merge-multiple: true
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 download_artifacts
 
       - name: Publish Release
         env:

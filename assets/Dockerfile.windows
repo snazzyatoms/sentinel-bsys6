@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3-pip msitools zstd libc6-i386 jq file xz-utils \
         nodejs zip unzip mono-complete gettext-base pkg-config \
-        mingw-w64-tools git-lfs ossign make patch pigz gnupg && \
+        mingw-w64-tools git-lfs ossign make patch pigz gnupg s3cmd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # Download LibreWolf source

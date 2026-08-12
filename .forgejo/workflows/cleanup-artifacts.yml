@@ -1,0 +1,22 @@
+name: Cleanup Artifacts
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: epsilon
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Delete old artifacts
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 cleanup_artifacts

@@ -18,6 +18,11 @@ on:
         required: false
         default: true
         type: boolean
+      sign_macos:
+        description: "Sign macOS builds"
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   build-linux:
@@ -115,6 +120,10 @@ jobs:
           ARCH: ${{ matrix.arch }}
           SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
           LTO: ${{ inputs.lto }}
+          MACOS_SIGNING_P12: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_SIGNING_P12 || '' }}
+          MACOS_NOTARY_KEY: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_KEY || '' }}
+          MACOS_NOTARY_KEY_ID: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_KEY_ID || '' }}
+          MACOS_NOTARY_ISSUER_ID: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_ISSUER_ID || '' }}
         run: ./bsys6 package
 
       - name: Upload artifacts

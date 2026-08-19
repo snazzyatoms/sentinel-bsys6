@@ -204,7 +204,7 @@ dispatch_workflows() {
     -H 'Accept: application/json' \
     -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
-    -d '{"ref": "master"}'
+    -d '{"ref": "main"}'
 
   echo "-> Dispatching deploy workflow for repo.librewolf.net"
   curl -X 'POST' \

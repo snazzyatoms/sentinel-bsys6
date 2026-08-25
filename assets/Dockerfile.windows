@@ -48,7 +48,7 @@ RUN apt-get update && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target x86_64-pc-windows-msvc --target aarch64-pc-windows-msvc && \
     # Install chocolatey
     mkdir -p /root/.mozbuild/chocolatey && \
-    curl -qfLA "" --no-sessionid --proto =https --tlsv1.2 https://github.com/chocolatey/choco/releases/download/2.7.2/chocolatey.v2.7.2.tar.gz | \
+    curl -qfLA "" --no-sessionid --proto =https --tlsv1.2 https://github.com/chocolatey/choco/releases/download/2.7.4/chocolatey.v2.7.4.tar.gz | \
         tar -C /root/.mozbuild/chocolatey -xz && \
     printf '#!/bin/bash\nset -e\nmono "$(dirname $(readlink -f "$0"))/choco.exe" "$@"\n' > /root/.mozbuild/chocolatey/choco && \
     chmod +x /root/.mozbuild/chocolatey/choco && \

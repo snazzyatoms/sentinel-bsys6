@@ -45,7 +45,7 @@ RUN apt-get update && \
         dxc-x86_64-pc-windows-msvc winappsdk-x86_64-pc-windows-msvc winappsdk-aarch64-pc-windows-msvc windows-rs 7zz \
         /root/.mozbuild/ && \
     # Install rust
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target x86_64-pc-windows-msvc --target aarch64-pc-windows-msvc && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.97.1 --target x86_64-pc-windows-msvc --target aarch64-pc-windows-msvc && \
     # Install chocolatey
     mkdir -p /root/.mozbuild/chocolatey && \
     curl -qfLA "" --no-sessionid --proto =https --tlsv1.2 https://github.com/chocolatey/choco/releases/download/2.7.4/chocolatey.v2.7.4.tar.gz | \

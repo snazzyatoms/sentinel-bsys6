@@ -39,7 +39,7 @@ RUN apt-get update && \
     # Move artifacts to .mozbuild
     mv  clang sysroot-wasm32-wasi cbindgen dmg cctools binutils nasm sysroot-x86_64-linux-gnu hfsplus \
         /root/.mozbuild/ && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target x86_64-apple-darwin --target aarch64-apple-darwin && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.97.1 --target x86_64-apple-darwin --target aarch64-apple-darwin && \
     # Cleanup
     rm -rf \
         /root/.mozbuild/toolchains librewolf-${VERSION} \

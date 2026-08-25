@@ -29,7 +29,7 @@ RUN apt-get update && \
         cbindgen node nasm sysroot-wasm32-wasi \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu /root/.mozbuild/ && \
     # Install rust
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target aarch64-unknown-linux-gnu && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.97.1 --target aarch64-unknown-linux-gnu && \
     # Cleanup
     rm -rf \
         /root/.mozbuild/toolchains librewolf-${VERSION} \

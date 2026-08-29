@@ -30,6 +30,22 @@ RUN apt-get update && \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu /root/.mozbuild/ && \
     # Install rust
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.98 --target aarch64-unknown-linux-gnu && \
+    # Install appimagetool
+    curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool" && \
+    chmod +x appimagetool && \
+    mv appimagetool /usr/local/bin/ && \
+    # Install the type2-runtime
+    curl -fL "https://github.com/AppImage/type2-runtime/releases/download/continuous/signing-pubkey.asc" -o "signing-pubkey.asc" && \
+    gpg --import signing-pubkey.asc && \
+    curl -fL "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64" -o "runtime-x86_64" && \
+    curl -fL "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64.sig" -o "runtime-x86_64.sig" && \
+    curl -fL "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-aarch64" -o "runtime-aarch64" && \
+    curl -fL "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-aarch64.sig" -o "runtime-aarch64.sig" && \
+    gpg --verify runtime-x86_64.sig runtime-x86_64 && \
+    gpg --verify runtime-aarch64.sig runtime-aarch64 && \
+    rm signing-pubkey.asc runtime-x86_64.sig runtime-aarch64.sig && \
+    mv runtime-x86_64 /usr/local/lib/appimage-runtime-x86_64 && \
+    mv runtime-aarch64 /usr/local/lib/appimage-runtime-aarch64 && \
     # Cleanup
     rm -rf \
         /root/.mozbuild/toolchains librewolf-${VERSION} \

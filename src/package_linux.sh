@@ -74,16 +74,14 @@ build_appimage() {
   mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.metainfo.xml" "LibreWolf.AppDir/usr/share/metainfo/net.librewolf.LibreWolf.appdata.xml"
   cp $BSYS6/../assets/appimage/* "LibreWolf.AppDir/"
   cp -r librewolf/* "LibreWolf.AppDir/usr/bin/"
-  curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool"
-  chmod +x appimagetool
   arch_appimage=$(rpm_arch)
-  ./appimagetool --appimage-extract
+  appimagetool --appimage-extract
   if [ -z "$SIGNING_KEY" ]; then
-    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun \
+    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} \
     -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
     LibreWolf.AppDir
   else
-    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun -s \
+    APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} -s \
     -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
     LibreWolf.AppDir
   fi

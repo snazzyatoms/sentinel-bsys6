@@ -7,11 +7,11 @@
     <authors>LibreWolf contributors</authors>
     <projectUrl>https://librewolf.net</projectUrl>
     <iconUrl>https://librewolf.dev/librewolf/branding/raw/branch/master/icon/icon.svg</iconUrl>
-    <licenseUrl>https://codeberg.org/librewolf/source/src/branch/main/LICENSE</licenseUrl>
+    <licenseUrl>https://librewolf.dev/librewolf/source/src/branch/main/LICENSE</licenseUrl>
     <packageSourceUrl>https://librewolf.dev/librewolf/bsys6/src/branch/master/assets/choco</packageSourceUrl>
     <releaseNotes>https://librewolf.dev/librewolf/bsys6/releases</releaseNotes>
     <docsUrl>https://librewolf.net/docs</docsUrl>
-    <bugTrackerUrl>https://codeberg.org/librewolf/issues</bugTrackerUrl>
+    <bugTrackerUrl>https://librewolf.dev/librewolf/issues</bugTrackerUrl>
     <projectSourceUrl>https://librewolf.dev/librewolf</projectSourceUrl>
     <tags>browser librewolf firefox fork</tags>
     <summary>A fork of Firefox, focused on privacy, security and freedom.</summary>

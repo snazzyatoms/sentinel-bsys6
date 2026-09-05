@@ -16,5 +16,9 @@ elif [ "$TARGET" == "macos" ]; then
   done
   source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.dmg"
 else
-  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.tar\.xz"
+  if [[ "${SIGNMAR:-false}" == "true" ]]; then
+    mv "$SOURCE/obj-$MOZ_TARGET/dist/bin/signmar" "$GITHUB_WORKSPACE/signmar"
+  else
+    source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.tar\.xz"
+  fi
 fi

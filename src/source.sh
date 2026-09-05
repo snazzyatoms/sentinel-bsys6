@@ -109,6 +109,17 @@ EOF
       )"
   fi
 
+# Signmar
+  if [[ "${SIGNMAR:-false}" == "true" ]]; then
+      mozconfig="$(
+        cat <<EOF
+$mozconfig
+ac_add_options --with-system-nss
+ac_add_options --with-system-nspr
+EOF
+      )"
+  fi
+
   mozconfig_new_hash=$(echo "$mozconfig" | sha256sum | cut -d' ' -f1)
   mozconfig_old_hash=$(cat "$SOURCEDIR/mozconfig.hash" 2>/dev/null || echo "")
 

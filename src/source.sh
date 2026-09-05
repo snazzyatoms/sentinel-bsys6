@@ -114,6 +114,8 @@ EOF
       mozconfig="$(
         cat <<EOF
 $mozconfig
+ac_add_options --disable-profile-use
+ac_add_options --without-pgo-profile-path
 ac_add_options --without-sysroot
 ac_add_options --with-system-nss
 ac_add_options --with-system-nspr

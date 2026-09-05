@@ -28,7 +28,7 @@ jobs:
     runs-on: epsilon
     container:
       image: librewolf.dev/librewolf/bsys6:dind
-    needs: [build-source]
+    needs: [build]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6

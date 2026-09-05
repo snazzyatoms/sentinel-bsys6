@@ -114,6 +114,7 @@ EOF
       mozconfig="$(
         cat <<EOF
 $mozconfig
+ac_add_options --without-sysroot
 ac_add_options --with-system-nss
 ac_add_options --with-system-nspr
 EOF

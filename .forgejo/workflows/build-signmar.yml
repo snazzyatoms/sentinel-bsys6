@@ -51,16 +51,18 @@ jobs:
           name: signmar
 
       - name: Upload to Package Registry
+        env:
+          FORGE_USER: ${{ vars.FORGE_USER }}
+          FORGE_TOKEN: ${{ secrets.FORGE_TOKEN }}
         run: |
           set -euo pipefail
 
           package_url="${{ forgejo.server_url }}/api/packages/${{ forgejo.repository_owner }}/generic/signmar/latest/signmar"
-          credentials="${{ vars.FORGE_USER }}:${{ secrets.FORGE_TOKEN }}"
 
           status="$(curl --silent --show-error \
             --output /dev/null \
             --write-out '%{http_code}' \
-            --user "$credentials" \
+            --user "$FORGE_USER:$FORGE_TOKEN" \
             --request DELETE \
             "$package_url")"
 
@@ -70,6 +72,6 @@ jobs:
           fi
 
           curl --fail --silent --show-error --http1.1 \
-            --user "$credentials" \
+            --user "$FORGE_USER:$FORGE_TOKEN" \
             --upload-file signmar \
             "$package_url"

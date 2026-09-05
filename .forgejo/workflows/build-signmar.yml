@@ -15,7 +15,19 @@ jobs:
       - name: Build
         env:
           SIGNMAR: true
-        run: ./bsys6 package
+        run: |
+          cat > /etc/apt/sources.list.d/forky.sources <<'EOF'
+          Types: deb deb-src
+          URIs: http://deb.debian.org/debian
+          Suites: forky
+          Components: main
+          Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+          EOF
+
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get -y -t forky --no-install-recommends install libnss3-dev libnspr4-dev
+          DEBIAN_FRONTEND=noninteractive apt-get -y -t forky --no-install-recommends build-dep firefox-esr
+          ./bsys6 package
 
       - name: Upload artifacts
         uses: https://data.forgejo.org/forgejo/upload-artifact@v4

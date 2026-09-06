@@ -119,6 +119,8 @@ ac_add_options --without-pgo-profile-path
 ac_add_options --without-sysroot
 ac_add_options --with-system-nss
 ac_add_options --with-system-nspr
+ac_add_options --enable-updater
+ac_add_options --enable-update-channel=release
 EOF
       )"
   fi

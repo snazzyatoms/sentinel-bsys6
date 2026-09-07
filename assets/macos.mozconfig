@@ -1,6 +1,10 @@
 ac_add_options --with-l10n-base=$(pwd)/lw/l10n
 ac_add_options --enable-sandbox
 
+# Enable building the updater
+ac_add_options --enable-updater
+ac_add_options --enable-update-channel=release
+
 # Packaging related
 #export DSYMUTIL="$MOZBUILD/clang/bin/dsymutil"
 export DMG_TOOL="$MOZBUILD/dmg/dmg"

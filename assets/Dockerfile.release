@@ -8,10 +8,14 @@ RUN apt-get update && \
     echo "deb [signed-by=/etc/apt/keyrings/forgejo-OSSign.asc] https://vcs.fi/api/packages/OSSign/debian stable main" > /etc/apt/sources.list.d/forgejo.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        gnupg lsb-release nodejs s3cmd ossign gawk git \
-        make lbzip2 zip mono-complete jq gettext-base python3-pip && \
+        gnupg lsb-release nodejs s3cmd ossign gawk git libnss3-tools libnss3 libnspr4 \
+        make lbzip2 zip mono-complete jq gettext-base python3-pip xz-utils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
+    # Install signmar
+    curl -fL "https://librewolf.dev/api/packages/librewolf/generic/signmar/latest/signmar" -o "signmar" && \
+    chmod +x signmar && \
+    mv signmar /usr/local/bin/ && \
     rm -rf /root/.mozbuild/chocolatey && \
     mkdir -p /root/.mozbuild/chocolatey && \
     curl -qfLA "" --no-sessionid --proto =https --tlsv1.2 https://github.com/chocolatey/choco/releases/download/2.7.2/chocolatey.v2.7.2.tar.gz | \

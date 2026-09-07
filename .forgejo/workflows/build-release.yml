@@ -39,10 +39,10 @@ jobs:
         with:
           lfs: false
           persist-credentials: false
-      
+
       - name: Fetch LFS objects
         run: git lfs pull
-  
+
       - name: Build Linux
         env:
           ARCH: ${{ matrix.arch }}
@@ -73,7 +73,7 @@ jobs:
         with:
           lfs: false
           persist-credentials: false
-      
+
       - name: Fetch LFS objects
         run: git lfs pull
 
@@ -110,7 +110,7 @@ jobs:
         with:
           lfs: false
           persist-credentials: false
-      
+
       - name: Fetch LFS objects
         run: git lfs pull
 
@@ -124,6 +124,9 @@ jobs:
           MACOS_NOTARY_KEY: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_KEY || '' }}
           MACOS_NOTARY_KEY_ID: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_KEY_ID || '' }}
           MACOS_NOTARY_ISSUER_ID: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_macos && secrets.MACOS_NOTARY_ISSUER_ID || '' }}
+          NSS_PASSWORD: ${{ forgejo.ref == 'refs/heads/master' && secrets.NSS_PASSWORD || '' }}
+          MAR_KEY_1_PASSWORD: ${{ forgejo.ref == 'refs/heads/master' && secrets.MAR_KEY_1_PASSWORD || '' }}
+          MAR_KEY_1: ${{ forgejo.ref == 'refs/heads/master' && secrets.MAR_KEY_1 || '' }}
         run: ./bsys6 package
 
       - name: Upload artifacts
@@ -175,4 +178,9 @@ jobs:
           S3_KEY: ${{ secrets.S3_KEY }}
           S3_SECRET: ${{ secrets.S3_SECRET }}
           S3_PUBLIC_URL: ${{ vars.S3_PUBLIC_URL }}
+          S3_UPDATE_BUCKET: ${{ vars.S3_UPDATE_BUCKET }}
+          S3_UPDATE_PUBLIC_URL: ${{ vars.S3_UPDATE_PUBLIC_URL }}
+          CLBR_APIKEY: ${{ secrets.CLBR_APIKEY }}
+          CLBR_CDN_ZONE: ${{ vars.CLBR_CDN_ZONE }}
+          CLBR_CDN_HOSTNAME: ${{ vars.CLBR_CDN_HOSTNAME }}
         run: ./bsys6 release

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates xmlns="http://www.mozilla.org/2005/app-update">
+  <update
+    appVersion="${APP_VERSION}"
+    buildID="${BUILD_ID}"
+    displayVersion="${DISPLAY_VERSION}"
+    platformVersion="${PLATFORM_VERSION}"
+    type="${TYPE}">
+    <patch
+      type="${PATCH_TYPE}"
+      URL="${PATCH_URL}"
+      hashFunction="${HASH_FUNCTION}"
+      hashValue="${HASH_VALUE}"
+      size="${SIZE}"/>
+  </update>
+</updates>

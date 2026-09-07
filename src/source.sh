@@ -35,6 +35,10 @@ if [ -z "${SOURCE:-}" ]; then
     fi
   fi
 
+  if [ "${TARGET:-}" == "macos" ]; then
+    sed -i '/AppUpdateURL/d; /DisableAppUpdate/d' "$SOURCEDIR/lw/policies.json"
+  fi
+
   if [ ! -f "$SOURCEDIR/mozconfig.backup" ]; then
     if [ -f "$SOURCEDIR/mozconfig" ]; then
       echo "-> Creating mozconfig backup" >&2

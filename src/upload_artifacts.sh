@@ -5,7 +5,7 @@ shopt -s nullglob
 source $BSYS6/exports/artifacts_s3.sh
 
 uploaded="false"
-for file in *.AppImage *.zsync *.deb *.rpm *.tar.xz *.zip *.exe *.msix *.nupkg *.dmg *.sha256sum; do
+for file in *.AppImage *.zsync *.deb *.rpm *.tar.xz *.zip *.exe *.msix *.nupkg *.dmg *.mar *.sha256sum; do
   echo "-> Uploading $file to the artifacts bucket" >&2
   s3_path="$ARTIFACTS_RUN_PATH/$file"
   if ! artifacts_s3cmd put "$file" "s3://$S3_ARTIFACTS_BUCKET$s3_path" >&2; then

@@ -43,6 +43,7 @@ RUN apt-get update && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.98 --target x86_64-apple-darwin --target aarch64-apple-darwin && \
     # Install signmar
     curl -fL "https://librewolf.dev/api/packages/librewolf/generic/signmar/latest/signmar" -o "signmar" && \
+    echo "79481e9f66b44fb3923d4ac7dec9fb646b2a613c99dbb447610bcc83e760de0f90a6f7caae6bf68bd25c201505c4a77634977d613004bc9c7ed1737717bda59e signmar" | sha512sum -c - && \
     chmod +x signmar && \
     mv signmar /usr/local/bin/ && \
     # Cleanup

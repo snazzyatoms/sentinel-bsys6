@@ -11,7 +11,7 @@ echo "v$VERSION -> v$CHOCO_VERSION"
 tmpdir=$(mktemp -d)
 echo "tmpdir is $tmpdir"
 mkdir -p "$tmpdir/tools"
-export CHOCO_FILE="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf/$FULL_VERSION/$(basename "$SETUP")"
+export CHOCO_FILE="https://dl.librewolf.net/librewolf/$FULL_VERSION/$(basename "$SETUP")"
 export CHOCO_CHECKSUM="$(cat "$SETUP_SHA256")"
 envsubst '$CHOCO_VERSION' \
   <"$BSYS6/../assets/choco/librewolf.nuspec.in" \

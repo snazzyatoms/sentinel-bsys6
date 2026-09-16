@@ -27,7 +27,7 @@ RUN apt-get update && \
     # Download needed build artifacts
     ./librewolf-${VERSION}/mach artifact toolchain --from-build \
         linux64-clang-22 sysroot-x86_64-linux-gnu linux64-pkgconf \
-        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-21 \
+        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-22 \
         onnxruntime-x86_64-linux-gnu \
         linux64-winchecksec dxc-aarch64-pc-windows-msvc dxc-x86_64-pc-windows-msvc \
         winappsdk-x86_64-pc-windows-msvc winappsdk-aarch64-pc-windows-msvc \

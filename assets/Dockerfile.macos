@@ -26,7 +26,7 @@ RUN apt-get update && \
     rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
     # Download needed build artifacts
     ./librewolf-${VERSION}/mach artifact toolchain --from-build \
-        linux64-clang-22 sysroot-wasm32-wasi linux64-cbindgen linux64-libdmg \
+        linux64-clang-22 sysroot-wasm32-wasi-clang-22 linux64-cbindgen linux64-libdmg \
         linux64-cctools-port linux64-binutils linux64-nasm sysroot-x86_64-linux-gnu linux64-hfsplus && \
     cd librewolf-${VERSION} && \
     ./mach --no-interactive python --virtualenv build \

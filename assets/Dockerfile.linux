@@ -22,7 +22,7 @@ RUN apt-get update && \
     # Download needed build artifacts
     ./librewolf-${VERSION}/mach artifact toolchain --from-build \
         linux64-clang-22 sysroot-x86_64-linux-gnu linux64-pkgconf \
-        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-21 \
+        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-22 \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu && \
     # Move artifacts to .mozbuild
     mv clang sysroot-x86_64-linux-gnu pkgconf \

@@ -36,7 +36,7 @@ printf '%s' "$MAR_KEY_1" | base64 -d > "$tmpdir/cert.p12"
 pk12util -i "$tmpdir/cert.p12" -d "$tmpdir/nssdb" -K "$NSS_PASSWORD" -W "$MAR_KEY_1_PASSWORD"
 
 # Sign mar
-printf '%s\n' "$NSS_PASSWORD" | signmar -d "$tmpdir/nssdb" -n "marsigner" -s "$SOURCE/librewolf.mar" "librewolf-signed.mar"
+printf '%s\n' "$NSS_PASSWORD" | signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -s "$SOURCE/librewolf.mar" "librewolf-signed.mar"
 
 # Verify that it was signed correctly
-signmar -d "$tmpdir/nssdb" -n "marsigner" -v "librewolf-signed.mar"
+signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -v "librewolf-signed.mar"

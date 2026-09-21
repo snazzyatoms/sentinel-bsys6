@@ -215,7 +215,7 @@ echo "-> Running fpm"
     -d 'libcairo2 >= 1.10.0' \
     -d 'libdbus-1-3 >= 1.9.14' \
     -d 'libfontconfig1 >= 2.12.6' \
-    -d 'libfreetype6 >= 2.3.9' \
+    -d 'libfreetype6 >= 2.6' \
     -d 'libgcc1 >= 1:4.5' \
     -d 'libgdk-pixbuf-2.0-0 >= 2.22.0 | libgdk-pixbuf2.0-0 >= 2.22.0' \
     -d 'libglib2.0-0 >= 2.37.3' \

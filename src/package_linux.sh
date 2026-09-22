@@ -217,7 +217,7 @@ echo "-> Running fpm"
     -d 'libfontconfig1 >= 2.12.6' \
     -d 'libfreetype6 >= 2.6' \
     -d 'libgcc1 >= 1:4.5' \
-    -d 'libgdk-pixbuf-2.0-0 >= 2.22.0 | libgdk-pixbuf2.0-0 >= 2.22.0' \
+    -d 'libgdk-pixbuf-2.0-0 (>= 2.22.0) | libgdk-pixbuf2.0-0 (>= 2.22.0)' \
     -d 'libglib2.0-0 >= 2.37.3' \
     -d 'libgtk-3-0 >= 3.13.7' \
     -d 'libpango-1.0-0 >= 1.14.0' \

@@ -21,15 +21,15 @@ RUN apt-get update && \
     rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
     # Download needed build artifacts
     ./librewolf-${VERSION}/mach artifact toolchain --from-build \
-        linux64-clang-22 sysroot-x86_64-linux-gnu linux64-pkgconf \
-        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-22 \
+        linux64-clang-23 sysroot-x86_64-linux-gnu linux64-pkgconf \
+        linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-23 \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu && \
     # Move artifacts to .mozbuild
     mv clang sysroot-x86_64-linux-gnu pkgconf \
         cbindgen node nasm sysroot-wasm32-wasi \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu /root/.mozbuild/ && \
     # Install rust
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.98.1 --target aarch64-unknown-linux-gnu && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.99 --target aarch64-unknown-linux-gnu && \
     # Install appimagetool
     curl -fL "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage" -o "appimagetool" && \
     chmod +x appimagetool && \

@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-images:
-    runs-on: epsilon
+    runs-on: tiny
     container:
       image: librewolf.dev/librewolf/bsys6:dind
     strategy:

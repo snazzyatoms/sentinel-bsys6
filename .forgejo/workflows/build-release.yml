@@ -59,43 +59,6 @@ jobs:
           S3_SECRET: ${{ secrets.S3_SECRET }}
         run: ./bsys6 upload_artifacts
 
-  build-windows:
-    runs-on: epsilon
-    container:
-      image: librewolf.dev/librewolf/bsys6:windows
-    strategy:
-      max-parallel: 2
-      matrix:
-        arch: [x86_64, arm64]
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-        with:
-          lfs: false
-          persist-credentials: false
-
-      - name: Fetch LFS objects
-        run: git lfs pull
-
-      - name: Build Windows
-        env:
-          TARGET: windows
-          ARCH: ${{ matrix.arch }}
-          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
-          LTO: ${{ inputs.lto }}
-          OSSIGN_CONFIG: ${{ forgejo.ref == 'refs/heads/master' && secrets.OSSIGN_CONFIG || '' }}
-          ENABLE_EXE_SIGNING: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_exe || false }}
-        run: ./bsys6 package setup msix portable nupkg
-
-      - name: Upload artifacts
-        env:
-          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
-          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
-          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
-          S3_KEY: ${{ secrets.S3_KEY }}
-          S3_SECRET: ${{ secrets.S3_SECRET }}
-        run: ./bsys6 upload_artifacts
-
   build-macos:
     runs-on: epsilon
     container:
@@ -128,6 +91,43 @@ jobs:
           MAR_KEY_1_PASSWORD: ${{ forgejo.ref == 'refs/heads/master' && secrets.MAR_KEY_1_PASSWORD || '' }}
           MAR_KEY_1: ${{ forgejo.ref == 'refs/heads/master' && secrets.MAR_KEY_1 || '' }}
         run: ./bsys6 package
+
+      - name: Upload artifacts
+        env:
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_ARTIFACTS_BUCKET: ${{ vars.S3_ARTIFACTS_BUCKET }}
+          S3_ARTIFACTS_PUBLIC_URL: ${{ vars.S3_ARTIFACTS_PUBLIC_URL }}
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_SECRET: ${{ secrets.S3_SECRET }}
+        run: ./bsys6 upload_artifacts
+
+  build-windows:
+    runs-on: epsilon
+    container:
+      image: librewolf.dev/librewolf/bsys6:windows
+    strategy:
+      max-parallel: 2
+      matrix:
+        arch: [x86_64, arm64]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          lfs: false
+          persist-credentials: false
+
+      - name: Fetch LFS objects
+        run: git lfs pull
+
+      - name: Build Windows
+        env:
+          TARGET: windows
+          ARCH: ${{ matrix.arch }}
+          SIGNING_KEY: ${{ forgejo.ref == 'refs/heads/master' && secrets.SIGNING_KEY || '' }}
+          LTO: ${{ inputs.lto }}
+          OSSIGN_CONFIG: ${{ forgejo.ref == 'refs/heads/master' && secrets.OSSIGN_CONFIG || '' }}
+          ENABLE_EXE_SIGNING: ${{ forgejo.ref == 'refs/heads/master' && inputs.sign_exe || false }}
+        run: ./bsys6 package setup msix portable nupkg
 
       - name: Upload artifacts
         env:

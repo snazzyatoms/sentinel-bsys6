@@ -22,7 +22,7 @@ export MOZ_PRODUCT_VERSION="$VERSION"
 export MAR_CHANNEL_ID="release"
 
 # Create mar
-(cd "$SOURCE" && ./tools/update-packaging/make_full_update.sh "librewolf.mar" "$app_path")
+(cd "$SOURCE" && ./tools/update-packaging/make_full_update.sh "sentinel.mar" "$app_path")
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
@@ -36,7 +36,7 @@ printf '%s' "$MAR_KEY_1" | base64 -d > "$tmpdir/cert.p12"
 pk12util -i "$tmpdir/cert.p12" -d "$tmpdir/nssdb" -K "$NSS_PASSWORD" -W "$MAR_KEY_1_PASSWORD"
 
 # Sign mar
-printf '%s\n' "$NSS_PASSWORD" | signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -s "$SOURCE/librewolf.mar" "librewolf-signed.mar"
+printf '%s\n' "$NSS_PASSWORD" | signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -s "$SOURCE/sentinel.mar" "sentinel-signed.mar"
 
 # Verify that it was signed correctly
-signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -v "librewolf-signed.mar"
+signmar -d "$tmpdir/nssdb" -n "marsigner-2026" -v "sentinel-signed.mar"

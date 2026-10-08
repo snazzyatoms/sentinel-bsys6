@@ -11,7 +11,7 @@ export DMG_TOOL="$MOZBUILD/dmg/dmg"
 export HFS_TOOL="$MOZBUILD/dmg/hfsplus"
 
 ## Bundle identifier
-ac_add_options --with-distribution-id='net.librewolf'
+ac_add_options --with-distribution-id='net.sentinel'
 
 # Build related
 CROSS=$MOZBUILD

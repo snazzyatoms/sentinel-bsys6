@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=LibreWolf
-Exec=librewolf %u
-Icon=librewolf
+Name=Sentinel
+Exec=sentinel %u
+Icon=sentinel
 Type=Application
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
-StartupWMClass=librewolf
+StartupWMClass=sentinel
 Categories=Network;WebBrowser;
 StartupNotify=true
 Terminal=false
@@ -14,12 +14,12 @@ Actions=new-window;new-private-window;profilemanager;
 
 [Desktop Action new-window]
 Name=Open a New Window
-Exec=librewolf %u
+Exec=sentinel %u
 
 [Desktop Action new-private-window]
 Name=Open a New Private Window
-Exec=librewolf --private-window %u
+Exec=sentinel --private-window %u
 
 [Desktop Action profilemanager]
 Name=Open the Profile Manager
-Exec=librewolf --ProfileManager %u
+Exec=sentinel --ProfileManager %u

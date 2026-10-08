@@ -26,83 +26,83 @@ deb_arch() {
 make_setup_folder() {
   # This line is stolen from $BSYS/update.sh
   # * We need a version here without the release number
-  version="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/version")"
+  version="$(curl -sfSA "" "https://raw.githubusercontent.com/snazzyatoms/sentinel-browser/main/version")"
 
   # Copy the needed assets.
-  cp $BSYS6/../assets/linux.librewolf.desktop.in librewolf/librewolf.desktop.in
-  cp $BSYS6/../assets/linux.librewolf.ico librewolf/librewolf.ico
+  cp $BSYS6/../assets/linux.sentinel.desktop.in sentinel/sentinel.desktop.in
+  cp $BSYS6/../assets/linux.sentinel.ico sentinel/sentinel.ico
 
   # Remove some files we don't want.
-  rm -f librewolf/browser/features/proxy-failover@mozilla.com.xpi
-  rm -f librewolf/pingsender
-  rm -f librewolf/precomplete
-  rm -f librewolf/removed-files
-  rm -f librewolf/libonnxruntime.so
+  rm -f sentinel/browser/features/proxy-failover@mozilla.com.xpi
+  rm -f sentinel/pingsender
+  rm -f sentinel/precomplete
+  rm -f sentinel/removed-files
+  rm -f sentinel/libonnxruntime.so
 
   # Create the target filesystem layout directly.
-  rm -rf "librewolf-$version"
-  mkdir -p "librewolf-$version/usr/share/librewolf"
-  mkdir -p "librewolf-$version/usr/bin"
-  mv librewolf/* "librewolf-$version/usr/share/librewolf"
-  rmdir librewolf
-  (cd "librewolf-$version/usr/bin" && ln -s ../share/librewolf/librewolf)
+  rm -rf "sentinel-$version"
+  mkdir -p "sentinel-$version/usr/share/sentinel"
+  mkdir -p "sentinel-$version/usr/bin"
+  mv sentinel/* "sentinel-$version/usr/share/sentinel"
+  rmdir sentinel
+  (cd "sentinel-$version/usr/bin" && ln -s ../share/sentinel/sentinel)
 
   # Application icon
-  mkdir -p "librewolf-$version/usr/share/applications"
-  mkdir -p "librewolf-$version/usr/share/icons/hicolor/16x16/apps"
-  mkdir -p "librewolf-$version/usr/share/icons/hicolor/32x32/apps"
-  mkdir -p "librewolf-$version/usr/share/icons/hicolor/64x64/apps"
-  mkdir -p "librewolf-$version/usr/share/icons/hicolor/128x128/apps"
-  cp "librewolf-$version/usr/share/librewolf/browser/chrome/icons/default/default16.png" "librewolf-$version/usr/share/icons/hicolor/16x16/apps/librewolf.png"
-  cp "librewolf-$version/usr/share/librewolf/browser/chrome/icons/default/default32.png" "librewolf-$version/usr/share/icons/hicolor/32x32/apps/librewolf.png"
-  cp "librewolf-$version/usr/share/librewolf/browser/chrome/icons/default/default64.png" "librewolf-$version/usr/share/icons/hicolor/64x64/apps/librewolf.png"
-  cp "librewolf-$version/usr/share/librewolf/browser/chrome/icons/default/default128.png" "librewolf-$version/usr/share/icons/hicolor/128x128/apps/librewolf.png"
+  mkdir -p "sentinel-$version/usr/share/applications"
+  mkdir -p "sentinel-$version/usr/share/icons/hicolor/16x16/apps"
+  mkdir -p "sentinel-$version/usr/share/icons/hicolor/32x32/apps"
+  mkdir -p "sentinel-$version/usr/share/icons/hicolor/64x64/apps"
+  mkdir -p "sentinel-$version/usr/share/icons/hicolor/128x128/apps"
+  cp "sentinel-$version/usr/share/sentinel/browser/chrome/icons/default/default16.png" "sentinel-$version/usr/share/icons/hicolor/16x16/apps/sentinel.png"
+  cp "sentinel-$version/usr/share/sentinel/browser/chrome/icons/default/default32.png" "sentinel-$version/usr/share/icons/hicolor/32x32/apps/sentinel.png"
+  cp "sentinel-$version/usr/share/sentinel/browser/chrome/icons/default/default64.png" "sentinel-$version/usr/share/icons/hicolor/64x64/apps/sentinel.png"
+  cp "sentinel-$version/usr/share/sentinel/browser/chrome/icons/default/default128.png" "sentinel-$version/usr/share/icons/hicolor/128x128/apps/sentinel.png"
 
   # This creates a `1ibrewolf.destop` file.
-  sed "s/MYDIR/\/usr\/share\/librewolf/g" <"librewolf-$version/usr/share/librewolf/librewolf.desktop.in" >"librewolf-$version/usr/share/applications/librewolf.desktop"
-  rm "librewolf-$version/usr/share/librewolf/librewolf.desktop.in"
+  sed "s/MYDIR/\/usr\/share\/sentinel/g" <"sentinel-$version/usr/share/sentinel/sentinel.desktop.in" >"sentinel-$version/usr/share/applications/sentinel.desktop"
+  rm "sentinel-$version/usr/share/sentinel/sentinel.desktop.in"
 }
 
 build_appimage() {
-  mkdir -p "LibreWolf.AppDir/usr/bin/"
-  mkdir -p "LibreWolf.AppDir/usr/share/metainfo/"
-  mkdir -p "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
-  mkdir -p "LibreWolf.AppDir/usr/share/applications/"
-  cp "$BSYS6/../assets/appimage/librewolf.png" "LibreWolf.AppDir/usr/share/icons/hicolor/128x128/apps/"
-  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/usr/share/applications/"
-  ln "LibreWolf.AppDir/usr/share/applications/net.librewolf.LibreWolf.desktop" "LibreWolf.AppDir/net.librewolf.LibreWolf.desktop"
-  mv "$BSYS6/../assets/appimage/net.librewolf.LibreWolf.metainfo.xml" "LibreWolf.AppDir/usr/share/metainfo/net.librewolf.LibreWolf.appdata.xml"
-  cp $BSYS6/../assets/appimage/* "LibreWolf.AppDir/"
-  cp -r librewolf/* "LibreWolf.AppDir/usr/bin/"
+  mkdir -p "Sentinel.AppDir/usr/bin/"
+  mkdir -p "Sentinel.AppDir/usr/share/metainfo/"
+  mkdir -p "Sentinel.AppDir/usr/share/icons/hicolor/128x128/apps/"
+  mkdir -p "Sentinel.AppDir/usr/share/applications/"
+  cp "$BSYS6/../assets/appimage/sentinel.png" "Sentinel.AppDir/usr/share/icons/hicolor/128x128/apps/"
+  mv "$BSYS6/../assets/appimage/net.sentinel.Sentinel.desktop" "Sentinel.AppDir/usr/share/applications/"
+  ln "Sentinel.AppDir/usr/share/applications/net.sentinel.Sentinel.desktop" "Sentinel.AppDir/net.sentinel.Sentinel.desktop"
+  mv "$BSYS6/../assets/appimage/net.sentinel.Sentinel.metainfo.xml" "Sentinel.AppDir/usr/share/metainfo/net.sentinel.Sentinel.appdata.xml"
+  cp $BSYS6/../assets/appimage/* "Sentinel.AppDir/"
+  cp -r sentinel/* "Sentinel.AppDir/usr/bin/"
   arch_appimage=$(rpm_arch)
   appimagetool --appimage-extract
   if [ -z "$SIGNING_KEY" ]; then
     APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} \
-    -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
-    LibreWolf.AppDir
+    -u "zsync|https://dl.sentinel.net/sentinel/latest/sentinel-latest-linux-${ARCH}-appimage.zsync" \
+    Sentinel.AppDir
   else
     APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} -s \
-    -u "zsync|https://dl.librewolf.net/librewolf/latest/librewolf-latest-linux-${ARCH}-appimage.zsync" \
-    LibreWolf.AppDir
+    -u "zsync|https://dl.sentinel.net/sentinel/latest/sentinel-latest-linux-${ARCH}-appimage.zsync" \
+    Sentinel.AppDir
   fi
 
   # Fix zsync location
   if [ "$arch_appimage" == "aarch64" ]; then
     sed -i \
-      -e "s|^Filename: .*|Filename: LibreWolf.aarch64.AppImage|" \
-      -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-arm64-appimage.AppImage|" \
+      -e "s|^Filename: .*|Filename: Sentinel.aarch64.AppImage|" \
+      -e "s|^URL: .*|URL: https://dl.sentinel.net/sentinel/${VERSION}/sentinel-${VERSION}-linux-arm64-appimage.AppImage|" \
       "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
   else
     sed -i \
-      -e "s|^Filename: .*|Filename: LibreWolf.x86_64.AppImage|" \
-      -e "s|^URL: .*|URL: https://dl.librewolf.net/librewolf/${VERSION}/librewolf-${VERSION}-linux-x86_64-appimage.AppImage|" \
+      -e "s|^Filename: .*|Filename: Sentinel.x86_64.AppImage|" \
+      -e "s|^URL: .*|URL: https://dl.sentinel.net/sentinel/${VERSION}/sentinel-${VERSION}-linux-x86_64-appimage.AppImage|" \
       "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
   fi
 
   chmod +x ${pkgname}-${VERSION}-${arch_appimage}.AppImage
 }
 
-pkgname="librewolf"
+pkgname="sentinel"
 
 tmpdir=$(mktemp -d)
 (cd "$tmpdir" && tar xf "$PACKAGE")
@@ -114,8 +114,8 @@ echo "-> Building AppImage" >&2
 
 (cd "$tmpdir" && make_setup_folder)
 
-version="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/version")"
-release="$(curl -sfSA "" "$FORGE_URL/$FORGE_REPO_OWNER/source/raw/branch/main/release")"
+version="$(curl -sfSA "" "https://raw.githubusercontent.com/snazzyatoms/sentinel-browser/main/version")"
+release="$(curl -sfSA "" "https://raw.githubusercontent.com/snazzyatoms/sentinel-browser/main/release")"
 
 echo "-> Building Redhat package" >&2
 arch=$(rpm_arch)
@@ -123,16 +123,16 @@ outpkg="$tmpdir/${pkgname}-${VERSION}.${arch}.rpm"
 
 echo "-> Running fpm"
 
-(cd "$tmpdir/librewolf-$version" &&
+(cd "$tmpdir/sentinel-$version" &&
   fpm -s dir -t rpm \
     --name "$pkgname" \
     --version "$version" \
     --iteration "$release" \
     --architecture "$arch" \
-    --vendor "LibreWolf Community" \
-    --url "https://librewolf.net/" \
+    --vendor "Sentinel Community" \
+    --url "https://sentinel.net/" \
     --license "MPL" \
-    --description "The LibreWolf browser for privacy, with uBlock and tweaked settings." \
+    --description "The Sentinel browser for privacy, with uBlock and tweaked settings." \
     --rpm-os linux \
     --chdir . \
     --package "$outpkg" \
@@ -184,23 +184,23 @@ outpkg="$tmpdir/${pkgname}-${VERSION}.${arch}.deb"
 
 chmod +x "$BSYS6/../assets/deb/postinst" "$BSYS6/../assets/deb/prerm"
 
-(cd "$tmpdir/librewolf-$version" &&
+(cd "$tmpdir/sentinel-$version" &&
   mkdir -p etc/apparmor.d &&
-  cp "$BSYS6/../assets/librewolf-apparmor" etc/apparmor.d/librewolf &&
-  chmod 644 etc/apparmor.d/librewolf)
+  cp "$BSYS6/../assets/sentinel-apparmor" etc/apparmor.d/sentinel &&
+  chmod 644 etc/apparmor.d/sentinel)
 
 echo "-> Running fpm"
 
-(cd "$tmpdir/librewolf-$version" &&
+(cd "$tmpdir/sentinel-$version" &&
   fpm -s dir -t deb \
     --name "$pkgname" \
     --version "$version" \
     --iteration "$release" \
     --architecture "$arch" \
-    --vendor "LibreWolf Community" \
-    --url "https://librewolf.net/" \
+    --vendor "Sentinel Community" \
+    --url "https://sentinel.net/" \
     --license "MPL" \
-    --description "The LibreWolf browser for privacy, with uBlock and tweaked settings." \
+    --description "The Sentinel browser for privacy, with uBlock and tweaked settings." \
     --chdir . \
     --package "$outpkg" \
     --after-install "$BSYS6/../assets/deb/postinst" \

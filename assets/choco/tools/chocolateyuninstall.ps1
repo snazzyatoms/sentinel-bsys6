@@ -1,7 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop';
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
-  softwareName  = 'librewolf'
+  softwareName  = 'sentinel'
   fileType      = 'exe'
   silentArgs   = '/S'
   validExitCodes= @(0)

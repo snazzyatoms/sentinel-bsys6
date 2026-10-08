@@ -3,23 +3,23 @@ set -e
 
 case "$1" in
 configure|abort-upgrade)
-  if [ -x /usr/bin/librewolf ]; then
-    update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/librewolf 70 || true
-    update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/librewolf 70 || true
+  if [ -x /usr/bin/sentinel ]; then
+    update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/sentinel 70 || true
+    update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/sentinel 70 || true
   fi
 ;;
 esac
 
 if command -v cmp >/dev/null 2>&1; then
-  if cmp -s /etc/apparmor.d/local/librewolf /etc/apparmor.d/librewolf; then
-    : > /etc/apparmor.d/local/librewolf
+  if cmp -s /etc/apparmor.d/local/sentinel /etc/apparmor.d/sentinel; then
+    : > /etc/apparmor.d/local/sentinel
   fi
 fi
 
 if command -v dpkg-query >/dev/null 2>&1; then
   if ver=$(dpkg-query -W -f='${Version}\n' apparmor 2>/dev/null); then
     if dpkg --compare-versions "$ver" lt "4.0"; then
-      rm -f /etc/apparmor.d/librewolf
+      rm -f /etc/apparmor.d/sentinel
     fi
   fi
 fi

@@ -13,7 +13,7 @@ if [ -z "${!NAME:-}" ]; then
 
   mkdir -p "$WORKDIR/artifacts"
 
-  artifact="$WORKDIR/artifacts/librewolf-$FULL_VERSION-$TARGET-$ARCH-$name"
+  artifact="$WORKDIR/artifacts/sentinel-$FULL_VERSION-$TARGET-$ARCH-$name"
 
   if [ -f "$artifact" ] && [ -f "$(readlink -f "$artifact")" ]; then
     export $NAME="$(readlink -f "$artifact")"

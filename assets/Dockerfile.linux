@@ -1,8 +1,8 @@
 FROM debian:trixie-slim
 
 ARG VERSION
-ARG FORGE_URL=https://librewolf.dev
-ARG FORGE_REPO_OWNER=librewolf
+ARG FORGE_URL=https://sentinel.dev
+ARG FORGE_REPO_OWNER=sentinel
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -12,15 +12,15 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     gem install fpm && gem cleanup && \
-    # Download LibreWolf source
+    # Download Sentinel source
     curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
-        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz -o librewolf-${VERSION}.source.tar.gz \
-        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz.sha512sum -o librewolf-${VERSION}.source.tar.gz.sha512sum && \
-    sha512sum -c librewolf-${VERSION}.source.tar.gz.sha512sum && \
-    tar -xf librewolf-${VERSION}.source.tar.gz && \
-    rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
+        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/sentinel-source/${VERSION}/sentinel-${VERSION}.source.tar.gz -o sentinel-${VERSION}.source.tar.gz \
+        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/sentinel-source/${VERSION}/sentinel-${VERSION}.source.tar.gz.sha512sum -o sentinel-${VERSION}.source.tar.gz.sha512sum && \
+    sha512sum -c sentinel-${VERSION}.source.tar.gz.sha512sum && \
+    tar -xf sentinel-${VERSION}.source.tar.gz && \
+    rm sentinel-${VERSION}.source.tar.gz sentinel-${VERSION}.source.tar.gz.sha512sum && \
     # Download needed build artifacts
-    ./librewolf-${VERSION}/mach artifact toolchain --from-build \
+    ./sentinel-${VERSION}/mach artifact toolchain --from-build \
         linux64-clang-23 sysroot-x86_64-linux-gnu linux64-pkgconf \
         linux64-cbindgen linux64-node-24 linux64-nasm sysroot-wasm32-wasi-clang-23 \
         onnxruntime-x86_64-linux-gnu sysroot-aarch64-linux-gnu && \
@@ -48,6 +48,6 @@ RUN apt-get update && \
     mv runtime-aarch64 /usr/local/lib/appimage-runtime-aarch64 && \
     # Cleanup
     rm -rf \
-        /root/.mozbuild/toolchains librewolf-${VERSION} \
+        /root/.mozbuild/toolchains sentinel-${VERSION} \
         /root/.mozbuild/srcdirs /root/.mozbuild/mach_func_cache \
         /root/.mozbuild/glean /root/.cache

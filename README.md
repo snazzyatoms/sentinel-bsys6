@@ -1,6 +1,6 @@
 # 🛠️ bsys6
 
-This repository should make it easy to build LibreWolf and various things
+This repository should make it easy to build Sentinel and various things
 around it, via Docker or directly on your system.
 
 ## Usage
@@ -25,15 +25,15 @@ environment variables, most importantly:
 | ------------ | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `TARGET`     | The platform you want to build for.                                         | **`linux`** `windows`                                                                    |
 | `ARCH`       | The architecture that you want to build for.                                | **`x86_64`** `arm64`                                                                     |
-| `VERSION`    | The version of LibreWolf to build.                                          | **`[latest version]`** [`[version tag]`](https://librewolf.dev/librewolf/source/releases) |
+| `VERSION`    | The version of Sentinel to build.                                          | **`[latest version]`** [`[version tag]`](https://sentinel.dev/sentinel/source/releases) |
 | `WORKDIR`    | The directory where the source code should be downloaded and compiled.      | **`~/.local/share/bsys6/work`** `[any directory]`                                        |
 | `SOURCE_TAR` | Optionally, a path to a local source tarball to use instead of downloading. | `[any filepath]`                                                                         |
-| `FORGE_URL`  | The forge to fetch sources and dependencies from, and publish releases to.  | **`https://librewolf.dev`** `[any forgejo/gitea instance]`                               |
+| `FORGE_URL`  | The forge to fetch sources and dependencies from, and publish releases to.  | **`https://sentinel.dev`** `[any forgejo/gitea instance]`                               |
 
 ## Setup
 
 ```bash
-git clone https://librewolf.dev/librewolf/bsys6.git --depth=1 && cd bsys6
+git clone https://sentinel.dev/sentinel/bsys6.git --depth=1 && cd bsys6
 ```
 
 > [!NOTE]

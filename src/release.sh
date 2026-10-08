@@ -54,7 +54,7 @@ packages_other=()
 # upload_to_registry <forge_url> <owner> <user> <token> <file>
 upload_to_registry() {
   echo "-> Uploading $5 to $1 package registry" >&2
-  package_url="$1/api/packages/$2/generic/librewolf/$FULL_VERSION/$(basename "$5")"
+  package_url="$1/api/packages/$2/generic/sentinel/$FULL_VERSION/$(basename "$5")"
   status=0
   curl -fsS --http1.1 --user "$3:$4" --upload-file "$5" "$package_url" >&2 || status=$?
   echo >&2
@@ -75,7 +75,7 @@ publish_to_registries() {
 
 upload_to_s3() {
   echo "-> Uploading $1 to S3" >&2
-  s3_path="/librewolf/$FULL_VERSION/$(basename "$1")"
+  s3_path="/sentinel/$FULL_VERSION/$(basename "$1")"
   if ! s3cmd put "$1" "s3://$S3_BUCKET$s3_path" \
     --access_key="$S3_KEY" \
     --secret_key="$S3_SECRET" \
@@ -91,7 +91,7 @@ upload_to_s3() {
 
 upload_to_s3_latest() {
   echo "-> Uploading $1 to latest path" >&2
-  s3_latest_path="/librewolf/latest/$(basename "$1" | sed 's/-[0-9][0-9]*\(\.[0-9][0-9]*\)*-[0-9][0-9]*-/-latest-/')"
+  s3_latest_path="/sentinel/latest/$(basename "$1" | sed 's/-[0-9][0-9]*\(\.[0-9][0-9]*\)*-[0-9][0-9]*-/-latest-/')"
   if ! s3cmd put "$1" "s3://$S3_BUCKET$s3_latest_path" \
     --access_key="$S3_KEY" \
     --secret_key="$S3_SECRET" \
@@ -125,7 +125,7 @@ upload_asset() {
 }
 
 release_description() {
-  description="## LibreWolf bsys6 Release v$FULL_VERSION\n\n"
+  description="## Sentinel bsys6 Release v$FULL_VERSION\n\n"
 
   if [ "$(echo "$FULL_VERSION" | cut -d'-' -f2)" == "1" ]; then
     ffver=$(echo "$FULL_VERSION" | cut -d'-' -f1)
@@ -198,7 +198,7 @@ publish_mirror_release() {
 }
 
 dispatch_workflows() {
-  echo "-> Dispatching deploy workflow for librewolf.net"
+  echo "-> Dispatching deploy workflow for sentinel.net"
   curl -X 'POST' \
     "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/website/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
@@ -206,9 +206,9 @@ dispatch_workflows() {
     -H 'Content-Type: application/json' \
     -d '{"ref": "main"}'
 
-  echo "-> Dispatching deploy workflow for repo.librewolf.net"
+  echo "-> Dispatching deploy workflow for repo.sentinel.net"
   curl -X 'POST' \
-    "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/repo.librewolf.net/actions/workflows/deploy.yaml/dispatches" \
+    "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/repo.sentinel.net/actions/workflows/deploy.yaml/dispatches" \
     -H 'Accept: application/json' \
     -H "Authorization: token $FORGE_TOKEN" \
     -H 'Content-Type: application/json' \
@@ -287,7 +287,7 @@ upload_to_update_bucket() {
 # Uploads the mar and a matching update.xml next to it
 publish_update() {
   mar_name="$(basename "$1")"
-  target_arch="${mar_name#librewolf-$FULL_VERSION-}"
+  target_arch="${mar_name#sentinel-$FULL_VERSION-}"
   target_arch="${target_arch%-update.mar}"
   platform="$(update_platform "${target_arch%-*}" "${target_arch##*-}")"
 

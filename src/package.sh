@@ -9,20 +9,20 @@ cat "$SOURCE/browser/locales/shipped-locales" | xargs "$SOURCE/mach" package-mul
 echo "-> Finished packaging locales" >&2
 
 if [ "$TARGET" == "windows" ]; then
-  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.zip"
+  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "sentinel-.*\.zip"
 elif [ "$TARGET" == "macos" ]; then
-  for dmg in "$SOURCE/obj-$MOZ_TARGET/dist/"librewolf-*.dmg; do
+  for dmg in "$SOURCE/obj-$MOZ_TARGET/dist/"sentinel-*.dmg; do
     $BSYS6/utils/sign_dmg.sh "$dmg"
   done
-  if [ -e "librewolf-signed.app" ]; then
-    $BSYS6/utils/generate_mar.sh "librewolf-signed.app"
+  if [ -e "sentinel-signed.app" ]; then
+    $BSYS6/utils/generate_mar.sh "sentinel-signed.app"
     source $BSYS6/exports/move_artifact.sh "UPDATE" "." ".*\.mar"
   fi
-  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.dmg"
+  source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "sentinel-.*\.dmg"
 else
   if [[ "${SIGNMAR:-false}" == "true" ]]; then
     mv "$SOURCE/obj-$MOZ_TARGET/dist/bin/signmar" "$GITHUB_WORKSPACE/signmar"
   else
-    source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "librewolf-.*\.tar\.xz"
+    source $BSYS6/exports/move_artifact.sh "PACKAGE" "$SOURCE/obj-$MOZ_TARGET/dist" "sentinel-.*\.tar\.xz"
   fi
 fi

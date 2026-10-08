@@ -32,26 +32,26 @@ if ! $BSYS6/utils/list_contains.sh "$AVAILABLE_ARCHS" "$ARCH"; then
 fi
 
 if [ -z "${FORGE_URL:-}" ]; then
-  export FORGE_URL="https://librewolf.dev"
+  export FORGE_URL="https://github.com"
 fi
 
 if [ -z "${FORGE_REPO_OWNER:-}" ]; then
-  export FORGE_REPO_OWNER="librewolf"
+  export FORGE_REPO_OWNER="snazzyatoms"
 fi
 
 if [ -z "${FORGE_REPO:-}" ]; then
-  export FORGE_REPO="librewolf/bsys6"
+  export FORGE_REPO="snazzyatoms/sentinel-bsys6"
 fi
 
 # Optional mirror forge
 if [ -z "${MIRROR_FORGE_URL:-}" ]; then
-  export MIRROR_FORGE_URL="https://codeberg.org"
+  export MIRROR_FORGE_URL="https://github.com"
 fi
 
 if [ -z "${MIRROR_FORGE_REPO_OWNER:-}" ]; then
-  export MIRROR_FORGE_REPO_OWNER="librewolf"
+  export MIRROR_FORGE_REPO_OWNER="snazzyatoms"
 fi
 
 if [ -z "${MIRROR_FORGE_REPO:-}" ]; then
-  export MIRROR_FORGE_REPO="librewolf/bsys6"
+  export MIRROR_FORGE_REPO="snazzyatoms/sentinel-bsys6"
 fi

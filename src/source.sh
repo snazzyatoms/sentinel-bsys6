@@ -14,14 +14,14 @@ if [ -z "${SOURCE:-}" ]; then
 
     if [ -z "${SOURCE_TAR:-}" ]; then
       echo "-> Fetching source tarball for version $VERSION" >&2
-      curl -fLA "" -o "$WORKDIR/librewolf-$VERSION.source.tar.gz" "$SOURCE_URL" >&2
-      export SOURCE_TAR="$WORKDIR/librewolf-$VERSION.source.tar.gz"
+      curl -fLA "" -o "$WORKDIR/sentinel-$VERSION.source.tar.gz" "$SOURCE_URL" >&2
+      export SOURCE_TAR="$WORKDIR/sentinel-$VERSION.source.tar.gz"
     fi
 
     echo "-> Extracting source tarball" >&2
     tar xf "$SOURCE_TAR" -C "$SOURCEDIR/.." >&2
-    if [ "$(readlink -f "$SOURCEDIR")" != "$(readlink -f "$SOURCEDIR/../librewolf-$VERSION")" ]; then
-      mv "$SOURCEDIR/../librewolf-$VERSION" "$SOURCEDIR" >&2
+    if [ "$(readlink -f "$SOURCEDIR")" != "$(readlink -f "$SOURCEDIR/../sentinel-$VERSION")" ]; then
+      mv "$SOURCEDIR/../sentinel-$VERSION" "$SOURCEDIR" >&2
     fi
 
     if [[ $SOURCE_TAR == $WORKDIR* ]]; then

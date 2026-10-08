@@ -13,11 +13,11 @@ if [ -z "${VERSION:-}" ]; then
 fi
 
 if [ -z "${SOURCEDIR:-}" ]; then
-  export SOURCEDIR="$WORKDIR/librewolf-$VERSION"
+  export SOURCEDIR="$WORKDIR/sentinel-$VERSION"
 fi
 
 if [ -z "${SOURCE_URL:-}" ]; then
-  export SOURCE_URL="$FORGE_URL/api/packages/$FORGE_REPO_OWNER/generic/librewolf-source/$VERSION/librewolf-$VERSION.source.tar.gz"
+  export SOURCE_URL="https://github.com/$FORGE_REPO_OWNER/sentinel-browser/releases/download/v$VERSION/sentinel-$VERSION.source.tar.gz"
 fi
 
 if [ -z "${FULL_VERSION:-}" ]; then

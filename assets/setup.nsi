@@ -4,13 +4,13 @@
 !addplugindir .
 !addplugindir x86-ansi
 
-!define APPNAME "LibreWolf"
-!define PROGNAME "librewolf"
+!define APPNAME "Sentinel"
+!define PROGNAME "sentinel"
 !define EXECUTABLE "${PROGNAME}.exe"
 !define PROG_VERSION "pkg_version"
-!define COMPANYNAME "LibreWolf"
+!define COMPANYNAME "Sentinel"
 !define ESTIMATED_SIZE 190000
-!define MUI_ICON "librewolf.ico"
+!define MUI_ICON "sentinel.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "banner.bmp"
 
 Name "${APPNAME}"
@@ -22,8 +22,8 @@ RequestExecutionLevel admin
 # Pages
 !define MUI_ABORTWARNING
 
-!define MUI_WELCOMEPAGE_TITLE "Welcome to LibreWolf Setup"
-!define MUI_WELCOMEPAGE_TEXT "LibreWolf is a custom version of Firefox, focused on privacy, security and freedom.$\r$\n$\r$\n\
+!define MUI_WELCOMEPAGE_TITLE "Welcome to Sentinel Setup"
+!define MUI_WELCOMEPAGE_TEXT "Sentinel is a custom version of Firefox, focused on privacy, security and freedom.$\r$\n$\r$\n\
 This setup will guide you through the installation.$\r$\n$\r$\n\
 Click Next to continue."
 
@@ -45,10 +45,10 @@ Click Next to continue."
 
 !insertmacro MUI_LANGUAGE "English"
 
-Section "LibreWolf Browser" main
+Section "Sentinel Browser" main
   SectionIn RO
 
-	# Make sure LibreWolf is closed before the installation
+	# Make sure Sentinel is closed before the installation
 	nsProcess::_FindProcess "${EXECUTABLE}"
 	Pop $R0
 	${If} $R0 = 0
@@ -58,7 +58,7 @@ Section "LibreWolf Browser" main
 		Abort
 
 		DetailPrint "${APPNAME} is still running"
-		MessageBox MB_OKCANCEL "LibreWolf is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
+		MessageBox MB_OKCANCEL "Sentinel is still running and has to be closed for the setup to continue." IDOK continue IDCANCEL break
 break:
 		SetErrorlevel 1
 		Abort
@@ -77,7 +77,7 @@ continue:
 			Pop $R0
 			${If} $R0 = 0
 				DetailPrint "Failed to kill ${APPNAME}, aborting"
-				MessageBox MB_ICONSTOP "LibreWolf is still running and can't be closed by the installer. Please close it manually and try again."
+				MessageBox MB_ICONSTOP "Sentinel is still running and can't be closed by the installer. Please close it manually and try again."
 				SetErrorlevel 2
 				Abort
 			${EndIf}
@@ -86,7 +86,7 @@ continue:
 
 	# Copy files
 	SetOutPath $INSTDIR
-	File /r LibreWolf\*.*
+	File /r Sentinel\*.*
 
 	# Start Menu
 	RMDir /r "$SMPROGRAMS\${COMPANYNAME}" ; Previously those files were stored for the user, we don't want double entries
@@ -113,44 +113,44 @@ continue:
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${ESTIMATED_SIZE}
 
 	# Registry information to let Windows pick us up in the list of available browsers
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf" "" "LibreWolf"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel" "" "Sentinel"
 
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationDescription" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities" "ApplicationName" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".htm" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".html" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\FileAssociations" ".pdf" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\Startmenu" "StartMenuInternet" "LibreWolf"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "http" "LibreWolfHTM"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\Capabilities\URLAssociations" "https" "LibreWolfHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities" "ApplicationDescription" "Sentinel"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities" "ApplicationIcon" "$INSTDIR\sentinel.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities" "ApplicationName" "Sentinel"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\FileAssociations" ".htm" "SentinelHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\FileAssociations" ".html" "SentinelHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\FileAssociations" ".pdf" "SentinelHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\Startmenu" "StartMenuInternet" "Sentinel"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\URLAssociations" "http" "SentinelHTM"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\Capabilities\URLAssociations" "https" "SentinelHTM"
 
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Clients\StartMenuInternet\LibreWolf\shell\open\command" "" "$INSTDIR\librewolf.exe"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\DefaultIcon" "" "$INSTDIR\sentinel.exe,0"
+	WriteRegStr HKLM "Software\Clients\StartMenuInternet\Sentinel\shell\open\command" "" "$INSTDIR\sentinel.exe"
 
-	WriteRegStr HKLM "Software\RegisteredApplications" "LibreWolf" "Software\Clients\StartMenuInternet\LibreWolf\Capabilities"
+	WriteRegStr HKLM "Software\RegisteredApplications" "Sentinel" "Software\Clients\StartMenuInternet\Sentinel\Capabilities"
 
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "" "LibreWolf Handler"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM" "AppUserModelId" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "AppUserModelId" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationIcon" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationName" "LibreWolf"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationDescription" "Start the LibreWolf Browser"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\Application" "ApplicationCompany" "LibreWolf Community"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\DefaultIcon" "" "$INSTDIR\librewolf.exe,0"
-	WriteRegStr HKLM "Software\Classes\LibreWolfHTM\shell\open\command" "" "$\"$INSTDIR\librewolf.exe$\" -osint -url $\"%1$\""
+	WriteRegStr HKLM "Software\Classes\SentinelHTM" "" "Sentinel Handler"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM" "AppUserModelId" "Sentinel"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\Application" "AppUserModelId" "Sentinel"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\Application" "ApplicationIcon" "$INSTDIR\sentinel.exe,0"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\Application" "ApplicationName" "Sentinel"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\Application" "ApplicationDescription" "Start the Sentinel Browser"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\Application" "ApplicationCompany" "Sentinel Community"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\DefaultIcon" "" "$INSTDIR\sentinel.exe,0"
+	WriteRegStr HKLM "Software\Classes\SentinelHTM\shell\open\command" "" "$\"$INSTDIR\sentinel.exe$\" -osint -url $\"%1$\""
 SectionEnd
 
-Section /o "LibreWolf WinUpdater" winupdater
-	File LibreWolf-WinUpdater.exe
+Section /o "Sentinel WinUpdater" winupdater
+	File Sentinel-WinUpdater.exe
 	File ScheduledTask-Create.ps1
 	File ScheduledTask-Remove.ps1
-	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" "$INSTDIR\LibreWolf-WinUpdater.exe" "" "$INSTDIR\LibreWolf-WinUpdater.exe"
+	CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\Sentinel WinUpdater.lnk" "$INSTDIR\Sentinel-WinUpdater.exe" "" "$INSTDIR\Sentinel-WinUpdater.exe"
 SectionEnd
 
 Section /o "Schedule Automatic Updates" autoupdate
 	DetailPrint "Creating scheduled update task"
-	Exec '"$INSTDIR\LibreWolf-WinUpdater.exe" /CreateTask'
+	Exec '"$INSTDIR\Sentinel-WinUpdater.exe" /CreateTask'
 	Sleep 3000
 SectionEnd
 
@@ -159,14 +159,14 @@ Section "-Remove WinUpdater" delwinupdater
 	IntCmp $0 ${SF_SELECTED} +1 +2
 	Return
 	Call RemoveWinUpdater
-	Delete "$INSTDIR\LibreWolf-WinUpdater.*"
+	Delete "$INSTDIR\Sentinel-WinUpdater.*"
 	Delete "$INSTDIR\*.ps1"
 SectionEnd
 
 # Uninstaller
 section "Uninstall"
 
-	# Kill LibreWolf if it is still running
+	# Kill Sentinel if it is still running
 	nsProcess::_FindProcess "${EXECUTABLE}"
 	Pop $R0
 	${If} $R0 = 0
@@ -178,7 +178,7 @@ section "Uninstall"
 	SetShellVarContext all
 
 	# Remove the Start Menu folder
-	RmDir /r "$SMPROGRAMS\LibreWolf"
+	RmDir /r "$SMPROGRAMS\Sentinel"
 
 	# Remove files
 	RmDir /r $INSTDIR
@@ -187,9 +187,9 @@ section "Uninstall"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
 
 	# Windows default browser integration
-	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\LibreWolf"
+	DeleteRegKey HKLM "Software\Clients\StartMenuInternet\Sentinel"
 	DeleteRegKey HKLM "Software\RegisteredApplications"
-	DeleteRegKey HKLM "Software\Classes\LibreWolfHTM"
+	DeleteRegKey HKLM "Software\Classes\SentinelHTM"
 
 	# Remove WinUpdater
 	Call un.RemoveWinUpdater
@@ -197,8 +197,8 @@ sectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${main} "Install the browser for all users."
-  !insertmacro MUI_DESCRIPTION_TEXT ${winupdater} "A companion tool to update LibreWolf with a single click."
-  !insertmacro MUI_DESCRIPTION_TEXT ${autoupdate} "Run LibreWolf WinUpdater to create a scheduled task for automatic updates."
+  !insertmacro MUI_DESCRIPTION_TEXT ${winupdater} "A companion tool to update Sentinel with a single click."
+  !insertmacro MUI_DESCRIPTION_TEXT ${autoupdate} "Run Sentinel WinUpdater to create a scheduled task for automatic updates."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ; Shared function
@@ -209,7 +209,7 @@ sectionEnd
 		FindFirst $0 $1 $PROFILE\..\*
 		loop:
 			StrCmp $1 "" done
-			RmDir /r "$PROFILE\..\$1\AppData\Roaming\LibreWolf\WinUpdater"
+			RmDir /r "$PROFILE\..\$1\AppData\Roaming\Sentinel\WinUpdater"
 			FindNext $0 $1
 			Goto loop
 		done:
@@ -217,7 +217,7 @@ sectionEnd
 		SetShellVarContext all
 
 		DetailPrint "Removing scheduled update task(s) if present"
-		nsExec::ExecToLog `powershell -Command "Get-ScheduledTask 'LibreWolf*' | Unregister-ScheduledTask -Confirm:$$false"`
+		nsExec::ExecToLog `powershell -Command "Get-ScheduledTask 'Sentinel*' | Unregister-ScheduledTask -Confirm:$$false"`
   FunctionEnd
 !macroend
 ; Function for installer and uninstaller
@@ -230,11 +230,11 @@ Function .onInit
 	StrCpy $DEFAULT_INSTDIR $INSTDIR
 	StrCpy $INSTALL_TYPE "normal"
 	SetShellVarContext current
-	IfFileExists "$SMPROGRAMS\${COMPANYNAME}\LibreWolf WinUpdater.lnk" +3 +1
+	IfFileExists "$SMPROGRAMS\${COMPANYNAME}\Sentinel WinUpdater.lnk" +3 +1
 	SetShellVarContext all
-	IfFileExists "$INSTDIR\LibreWolf-WinUpdater.exe" +1 +2
+	IfFileExists "$INSTDIR\Sentinel-WinUpdater.exe" +1 +2
 	SectionSetFlags ${winupdater} ${SF_SELECTED}
-	IfFileExists "$INSTDIR\librewolf.exe" +2 +1
+	IfFileExists "$INSTDIR\sentinel.exe" +2 +1
 	SectionSetFlags ${winupdater} ${SF_SELECTED}
 	SetShellVarContext all
 FunctionEnd
@@ -247,5 +247,5 @@ FunctionEnd
 
 Function CreateDesktopShortcut
 	SetShellVarContext all
-	CreateShortCut "$DESKTOP\LibreWolf.lnk" "$INSTDIR\librewolf.exe" "" "$INSTDIR\librewolf.exe" 0
+	CreateShortCut "$DESKTOP\Sentinel.lnk" "$INSTDIR\sentinel.exe" "" "$INSTDIR\sentinel.exe" 0
 FunctionEnd

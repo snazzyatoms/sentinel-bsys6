@@ -3,7 +3,7 @@
 source $BSYS6/exports/target.sh
 
 cat <<EOF
-bsys6 - The 6th generation LibreWolf Build System
+bsys6 - The 6th generation Sentinel Build System
 
 Usage: bsys6 [command]
 
@@ -15,13 +15,13 @@ command_descr() {
   bootstrap) echo "Bootstrap the build system with mach" ;;
   build_docker) echo "Run the 'build' command inside Docker" ;;
   build_image) echo "Build the docker image used by 'build_docker'" ;;
-  build) echo "Build LibreWolf (requires a prepared system)" ;;
+  build) echo "Build Sentinel (requires a prepared system)" ;;
   clean) echo "Remove the work directory (including source)" ;;
   clobber) echo "Clean the current source directory" ;;
   help) echo "Show this page" ;;
   msix) echo "Build a MSIX package for Windows" ;;
   nupkg) echo "Build a .nupkg to be used for Chocolatey" ;;
-  package) echo "Package LibreWolf into a zip/tarball" ;;
+  package) echo "Package Sentinel into a zip/tarball" ;;
   package_docker) echo "Run the 'package' command inside Docker" ;;
   prepare) echo "Prepare the build enviroment and install dependencies" ;;
   release) printf "Publish all the various artifacts\n(Should only be used in CI)" ;;
@@ -30,9 +30,9 @@ command_descr() {
   cleanup_artifacts) printf "Delete old objects from the artifacts S3 bucket\n(Should only be used in CI)" ;;
   run) echo "Start the built browser" ;;
   setup) echo "Build the installer for Windows with nsis" ;;
-  source) printf "Download the latest LibreWolf source code into\nthe working directory" ;;
+  source) printf "Download the latest Sentinel source code into\nthe working directory" ;;
   update) echo "Update the version cache" ;;
-  portable) printf "Build a zip containing a portable LibreWolf using\nhttps://librewolf.dev/librewolf/portable" ;;
+  portable) printf "Build a zip containing a portable Sentinel using\nhttps://github.com/snazzyatoms/sentinel-bsys6" ;;
   deb) printf "Build the Debian .deb pacakge file" ;;
   rpm) printf "Create a Redhat/Fedora-style .rpm package file" ;;
   *) ;;
@@ -73,7 +73,7 @@ cat <<EOF
 Commands may be customized by setting the following environment variables:
   TARGET     - The target platform (available: $AVAILABLE_TARGETS; currently: $TARGET)
   ARCH       - The target architecture (available: $AVAILABLE_ARCHS; currently: $ARCH)
-  VERSION    - The version of LibreWolf to build (default: latest)
+  VERSION    - The version of Sentinel to build (default: latest)
   WORKDIR    - The directory to use for temporary files (currently: $WORKDIR)
   SOURCE_TAR - Optionally, a path to a local source tarball to use instead of downloading
                the VERSION-tarball from GitLab (currently: ${SOURCE_TAR:-"not set"})

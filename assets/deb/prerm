@@ -3,8 +3,8 @@ set -e
 
 case "$1" in
 remove|deconfigure)
-  update-alternatives --remove x-www-browser /usr/bin/librewolf || true
-  update-alternatives --remove gnome-www-browser /usr/bin/librewolf || true
+  update-alternatives --remove x-www-browser /usr/bin/sentinel || true
+  update-alternatives --remove gnome-www-browser /usr/bin/sentinel || true
 ;;
 esac
 

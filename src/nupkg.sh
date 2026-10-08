@@ -11,11 +11,11 @@ echo "v$VERSION -> v$CHOCO_VERSION"
 tmpdir=$(mktemp -d)
 echo "tmpdir is $tmpdir"
 mkdir -p "$tmpdir/tools"
-export CHOCO_FILE="https://dl.librewolf.net/librewolf/$FULL_VERSION/$(basename "$SETUP")"
+export CHOCO_FILE="https://dl.sentinel.net/sentinel/$FULL_VERSION/$(basename "$SETUP")"
 export CHOCO_CHECKSUM="$(cat "$SETUP_SHA256")"
 envsubst '$CHOCO_VERSION' \
-  <"$BSYS6/../assets/choco/librewolf.nuspec.in" \
-  >$tmpdir/librewolf.nuspec
+  <"$BSYS6/../assets/choco/sentinel.nuspec.in" \
+  >$tmpdir/sentinel.nuspec
 envsubst '$CHOCO_FILE $CHOCO_CHECKSUM' \
   <"$BSYS6/../assets/choco/tools/chocolateyinstall.ps1.in" \
   >$tmpdir/tools/chocolateyinstall.ps1

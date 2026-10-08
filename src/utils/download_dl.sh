@@ -4,7 +4,7 @@ set -eu
 if [ "$#" -ne 2 ]; then
   echo 'Usage: download_dl.sh <name> <target_file>'
   echo '  Resolves the latest stable release of the $FORGE_REPO_OWNER/<name> repo (case-insensitive) and downloads'
-  echo '  https://dl.librewolf.net/librewolf-<name>/<tag>/LibreWolf-<Name>_<tag>.zip'
+  echo '  https://dl.sentinel.net/sentinel-<name>/<tag>/Sentinel-<Name>_<tag>.zip'
   exit 1
 fi
 
@@ -16,4 +16,4 @@ if [ -z "${version:-}" ]; then
   exit 1
 fi
 
-$BSYS6/utils/download.sh "https://dl.librewolf.net/librewolf-$repo/$version/LibreWolf-${1}_$version.zip" "$2"
+$BSYS6/utils/download.sh "https://dl.sentinel.net/sentinel-$repo/$version/Sentinel-${1}_$version.zip" "$2"

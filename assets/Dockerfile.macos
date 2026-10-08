@@ -1,8 +1,8 @@
 FROM debian:trixie-slim
 
 ARG VERSION
-ARG FORGE_URL=https://librewolf.dev
-ARG FORGE_REPO_OWNER=librewolf
+ARG FORGE_URL=https://sentinel.dev
+ARG FORGE_REPO_OWNER=sentinel
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -17,18 +17,18 @@ RUN apt-get update && \
     echo "dbe85cedd8ee4217b64e9a0e4c2aef92ab8bcaaa41f20bde99781ff02e600002  rcodesign.tar.gz" | sha256sum -c && \
     tar -xf rcodesign.tar.gz --strip-components=1 -C /usr/local/bin apple-codesign-0.29.0-x86_64-unknown-linux-musl/rcodesign && \
     rm rcodesign.tar.gz && \
-    # Download LibreWolf source
+    # Download Sentinel source
     curl -qfA "" --no-sessionid --proto =https --tlsv1.2 \
-        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz -o librewolf-${VERSION}.source.tar.gz \
-        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/librewolf-source/${VERSION}/librewolf-${VERSION}.source.tar.gz.sha512sum -o librewolf-${VERSION}.source.tar.gz.sha512sum && \
-    sha512sum -c librewolf-${VERSION}.source.tar.gz.sha512sum && \
-    tar -xf librewolf-${VERSION}.source.tar.gz && \
-    rm librewolf-${VERSION}.source.tar.gz librewolf-${VERSION}.source.tar.gz.sha512sum && \
+        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/sentinel-source/${VERSION}/sentinel-${VERSION}.source.tar.gz -o sentinel-${VERSION}.source.tar.gz \
+        ${FORGE_URL}/api/packages/${FORGE_REPO_OWNER}/generic/sentinel-source/${VERSION}/sentinel-${VERSION}.source.tar.gz.sha512sum -o sentinel-${VERSION}.source.tar.gz.sha512sum && \
+    sha512sum -c sentinel-${VERSION}.source.tar.gz.sha512sum && \
+    tar -xf sentinel-${VERSION}.source.tar.gz && \
+    rm sentinel-${VERSION}.source.tar.gz sentinel-${VERSION}.source.tar.gz.sha512sum && \
     # Download needed build artifacts
-    ./librewolf-${VERSION}/mach artifact toolchain --from-build \
+    ./sentinel-${VERSION}/mach artifact toolchain --from-build \
         linux64-clang-23 sysroot-wasm32-wasi-clang-23 linux64-cbindgen linux64-libdmg \
         linux64-cctools-port linux64-binutils linux64-nasm sysroot-x86_64-linux-gnu linux64-hfsplus && \
-    cd librewolf-${VERSION} && \
+    cd sentinel-${VERSION} && \
     ./mach --no-interactive python --virtualenv build \
         taskcluster/scripts/misc/unpack-sdk.py \
         https://swcdn.apple.com/content/downloads/33/19/140-17812-A_21ZLMMLY4E/zu3xwktttpoe71qiawhzgzvqss6rovawsa/CLTools_macOSNMOS_SDK.pkg \
@@ -42,12 +42,12 @@ RUN apt-get update && \
     # Install Rust
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.99 --target x86_64-apple-darwin --target aarch64-apple-darwin && \
     # Install signmar
-    curl -fL "https://librewolf.dev/api/packages/librewolf/generic/signmar/latest/signmar" -o "signmar" && \
+    curl -fL "https://sentinel.dev/api/packages/sentinel/generic/signmar/latest/signmar" -o "signmar" && \
     echo "79481e9f66b44fb3923d4ac7dec9fb646b2a613c99dbb447610bcc83e760de0f90a6f7caae6bf68bd25c201505c4a77634977d613004bc9c7ed1737717bda59e signmar" | sha512sum -c - && \
     chmod +x signmar && \
     mv signmar /usr/local/bin/ && \
     # Cleanup
     rm -rf \
-        /root/.mozbuild/toolchains librewolf-${VERSION} \
+        /root/.mozbuild/toolchains sentinel-${VERSION} \
         /root/.mozbuild/srcdirs /root/.mozbuild/mach_func_cache \
         /root/.mozbuild/glean /root/.cache

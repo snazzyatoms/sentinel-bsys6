@@ -72,4 +72,4 @@ fi
 echo "-> Repackaging $dmg" >&2
 (cd "$SOURCE" && ./mach python -m mozbuild.action.make_dmg "$tmpdir/dmg" "$tmpdir/signed.dmg" >/dev/null)
 mv -f "$tmpdir/signed.dmg" "$dmg"
-mv -f "$app" "librewolf-signed.app"
+mv -f "$app" "sentinel-signed.app"

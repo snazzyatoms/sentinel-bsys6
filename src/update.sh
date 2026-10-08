@@ -6,7 +6,7 @@ $BSYS6/exports/vars.sh # for $WORKDIR
 
 echo "-> Fetching version" >&2
 
-export VERSION="$(curl -A "" "$FORGE_URL/api/v1/repos/$FORGE_REPO_OWNER/source/tags?limit=1" | jq -r '.[0].name' | sed 's/^v//')"
+export VERSION="$(curl -A "" "https://api.github.com/repos/$FORGE_REPO_OWNER/sentinel-browser/tags?per_page=1" | jq -r '.[0].name' | sed 's/^v//')"
 
 if [ "$VERSION" == "" ]; then
   echo "Failed to fetch version from $FORGE_URL" >&2

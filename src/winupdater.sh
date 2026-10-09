@@ -2,16 +2,19 @@
 set -eu
 
 source $BSYS6/exports/require_target.sh windows
-$BSYS6/utils/require_command.sh "unzip"
+$BSYS6/utils/require_command.sh "mcs"
 
-echo "-> Preparing WinUpdater" >&2
+echo "-> Building WinUpdater" >&2
 tmpdir="$(mktemp -d)"
 
-cd $tmpdir
+mcs -optimize+ -target:winexe -platform:x64 \
+    -r:System.Windows.Forms -r:System.Drawing \
+    -r:System.Runtime.Serialization \
+    -win32icon:"$BSYS6/../assets/sentinel.ico" \
+    -out:"$tmpdir/Sentinel-WinUpdater.exe" \
+    "$BSYS6/../assets/updater/SentinelUpdater.cs"
 
-$BSYS6/utils/download_dl.sh "WinUpdater" "lwu.zip"
-unzip lwu.zip
-rm lwu.zip
-rm *.url
+cp "$BSYS6/../assets/updater/ScheduledTask-Create.ps1" "$tmpdir/"
+cp "$BSYS6/../assets/updater/ScheduledTask-Remove.ps1" "$tmpdir/"
 
 export WINUPDATER="$tmpdir"

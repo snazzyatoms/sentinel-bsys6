@@ -11,12 +11,7 @@
 Sentinel is designed to increase protection against tracking and fingerprinting techniques, while also including a few security improvements. This is achieved through our privacy and security oriented settings and patches. Sentinel also aims to remove all the telemetry, data collection and annoyances, as well as disabling anti-freedom features like DRM.</p>
 	</description>
 	<launchable type="desktop-id">net.sentinel.Sentinel.desktop</launchable>
-	<url type="homepage">https://sentinel.net/</url>
-	<screenshots>
-		<screenshot type="default">
-			<image>https://sentinel.net/screenshot.png</image>
-		</screenshot>
-	</screenshots>
+	<url type="homepage">https://github.com/snazzyatoms/sentinel-browser</url>
 	<provides>
 		<id>net.sentinel.Sentinel.desktop</id>
 	</provides>

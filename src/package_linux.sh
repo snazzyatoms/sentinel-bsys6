@@ -78,25 +78,10 @@ build_appimage() {
   appimagetool --appimage-extract
   if [ -z "$SIGNING_KEY" ]; then
     APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} \
-    -u "zsync|https://dl.sentinel.net/sentinel/latest/sentinel-latest-linux-${ARCH}-appimage.zsync" \
     Sentinel.AppDir
   else
     APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} -s \
-    -u "zsync|https://dl.sentinel.net/sentinel/latest/sentinel-latest-linux-${ARCH}-appimage.zsync" \
     Sentinel.AppDir
-  fi
-
-  # Fix zsync location
-  if [ "$arch_appimage" == "aarch64" ]; then
-    sed -i \
-      -e "s|^Filename: .*|Filename: Sentinel.aarch64.AppImage|" \
-      -e "s|^URL: .*|URL: https://dl.sentinel.net/sentinel/${VERSION}/sentinel-${VERSION}-linux-arm64-appimage.AppImage|" \
-      "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
-  else
-    sed -i \
-      -e "s|^Filename: .*|Filename: Sentinel.x86_64.AppImage|" \
-      -e "s|^URL: .*|URL: https://dl.sentinel.net/sentinel/${VERSION}/sentinel-${VERSION}-linux-x86_64-appimage.AppImage|" \
-      "${pkgname}-${VERSION}-${arch_appimage}.AppImage.zsync"
   fi
 
   chmod +x ${pkgname}-${VERSION}-${arch_appimage}.AppImage
@@ -130,7 +115,7 @@ echo "-> Running fpm"
     --iteration "$release" \
     --architecture "$arch" \
     --vendor "Sentinel Community" \
-    --url "https://sentinel.net/" \
+    --url "https://github.com/snazzyatoms/sentinel-browser" \
     --license "MPL" \
     --description "The Sentinel browser for privacy, with uBlock and tweaked settings." \
     --rpm-os linux \
@@ -198,7 +183,7 @@ echo "-> Running fpm"
     --iteration "$release" \
     --architecture "$arch" \
     --vendor "Sentinel Community" \
-    --url "https://sentinel.net/" \
+    --url "https://github.com/snazzyatoms/sentinel-browser" \
     --license "MPL" \
     --description "The Sentinel browser for privacy, with uBlock and tweaked settings." \
     --chdir . \
@@ -246,4 +231,3 @@ fi
 source $BSYS6/exports/move_artifact.sh "RPM"      "$tmpdir" ".*\.rpm"
 source $BSYS6/exports/move_artifact.sh "DEB"      "$tmpdir" ".*\.deb"
 source $BSYS6/exports/move_artifact.sh "APPIMAGE" "$tmpdir" ".*\.AppImage"
-source $BSYS6/exports/move_artifact.sh "APPIMAGE" "$tmpdir" ".*\.AppImage.zsync"

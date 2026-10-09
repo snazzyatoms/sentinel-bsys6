@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 [DataContract]
 class Release {
@@ -48,18 +49,47 @@ static class Updater {
             case "/createtask": return CreateTask();
             case "/removetask": return RemoveTask();
             case "/auto":       return Check(quiet: true);
+            case "/diag":       return Diag();
             default:            return Check(quiet: false);
         }
     }
 
     static Version InstalledVersion() {
-        string exe = Path.Combine(InstallDir, "sentinel.exe");
+        // The installer records the full "157.0.1-1" tag as DisplayVersion.
+        // NSIS writes to the 32-bit view, so check it first.
+        foreach (var view in new[] { RegistryView.Registry32, RegistryView.Registry64 }) {
+            try {
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view))
+                using (var k = hklm.OpenSubKey(
+                    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Sentinel Sentinel")) {
+                    var v = ParseTag((k?.GetValue("DisplayVersion") as string) ?? "");
+                    if (v != null) return v;
+                }
+            } catch { }
+        }
         try {
-            var v = FileVersionInfo.GetVersionInfo(exe).FileVersion;
-            var m = Regex.Match(v ?? "", @"\d+(\.\d+)+");
+            string exe = Path.Combine(InstallDir, "sentinel.exe");
+            var m = Regex.Match(
+                FileVersionInfo.GetVersionInfo(exe).FileVersion ?? "",
+                @"\d+(\.\d+)+");
             if (m.Success) return new Version(m.Value);
         } catch { }
         return new Version("0.0");
+    }
+
+    static int Diag() {
+        string path = Path.Combine(Path.GetTempPath(), "sentinel-updater-diag.txt");
+        try {
+            var rel = FetchLatest();
+            File.WriteAllText(path,
+                "installed=" + InstalledVersion() +
+                "\nlatest=" + (rel == null ? "null" : rel.TagName) +
+                "\nparsed=" + (rel == null ? "null" : (object)(ParseTag(rel.TagName) ?? (object)"null")));
+        } catch (Exception e) {
+            File.WriteAllText(path, e.ToString());
+            return 1;
+        }
+        return 0;
     }
 
     static int Check(bool quiet) {
@@ -82,7 +112,8 @@ static class Updater {
             return 0;
         }
 
-        string download = FindSetupAsset(rel);
+        string download, sums;
+        FindSetupAsset(rel, out download, out sums);
         string label = rel.TagName.TrimStart('v', 'V');
         var r = MessageBox.Show(
             "A new version of Sentinel is available: " + label +
@@ -91,15 +122,36 @@ static class Updater {
             "Sentinel Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
         if (r != DialogResult.Yes) return 0;
 
-        if (download == null) {
+        // Only an installer can be auto-run; for archives or missing assets,
+        // open the release page and let the user handle it.
+        if (download == null || !download.EndsWith("setup.exe")) {
+            Process.Start(rel.HtmlUrl ?? "https://github.com/" + Repo + "/releases");
+            return 0;
+        }
+
+        if (sums == null) {
+            // No checksum asset to verify against — don't run an unchecked
+            // binary; send the user to the release page instead.
             Process.Start(rel.HtmlUrl ?? "https://github.com/" + Repo + "/releases");
             return 0;
         }
 
         string tmp = Path.Combine(Path.GetTempPath(), Path.GetFileName(download));
         try {
-            using (var wc = UpdaterClient())
+            using (var wc = UpdaterClient()) {
                 wc.DownloadFile(download, tmp);
+                string expected = ExpectedHash(wc.DownloadString(sums),
+                    Path.GetFileName(download));
+                if (expected == null || !expected.Equals(Sha256(tmp),
+                        StringComparison.OrdinalIgnoreCase)) {
+                    File.Delete(tmp);
+                    MessageBox.Show(
+                        "Update verification failed (checksum mismatch).\n" +
+                        "The download was not installed.",
+                        "Sentinel Updater", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return 1;
+                }
+            }
             Process.Start(tmp);
         } catch (Exception e) {
             if (!quiet)
@@ -135,27 +187,50 @@ static class Updater {
         return v;
     }
 
-    static string FindSetupAsset(Release rel) {
+    static void FindSetupAsset(Release rel, out string setup, out string sums) {
+        setup = null; sums = null;
         string fallback = null;
         if (rel.Assets != null)
             foreach (var a in rel.Assets) {
-                if (a.Name != null && a.Name.EndsWith("setup.exe")) return a.Url;
-                if (a.Name != null && a.Name.EndsWith(".zip")) fallback = a.Url;
+                if (a.Name == null) continue;
+                if (a.Name.EndsWith("setup.exe")) setup = a.Url;
+                else if (a.Name.StartsWith("SHA256")) sums = a.Url;
+                else if (a.Name.EndsWith(".zip")) fallback = a.Url;
             }
-        return fallback;
+        if (setup == null) setup = fallback;
+    }
+
+    static string ExpectedHash(string sumsText, string fileName) {
+        foreach (var line in sumsText.Split('\n')) {
+            var m = Regex.Match(line.Trim(), @"^([0-9a-fA-F]{64})\s+\*?(.+)$");
+            if (m.Success && m.Groups[2].Value.Trim() == fileName)
+                return m.Groups[1].Value;
+        }
+        return null;
+    }
+
+    static string Sha256(string path) {
+        using (var sha = System.Security.Cryptography.SHA256.Create())
+        using (var f = File.OpenRead(path))
+            return BitConverter.ToString(sha.ComputeHash(f)).Replace("-", "");
     }
 
     static int CreateTask() {
         string exe = Path.Combine(InstallDir, ExeName);
-        string xml = Path.Combine(Path.GetTempPath(), "sentinel-updater-task.xml");
-        File.WriteAllText(xml, TaskXml(exe));
         var p = Process.Start(new ProcessStartInfo {
             FileName = "schtasks.exe",
-            Arguments = "/Create /TN \"" + TaskName + "\" /XML \"" + xml + "\" /F",
+            Arguments = "/Create /TN \"" + TaskName + "\" /TR \"\\\"" + exe + "\\\" /Auto\" /SC DAILY /ST 12:00 /F",
             UseShellExecute = false,
             CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
         });
+        string so = p.StandardOutput.ReadToEnd();
+        string se = p.StandardError.ReadToEnd();
         p.WaitForExit();
+        if (p.ExitCode != 0)
+            File.WriteAllText(Path.Combine(Path.GetTempPath(), "sentinel-updater-diag.txt"),
+                "schtasks exit=" + p.ExitCode + "\n" + so + se);
         return p.ExitCode;
     }
 
@@ -168,29 +243,5 @@ static class Updater {
         });
         p.WaitForExit();
         return 0;
-    }
-
-    static string TaskXml(string exe) {
-        return @"<?xml version=""1.0"" encoding=""UTF-16""?>
-<Task version=""1.2"" xmlns=""http://schemas.microsoft.com/windows/2004/02/mit/task"">
-  <Triggers>
-    <LogonTrigger><Enabled>true</Enabled></LogonTrigger>
-    <CalendarTrigger>
-      <StartBoundary>2020-01-01T12:00:00</StartBoundary>
-      <ScheduleByDay><DaysInterval>1</DaysInterval></ScheduleByDay>
-    </CalendarTrigger>
-  </Triggers>
-  <Principals>
-    <Principal><LogonType>InteractiveToken</LogonType></Principal>
-  </Principals>
-  <Settings>
-    <AllowStartIfOnBatteries>true</AllowStartIfOnBatteries>
-    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
-    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
-  </Settings>
-  <Actions>
-    <Exec><Command>" + exe + @"</Command><Arguments>/Auto</Arguments></Exec>
-  </Actions>
-</Task>";
     }
 }

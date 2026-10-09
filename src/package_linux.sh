@@ -69,9 +69,9 @@ build_appimage() {
   mkdir -p "Sentinel.AppDir/usr/share/icons/hicolor/128x128/apps/"
   mkdir -p "Sentinel.AppDir/usr/share/applications/"
   cp "$BSYS6/../assets/appimage/sentinel.png" "Sentinel.AppDir/usr/share/icons/hicolor/128x128/apps/"
-  mv "$BSYS6/../assets/appimage/net.sentinel.Sentinel.desktop" "Sentinel.AppDir/usr/share/applications/"
+  cp "$BSYS6/../assets/appimage/net.sentinel.Sentinel.desktop" "Sentinel.AppDir/usr/share/applications/"
   ln "Sentinel.AppDir/usr/share/applications/net.sentinel.Sentinel.desktop" "Sentinel.AppDir/net.sentinel.Sentinel.desktop"
-  mv "$BSYS6/../assets/appimage/net.sentinel.Sentinel.metainfo.xml" "Sentinel.AppDir/usr/share/metainfo/net.sentinel.Sentinel.appdata.xml"
+  cp "$BSYS6/../assets/appimage/net.sentinel.Sentinel.metainfo.xml" "Sentinel.AppDir/usr/share/metainfo/net.sentinel.Sentinel.appdata.xml"
   cp $BSYS6/../assets/appimage/* "Sentinel.AppDir/"
   cp -r sentinel/* "Sentinel.AppDir/usr/bin/"
   arch_appimage=$(rpm_arch)

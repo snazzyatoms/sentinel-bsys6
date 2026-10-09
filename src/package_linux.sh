@@ -76,7 +76,7 @@ build_appimage() {
   cp -r sentinel/* "Sentinel.AppDir/usr/bin/"
   arch_appimage=$(rpm_arch)
   appimagetool --appimage-extract
-  if [ -z "$SIGNING_KEY" ]; then
+  if [ -z "${SIGNING_KEY:-}" ]; then
     APPIMAGETOOL_APP_NAME=${pkgname} ./squashfs-root/AppRun --runtime-file=/usr/local/lib/appimage-runtime-${arch_appimage} \
     Sentinel.AppDir
   else
